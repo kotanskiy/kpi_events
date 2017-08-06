@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-lg-6 col-sm-8 col-xs-12">
+    {% if error %}
+        <span style="color: red">{{ error }}</span>
+    {% endif %}
+    <form class="form-horizontal" method="post" action="{% url 'calendar:create_event' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" class="form-control" name="name" placeholder="Название"><br>
+        <textarea class="form-control" placeholder="Описание" name="description" style="max-width: 100%;"></textarea><br>
+        <label class="text-info">Картинка события:</label>
+        <input type="file" name="image" accept="image/jpeg,image/png" class="file-upload"><br>
+        <label class="text-info">Дата начала:</label>
+        <input type="datetime-local" name="start_date" class="form-control"><br>
+        <label class="text-info">Дата окончания:</label>
+        <input type="datetime-local" name="end_date" class="form-control"><br>
+        <label class="text-info">Категория:</label>
+        <select class="form-control" name="category">
+            <option>----------</option>
+            {% for category in categories %}
+                <option>{{ category.name }}</option>
+            {% endfor %}
+        </select><br>
+        <input type="text" class="form-control" name="place_of_event" placeholder="Место события"><br>
+        <input type="text" class="form-control" name="vk_link" placeholder="Ссылка вк"><br>
+        <input type="text" class="form-control" name="fb_link" placeholder="Ссылка fb"><br>
+        <input type="submit" value="Сохранить" class="btn btn-primary">
+    </form>
+</div>
+<br><br><br>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-lg-8 col-sm-12">
+    <form class="form-horizontal" action="{% url 'loginsys:login' %}" method="post">
+        {% csrf_token %}
+        <label class="control-label" for="inputUsername">Логин:</label>
+        <input class="form-control" type="text" id="inputUsername" name="username" placeholder="Логин пользователя">
+        <label class="control-label" for="inputPassword">Пароль:</label>
+        <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Пароль"><br>
+        <button type="submit" class="btn btn-primary">Вход</button>
+        <a href="{% url 'loginsys:registration' %}">Регистрация</a>
+        <br><br>
+        {% if login_error %}
+            <label class="error-login">{{ login_error }}</label>
+        {% endif %}
+
+    </form>
+</div>
+
+
+
+{% endblock %}

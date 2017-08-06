@@ -1,0 +1,82 @@
+@import "../bootstrap/dist/css/bootstrap.css";
+
+
+.navbar-default {
+    background-color: #397dfa;
+    border-color: #397dfa;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: #bcbcbc;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: whitesmoke;
+}
+
+.navbar-default .navbar-brand {
+    color: whitesmoke;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #397dfa;
+    background-color: whitesmoke;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #bcbcbc;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    border-color: #397dfa;
+}
+
+
+.event-image {
+    max-width: 100%;
+}
+
+.row-size {
+    padding: 10px;
+}
+
+.description-font {
+    font-size: 15px;
+    line-height: 22px;
+    color: #0d0d0d;
+}
+
+.title-font {
+    text-decoration: none;
+    font-size: 20px;
+    line-height: 22px;
+    font-weight: 700;
+    font-kerning: normal;
+    padding-bottom: 8px;
+}
+
+.detail-image {
+    max-width: 100%;
+}
+
+.event-date {
+    float: right;
+    padding-right: 10px;
+}
+
+.error-login {
+    color: #cf5119;
+}
+
+
+.text-comment {
+    line-height: 1.36;
+    text-align: center;
+}
+
+.date-comment {
+    color: #939393;
+}
+
+

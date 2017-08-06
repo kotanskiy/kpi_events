@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+    {% block add_head %}
+    {% endblock %}
+    <title>{{ page_header }} | Календарь событий КПИ</title>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu" aria-expanded="true">
+            <span class="sr-only">Открыть навигацию</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'calendar:home' %}">KPI events</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="responsive-menu">
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.username %}
+                <li>
+                    <img src="/media/{{ user.profile.image }}" style="height: 30px; width: 30px; margin-top: 10px; float: left;" class="img-rounded";>
+                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.username }}/Выйти</a>
+                </li>
+                <li>
+                    <a href="{% url 'loginsys:edit_user' %}">Редактировать</a>
+                </li>
+                {% if user.profile.organization %}
+                    <li>
+                        <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li>
+                    <a href="{% url 'loginsys:login' %}">Вход и регистрация</a>
+                </li>
+            {% endif %}
+            <li><form class="navbar-form navbar-right">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Поиск">
+            </div>
+            <button type="submit" class="btn btn-default">Поиск</button>
+        </form></li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+
+<br><br><br><br>
+{% block content %}{% endblock %}
+</div>
+<footer id="footer" class="footer" style="background-color: #397dfa;"><!--Footer-->
+    <div class="container" >
+        <p style="color: whitesmoke; padding-top: 12px">Developed by <a href="https://vk.com/kotanskiy" target="_blank" style="color: whitesmoke"><b>Olexiy Yefimenko</b></a> olexiyyefimenko@gmail.com</p>
+    </div>
+</footer>
+<script type="text/javascript">
+    function footer() {
+        if ($(document).height() <= $(window).height()){
+            $("footer.footer").addClass("navbar-fixed-bottom");
+        }else {
+            $("footer.footer").removeClass("navbar-fixed-bottom");
+        }
+    }
+footer();
+setInterval('footer()', 1000);
+</script>
+</body>
+</html>

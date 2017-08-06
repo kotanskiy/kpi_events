@@ -1,0 +1,20 @@
+{% for comment in comments %}
+<div class="row">
+    <div class="col-lg-8 col-sm-8">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <img src="/media/{{ comment.creator.profile.image }}" style="width: 40px; height: 40px;" class="img-rounded">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="cursor: default; margin-left: 15px">
+            <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span><br>
+            <span class="text-comment">{{ comment.text }}</span><br>
+            <span class="date-comment">{{ comment.time }}</span><br>
+        </div>
+
+
+    </div>
+
+</div><br>
+{% endfor %}
+<script type="text/javascript">
+    footer();
+</script>

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<script type="text/javascript">
+    function updateComments() {
+        $.ajax({
+            url: "{% url 'calendar:comments' event.id %}",
+            cache: false,
+            success: function(html){
+                $("#comments").html(html);
+            }
+        });
+    }
+    $(document).ready(function(){
+        updateComments();
+        setInterval('updateComments()',5000);
+    });
+</script>
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <span class="title-font">{{ event.name }}</span>
+        <span class="event-date text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-sm-12">
+        <img src="/media/{{ event.image }}" class="detail-image">
+    </div>
+    <div class="col-lg-4 col-sm-12">
+        {% if event.creator.profile.organization.image %}
+            <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
+        {% endif %}
+        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
+        <br><br>
+        <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="event" value="{{ event.id }}">
+            {% if event.creator.profile.organization in signed_organizations %}
+                <input type="hidden" name="sub" value="Unsubscribe">
+                <input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
+            {% else %}
+                <input type="hidden" name="sub" value="Subscribe">
+                <input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+            {% endif %}
+        </form><br>
+        {% if event.place_of_event != None %}
+            <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
+        {% endif %}
+
+        {% if event.vk_link != None %}
+            <span class="text-info"><a href="{{ event.vk_link }}" target="_blank">Ссылка вк</a></span><br>
+        {% endif %}
+
+        {% if event.fb_link != None %}
+            <a href="{{ event.fb_link }}" target="_blank">Ссылка facebook</a><br>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <span class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description }}</span><br>
+        <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category.name }}</span>
+        {% if event.end_date != None %}
+            <span class="event-date text-info" style="color: #a1a1a1">{{ event.end_date }}</span>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-8 col-sm-12">
+        <hr>
+        {% if user.username %}
+        {% else %}
+            <span class="text-comment"><a href="{% url 'loginsys:login' %}">Войдите или зарегистрируйтесь</a> что бы оставить свой комментарий</span>
+            <br><br>
+        {% endif %}
+        <div id="comments">
+        </div>
+        <div class="row">
+            {% if user.username %}
+
+            <form id="form" class="form-horizontal" onsubmit="getAjax()" action="javascript:void(null);">
+                {% csrf_token %}
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
+                    <img src="/media/{{ user.profile.image }}" class="img-rounded" style="width: 50px; height: 50px;">
+                </div>
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
+                    <!--<input id="input_comment" class="form-control" placeholder="Отправить Enter"   name="text">-->
+                    <textarea id="input_comment" class="form-control" placeholder="Отправить Enter" name="text" style="max-width: 100%; max-height: 50px"></textarea>
+                </div>
+
+                <script type="text/javascript">
+                    function getAjax() {
+                        var textComment   = $('#form').serialize();
+                        $.ajax({
+                            url: "{% url 'calendar:add_comment' event.id %}",
+                            type: 'POST',
+                            data: textComment
+                        });
+                        $("#input_comment").val('');
+                        $("#input_comment").blur();
+                        updateComments();
+                    }
+                    $(document).ready(function(){
+                        $("#input_comment").keypress(function(e){
+                            if(e.keyCode==13){
+                                $("#form").submit();
+                            }
+                        });
+                    });
+                </script>
+            </form>
+            <br><br><br><br><br>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
