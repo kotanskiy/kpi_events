@@ -35,12 +35,14 @@
         <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="event" value="{{ event.id }}">
-            {% if event.creator.profile.organization in signed_organizations %}
-                <input type="hidden" name="sub" value="Unsubscribe">
-                <input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
-            {% else %}
-                <input type="hidden" name="sub" value="Subscribe">
-                <input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+            {% if user.username %}
+                {% if event.creator.profile.organization in signed_organizations %}
+                    <input type="hidden" name="sub" value="Unsubscribe">
+                    <input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
+                {% else %}
+                    <input type="hidden" name="sub" value="Subscribe">
+                    <input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+                {% endif %}
             {% endif %}
         </form><br>
         {% if event.place_of_event != None %}

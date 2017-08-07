@@ -24,13 +24,16 @@ def calendar(request):
 def calendar_details(request, calendar_id):
     user = auth.get_user(request)
     event = get_object_or_404(Event, pk=calendar_id)
-    signed_organizations = user.profile.signed_organizations.all()
     context = {
         'page_header': event.name,
         'event': event,
         'user': user,
-        'signed_organizations': signed_organizations
     }
+    if request.user.username:
+        signed_organizations = user.profile.signed_organizations.all()
+        context['signed_organizations'] = signed_organizations
+
+
     return render(request, 'events_calendar/details.html', context)
 
 def comments(request, calendar_id):
