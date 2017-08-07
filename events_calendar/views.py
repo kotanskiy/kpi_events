@@ -6,20 +6,48 @@ from django.shortcuts import render, get_object_or_404, redirect, render_to_resp
 
 # Create your views here.
 from django.template.context_processors import csrf
-from events_calendar.models import Event, Comment, Category, Organization
+from events_calendar.models import Event, Comment, Category
 from datetime import datetime
+from django.core.paginator import Paginator
 
 
-def calendar(request):
+def calendar(request, page_number=1):
     user = auth.get_user(request)
     events = Event.objects.all()
+    current_page = Paginator(events, 5)
     context = {
         'page_header': 'Главная',
-        'events': events,
+        'events': current_page.page(page_number),
         'user': user,
+        'type': 'Все события',
+    }
+
+    return render(request, 'events_calendar/calendar.html', context)
+
+def filter_by_signed_organizations(request, page_number=1):
+    user = auth.get_user(request)
+    organizations = user.profile.signed_organizations.all()
+    events = set()
+    for organization in organizations:
+        local_events = Event.objects.filter(creator__profile__organization=organization)
+        events = events.union(local_events)
+
+    current_page = Paginator(list(events), 5)
+    if len(events) == 0:
+        info = 'Подпишитесь на события организаций'
+    else:
+        info = ''
+    context = {
+        'page_header': 'Главная',
+        'events': current_page.page(page_number),
+        'user': user,
+        'type': 'Моя лента событий',
+        'info': info,
     }
     return render(request, 'events_calendar/calendar.html', context)
 
+def filter_by_category(request):
+    return None
 
 def calendar_details(request, calendar_id):
     user = auth.get_user(request)
@@ -54,13 +82,14 @@ def add_comment(request, calendar_id):
     return redirect('/')
 
 
-def organization_events(request):
+def organization_events(request, page_number=1):
     try:
         if request.user.profile.organization:
             events = Event.objects.all().filter(creator=request.user)
+            current_page = Paginator(events, 5)
             context = {
                 'page_header': request.user.profile.organization.name,
-                'events': events,
+                'events': current_page.page(page_number),
                 'user':request.user
             }
             return render(request, 'events_calendar/organization_events.html', context)
@@ -126,6 +155,7 @@ def create_event(request):
                         start_date=start_date,
                         end_date=end_date,
                         category=category,
+                        image=link_image,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
@@ -173,6 +203,7 @@ def create_event(request):
                         start_date=start_date,
                         end_date=end_date,
                         category=category,
+                        image=link_image,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
