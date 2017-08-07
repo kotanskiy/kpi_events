@@ -10,7 +10,39 @@
     <br>
     <br>
 {% endif %}
-<span class="text-info" style="color: #a1a1a1">{{ type }}</span>
+    <span class="text-info" style="color: #a1a1a1">{{ type }}</span>
+    <div class="row row-size">
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+            {% if type != 'Моя лента событий' %}
+                <form class="form-inline" method="post" action="{% url 'calendar:home' %}">
+            {% else %}
+                <form class="form-inline" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
+            {% endif %}
+
+            {% csrf_token %}
+                <div class="row row-size">
+                        <select class="form-control" name="category_id">
+                            {% if current_category == None %}
+                                <option selected>По всем категориям</option>
+                                {% for category in categories %}
+                                    <option>{{ category.name }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option>По всем категориям</option>
+                                <option selected>{{ current_category.name }}</option>
+                                {% for category in categories %}
+                                    <option>{{ category.name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <input type="submit" class="btn btn-primary" value="Отфильтровать">
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
 {% for event in events %}
 <div class="row row-size" >
     <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -35,7 +67,7 @@
 <br>
 {% endfor %}
 <br><br>
-<span class="text-comment">{{ info }}</span>
+
 <div class="row">
     {% if type == 'Моя лента событий' %}
         <div class="col-lg-8 col-sm-12">

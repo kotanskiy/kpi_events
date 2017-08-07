@@ -20,5 +20,4 @@ urlpatterns = [
     url(r'^organization_events/edit_organization$', views.edit_organization, name='edit_organization'),
     url(r'^subscribe$', views.subscribe, name='subscribe'),
     url(r'^my_feed', views.filter_by_signed_organizations, name='filter_by_signed_organizations'),
-    url(r'^filter_by_category$', views.filter_by_category, name='filter_by_category'),
 ]

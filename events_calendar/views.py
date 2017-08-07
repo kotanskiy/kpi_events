@@ -13,14 +13,29 @@ from django.core.paginator import Paginator
 
 def calendar(request, page_number=1):
     user = auth.get_user(request)
-    events = Event.objects.all()
+    #filter by category
+    category_name = request.POST.get('category_id')
+    category = None
+    if request.POST and request.POST.get('category_id') != 'По всем категориям':
+        category = Category.objects.filter(name=category_name)[0]
+        events = Event.objects.filter(category=category)
+    else:
+        events = Event.objects.all()
+    categories = Category.objects.all()
+    if category != None:
+        categories = list(categories)
+        categories.remove(category)
+    # filter by category
     current_page = Paginator(events, 5)
     context = {
         'page_header': 'Главная',
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Все события',
+        'categories': categories,
+        'current_category':category,
     }
+    context.update(csrf(request))
 
     return render(request, 'events_calendar/calendar.html', context)
 
@@ -28,9 +43,23 @@ def filter_by_signed_organizations(request, page_number=1):
     user = auth.get_user(request)
     organizations = user.profile.signed_organizations.all()
     events = set()
+    category_name = request.POST.get('category_id')
+    category = None
     for organization in organizations:
         local_events = Event.objects.filter(creator__profile__organization=organization)
         events = events.union(local_events)
+    result_events = set()
+    if request.POST and request.POST.get('category_id') != 'По всем категориям':
+        category = Category.objects.filter(name=category_name)[0]
+        for event in events:
+            if event.category == category:
+                result_events.add(event)
+        events = result_events
+
+    categories = Category.objects.all()
+    if category != None:
+        categories = list(categories)
+        categories.remove(category)
 
     current_page = Paginator(list(events), 5)
     if len(events) == 0:
@@ -42,12 +71,10 @@ def filter_by_signed_organizations(request, page_number=1):
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Моя лента событий',
-        'info': info,
+        'categories': categories,
+        'current_category': category,
     }
     return render(request, 'events_calendar/calendar.html', context)
-
-def filter_by_category(request):
-    return None
 
 def calendar_details(request, calendar_id):
     user = auth.get_user(request)
