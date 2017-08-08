@@ -16,16 +16,27 @@ def calendar(request, page_number=1):
     #filter by category
     category_name = request.POST.get('category_id')
     category = None
-    if request.POST and request.POST.get('category_id') != 'По всем категориям':
+    if request.POST and category_name != 'По всем категориям':
         category = Category.objects.filter(name=category_name)[0]
         events = Event.objects.filter(category=category)
     else:
-        events = Event.objects.all()
+        if category_name != 'По всем категориям':
+            if 'current_category' in request.session:
+                category = Category.objects.filter(name=request.session['current_category'])[0]
+                events = Event.objects.filter(category=category)
+            else:
+                events = Event.objects.all()
+        else:
+            if 'current_category' in request.session:
+                del request.session['current_category']
+            events = Event.objects.all()
     categories = Category.objects.all()
     if category != None:
         categories = list(categories)
         categories.remove(category)
     # filter by category
+    events = list(events)
+    events.reverse()
     current_page = Paginator(events, 5)
     context = {
         'page_header': 'Главная',
@@ -36,7 +47,9 @@ def calendar(request, page_number=1):
         'current_category':category,
     }
     context.update(csrf(request))
-
+    if category != None:
+        request.session.set_expiry(3600)
+        request.session['current_category'] = category.name
     return render(request, 'events_calendar/calendar.html', context)
 
 def filter_by_signed_organizations(request, page_number=1):
@@ -49,19 +62,31 @@ def filter_by_signed_organizations(request, page_number=1):
         local_events = Event.objects.filter(creator__profile__organization=organization)
         events = events.union(local_events)
     result_events = set()
-    if request.POST and request.POST.get('category_id') != 'По всем категориям':
+    category_name = request.POST.get('category_id')
+    if request.POST and category_name != 'По всем категориям':
         category = Category.objects.filter(name=category_name)[0]
         for event in events:
             if event.category == category:
                 result_events.add(event)
         events = result_events
-
+    else:
+        if category_name != 'По всем категориям':
+            if 'current_category' in request.session:
+                category = Category.objects.filter(name=request.session['current_category'])[0]
+                for event in events:
+                    if event.category == category:
+                        result_events.add(event)
+                events = result_events
+        else:
+            if 'current_category' in request.session:
+                del request.session['current_category']
     categories = Category.objects.all()
     if category != None:
         categories = list(categories)
         categories.remove(category)
-
-    current_page = Paginator(list(events), 5)
+    events = list(events)
+    events.reverse()
+    current_page = Paginator(events, 5)
     if len(events) == 0:
         info = 'Подпишитесь на события организаций'
     else:
@@ -74,6 +99,9 @@ def filter_by_signed_organizations(request, page_number=1):
         'categories': categories,
         'current_category': category,
     }
+    if category != None:
+        request.session.set_expiry(3600)
+        request.session['current_category'] = category.name
     return render(request, 'events_calendar/calendar.html', context)
 
 def calendar_details(request, calendar_id):
@@ -93,7 +121,7 @@ def calendar_details(request, calendar_id):
 
 def comments(request, calendar_id):
     event = get_object_or_404(Event, pk=calendar_id)
-    comments = Comment.objects.all().filter(event=event)
+    comments = Comment.objects.filter(event=event)
     context = {
         'comments': comments
     }
@@ -112,7 +140,7 @@ def add_comment(request, calendar_id):
 def organization_events(request, page_number=1):
     try:
         if request.user.profile.organization:
-            events = Event.objects.all().filter(creator=request.user)
+            events = Event.objects.filter(creator=request.user)
             current_page = Paginator(events, 5)
             context = {
                 'page_header': request.user.profile.organization.name,

@@ -26,7 +26,5 @@ urlpatterns = [
     url(r'^admin/jsi18n', django.views.i18n.javascript_catalog),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
-
-
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 ]
