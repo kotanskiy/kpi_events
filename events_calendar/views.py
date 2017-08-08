@@ -230,7 +230,6 @@ def create_event(request):
                         start_date=start_date,
                         end_date=end_date,
                         category=category,
-                        image=link_image,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
