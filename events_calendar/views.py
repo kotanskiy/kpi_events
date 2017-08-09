@@ -376,3 +376,19 @@ def subscribe(request):
         return redirect('/event/' + str(event.id))
 
 
+def searching_results(request):
+    user = auth.get_user(request)
+    text = request.GET.get('text').strip()
+    if text == '' or len(text) < 5:
+        return redirect('/')
+    events = Event.objects.filter(name__icontains=text)
+    if not events:
+        events = Event.objects.filter(description__icontains=text)
+    events = list(events)
+    events.reverse()
+    context = {
+        'user':user,
+        'page_header':'Результаты поиска',
+        'events':events,
+    }
+    return render(request, 'events_calendar/searching_results.html', context)

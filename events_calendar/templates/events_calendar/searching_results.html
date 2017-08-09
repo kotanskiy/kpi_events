@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2 class="text-info" style="color: #a1a1a1;">Результаты поиска:</h2>
+
+{% for event in events %}
+<div class="row row-size" >
+    <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
+        {% if event.image != '' %}
+        <a href="{% url 'calendar:details' event.id %}"><img src="/media/{{ event.image }}" class="event-image"></a>
+        {% endif %}
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+        <div class="text">
+            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
+            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
+            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
+            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
+            {% if event.creator.profile.organization.image %}
+            <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
+            {% endif %}
+            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
+        </div>
+    </div>
+</div>
+
+<br>
+{% endfor %}
+<br><br>
+
+{% endblock %}

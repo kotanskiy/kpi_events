@@ -16,6 +16,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
 
 class Event(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
@@ -33,6 +37,10 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Событие'
+        verbose_name_plural = 'События'
+
 class Comment(models.Model):
     creator = CurrentUserField(add_only=True, related_name='Comment_creator')
     text = models.TextField('Комментарий')
@@ -42,6 +50,10 @@ class Comment(models.Model):
     def __str__(self):
         return self.creator.username
 
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
 class Organization(models.Model):
     name = models.CharField(max_length=50, verbose_name='Наименование', null=False)
     image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
@@ -49,6 +61,9 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Организация'
+        verbose_name_plural = 'Организации'
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -58,6 +73,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
