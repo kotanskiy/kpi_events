@@ -140,7 +140,9 @@ def add_comment(request, calendar_id):
 def organization_events(request, page_number=1):
     try:
         if request.user.profile.organization:
-            events = Event.objects.filter(creator=request.user)
+            events = Event.objects.filter(creator__profile__organization=request.user.profile.organization)
+            events = list(events)
+            events.reverse()
             current_page = Paginator(events, 5)
             context = {
                 'page_header': request.user.profile.organization.name,
