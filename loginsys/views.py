@@ -62,7 +62,7 @@ def edit_user(request):
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
                 for file in request.FILES.getlist('image'):
-                    link_image = 'images/users/' + request.user.username + str(file)
+                    link_image = 'images/users/' + str(random.random()) + str(file)
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)

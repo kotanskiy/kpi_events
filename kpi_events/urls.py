@@ -20,8 +20,8 @@ from django.views.static import serve
 
 from kpi_events import settings
 
-
 urlpatterns = [
+
     url(r'^', include('events_calendar.urls')),
     url(r'^admin/jsi18n', django.views.i18n.javascript_catalog),
     url(r'^admin/', admin.site.urls),

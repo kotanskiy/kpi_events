@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!3o+p4s%akp7!1e9ab9cgy3g8(lrrl&4=d^=4*mjkbcu2xfk%z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.0.105',
@@ -35,9 +35,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'events_calendar',
-
-
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'events_calendar',
     'loginsys',
     'cuser',
 
@@ -111,6 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Календарь событий КПИ'
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

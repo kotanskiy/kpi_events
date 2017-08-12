@@ -203,7 +203,7 @@ def create_event(request):
                         end_date = None
 
                     for file in request.FILES.getlist('image'):
-                        link_image = 'images/organization/' + request.user.username + str(file)
+                        link_image = 'images/organization/' + request.user.profile.organization.name + str(file)
                         with default_storage.open(link_image, 'wb+') as destination:
                             for chunk in file.chunks():
                                 destination.write(chunk)
@@ -316,7 +316,7 @@ def edit_event(request, calendar_id):
                 if request.POST.get('description').strip() != '':
                     event.description = request.POST.get('description').strip()
                 for file in request.FILES.getlist('image'):
-                    link_image = 'images/events_calendar/' + request.user.username + str(file)
+                    link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
@@ -376,7 +376,7 @@ def edit_organization(request):
             if request.POST.get('name').strip() != '':
                 organization.name = request.POST.get('name').strip()
             for file in request.FILES.getlist('image'):
-                link_image = 'images/events_calendar/' + request.user.username + str(file)
+                link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
                 with default_storage.open(link_image, 'wb+') as destination:
                     for chunk in file.chunks():
                         destination.write(chunk)
