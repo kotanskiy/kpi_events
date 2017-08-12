@@ -12,60 +12,54 @@
 {% endif %}
     <span class="text-info" style="color: #a1a1a1">{{ type }}</span>
     <div class="row row-size">
-        <div class="col-lg-4 col-sm-6 col-xs-12">
-            {% if type != 'Моя лента событий' %}
-                <form class="form-inline" method="post" action="{% url 'calendar:home' %}">
-            {% else %}
-                <form class="form-inline" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
-            {% endif %}
+            <div class="pull-right col-lg-4 col-md-6 col-xs-12">
+                По категориям:<hr>
+                {% if type != 'Моя лента событий' %}
+                    <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
+                {% else %}
+                    <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
+                {% endif %}
+                    {% csrf_token %}
+                    {% for category in categories %}
+                        {% if category in current_categories %}
+                            <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}" checked> {{ category.name }}<br>
+                        {% else %}
+                            <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}"> {{ category.name }}<br>
+                        {% endif %}
+                    {% endfor %}
+                    <br>
+                    <input type="submit" value="Отфильтровать" class="btn btn-primary">
+                </form>
+                <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
+            </div>
 
-            {% csrf_token %}
+            {% for event in events %}
                 <div class="row row-size">
-                        <select class="form-control" name="category_id">
-                            {% if current_category == None %}
-                                <option selected>По всем категориям</option>
-                                {% for category in categories %}
-                                    <option>{{ category.name }}</option>
-                                {% endfor %}
-                            {% else %}
-                                <option>По всем категориям</option>
-                                <option selected>{{ current_category.name }}</option>
-                                {% for category in categories %}
-                                    <option>{{ category.name }}</option>
-                                {% endfor %}
+                    <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        {% if event.image != '' %}
+                            <a href="{% url 'calendar:details' event.id %}"><img src="/media/{{ event.image }}" class="event-image"></a>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="text">
+                            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
+                            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
+                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
+                            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
+                            {% if event.creator.profile.organization.image %}
+                                <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
                             {% endif %}
-                        </select>
-                        <input type="submit" class="btn btn-primary" value="Отфильтровать">
+                            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
+                        </div>
+                    </div>
                 </div>
 
+                <br>
+            {% endfor %}
 
-            </form>
-        </div>
+
     </div>
 
-{% for event in events %}
-<div class="row row-size" >
-    <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
-        {% if event.image != '' %}
-        <a href="{% url 'calendar:details' event.id %}"><img src="/media/{{ event.image }}" class="event-image"></a>
-        {% endif %}
-    </div>
-    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-        <div class="text">
-            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
-            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
-            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
-            {% if event.creator.profile.organization.image %}
-            <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
-            {% endif %}
-            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
-        </div>
-    </div>
-</div>
-
-<br>
-{% endfor %}
 <br><br>
 
 <div class="row">

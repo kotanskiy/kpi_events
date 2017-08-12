@@ -13,95 +13,121 @@ from django.core.paginator import Paginator
 
 def calendar(request, page_number=1):
     user = auth.get_user(request)
+    all_categories = Category.objects.all()
+    events = set()
     #filter by category
-    category_name = request.POST.get('category_id')
-    category = None
-    if request.POST and category_name != 'По всем категориям':
-        category = Category.objects.filter(name=category_name)[0]
-        events = Event.objects.filter(category=category)
+    current_categories = set()
+    if request.POST:
+        #get input categories from post query and events with input categories
+        for category in all_categories:
+            category_id = request.POST.get(category.name)
+            current_categories.update(Category.objects.filter(pk=category_id))
+            events.update(Event.objects.filter(category__pk=category_id))
+            try:
+                del request.session[category.name]
+            except KeyError:
+                pass
+        #save input categories into session
+        for category in current_categories:
+            request.session.set_expiry(3600)
+            request.session[category.name] = category.id
     else:
-        if category_name != 'По всем категориям':
-            if 'current_category' in request.session:
-                category = Category.objects.filter(name=request.session['current_category'])[0]
-                events = Event.objects.filter(category=category)
-            else:
-                events = Event.objects.all()
-        else:
-            if 'current_category' in request.session:
-                del request.session['current_category']
-            events = Event.objects.all()
-    categories = Category.objects.all()
-    if category != None:
-        categories = list(categories)
-        categories.remove(category)
-    # filter by category
-    events = list(events)
-    events.reverse()
+        #load categories from session
+        for category in all_categories:
+            try:
+                category_id = request.session[category.name]
+                current_categories.update(Category.objects.filter(pk=category_id))
+            except KeyError:
+                pass
+        for category in current_categories:
+            events.update(Event.objects.filter(category=category))
+    #end filter
+    if not events:
+        events = list(Event.objects.all())
+        events.reverse()
+        info_filter = 'Отображены все события т.к. по параметрам фильтра ничего не найдено.'
+    else:
+        info_filter = ''
+        events = list(events)
+        events.reverse()
     current_page = Paginator(events, 5)
     context = {
         'page_header': 'Главная',
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Все события',
-        'categories': categories,
-        'current_category':category,
+        'categories': all_categories,
+        'current_categories':current_categories,
+        'info_filter':info_filter,
     }
     context.update(csrf(request))
-    if category != None:
-        request.session.set_expiry(3600)
-        request.session['current_category'] = category.name
     return render(request, 'events_calendar/calendar.html', context)
 
 def filter_by_signed_organizations(request, page_number=1):
     user = auth.get_user(request)
+    if user.is_anonymous:
+        return redirect('/')
     organizations = user.profile.signed_organizations.all()
+    all_categories = Category.objects.all()
+    info_filter = ''
     events = set()
-    category_name = request.POST.get('category_id')
-    category = None
+
+    #filter by signed organizations
     for organization in organizations:
-        local_events = Event.objects.filter(creator__profile__organization=organization)
-        events = events.union(local_events)
-    result_events = set()
-    category_name = request.POST.get('category_id')
-    if request.POST and category_name != 'По всем категориям':
-        category = Category.objects.filter(name=category_name)[0]
-        for event in events:
-            if event.category == category:
-                result_events.add(event)
-        events = result_events
+        events.update(Event.objects.filter(creator__profile__organization=organization))
+    #end filter
+
+    #filter by categories
+    current_categories = set()
+    events_categories = set()
+    if request.POST:
+        for category in all_categories:
+            category_id = request.POST.get(category.name)
+            current_categories.update(Category.objects.filter(pk=category_id))
+            try:
+                del request.session[category.name]
+            except KeyError:
+                pass
+        for category in current_categories:
+            for event in events:
+                if event.category == category:
+                    events_categories.add(event)
+            # save input categories into session
+            request.session.set_expiry(3600)
+            request.session[category.name] = category.id
+        events = events_categories
     else:
-        if category_name != 'По всем категориям':
-            if 'current_category' in request.session:
-                category = Category.objects.filter(name=request.session['current_category'])[0]
-                for event in events:
-                    if event.category == category:
-                        result_events.add(event)
-                events = result_events
-        else:
-            if 'current_category' in request.session:
-                del request.session['current_category']
-    categories = Category.objects.all()
-    if category != None:
-        categories = list(categories)
-        categories.remove(category)
+        # load categories from session
+        for category in all_categories:
+            try:
+                category_id = request.session[category.name]
+                current_categories.update(Category.objects.filter(pk=category_id))
+            except KeyError:
+                pass
+        for category in current_categories:
+            for event in events:
+                if event.category == category:
+                    events_categories.add(event)
+        events = events_categories
+    #end filter
+    if not events:
+        info_filter = 'Отображены все события, на которые вы подписаны, т.к. по параметрам фильтра ничего не найдено.'
+        for organization in organizations:
+            events.update(Event.objects.filter(creator__profile__organization=organization))
+
     events = list(events)
     events.reverse()
     current_page = Paginator(events, 5)
-    if len(events) == 0:
-        info = 'Подпишитесь на события организаций'
-    else:
-        info = ''
     context = {
         'page_header': 'Главная',
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Моя лента событий',
-        'categories': categories,
-        'current_category': category,
+        'categories': all_categories,
+        'current_categories':current_categories,
+        'info_filter': info_filter,
     }
-    if category != None:
-        request.session.set_expiry(3600)
-        request.session['current_category'] = category.name
+    context.update(csrf(request))
     return render(request, 'events_calendar/calendar.html', context)
 
 def calendar_details(request, calendar_id):
