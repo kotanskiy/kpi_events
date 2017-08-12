@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -121,11 +121,11 @@ LANGUAGE_CODE = 'Ru-ru'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+#USE_I18N = True
 
-USE_L10N = True
+#USE_L10N = True
 
-USE_TZ = True
+#USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

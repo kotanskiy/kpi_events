@@ -12,7 +12,9 @@
 {% endif %}
     <span class="text-info" style="color: #a1a1a1">{{ type }}</span>
     <div class="row row-size">
+
             <div class="pull-right col-lg-4 col-md-6 col-xs-12">
+            <!--<div style="background-color: #1b6d85; height: 400px;width: 200px;"></div>-->
                 По категориям:<hr>
                 {% if type != 'Моя лента событий' %}
                     <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
