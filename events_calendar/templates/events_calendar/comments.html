@@ -1,8 +1,11 @@
+{% load thumbnail %}
 {% for comment in comments %}
 <div class="row">
     <div class="col-lg-8 col-sm-8">
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <img src="/media/{{ comment.creator.profile.image }}" style="width: 40px; height: 40px;" class="img-rounded">
+            {% thumbnail comment.creator.profile.image "40x40" crop="" as im %}
+                <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
         </div>
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="cursor: default; margin-left: 15px">
             <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span><br>

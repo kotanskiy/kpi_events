@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load thumbnail %}
 {% block content %}
 <script type="text/javascript">
     function updateComments() {
@@ -28,7 +29,9 @@
     </div>
     <div class="col-lg-4 col-sm-12">
         {% if event.creator.profile.organization.image %}
-            <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
+            {% thumbnail event.creator.profile.organization.image "30x30" crop="" as im %}
+                <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
         {% endif %}
         <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
         <br><br>
@@ -83,7 +86,9 @@
             <form id="form" class="form-horizontal" onsubmit="getAjax()" action="javascript:void(null);">
                 {% csrf_token %}
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
-                    <img src="/media/{{ user.profile.image }}" class="img-rounded" style="width: 50px; height: 50px;">
+                    {% thumbnail user.profile.image "50x50" crop="" as im %}
+                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
                 </div>
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
                     <!--<input id="input_comment" class="form-control" placeholder="Отправить Enter"   name="text">-->

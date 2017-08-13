@@ -1,4 +1,5 @@
 {% load static %}
+{% load thumbnail %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -34,7 +35,9 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
                 <li>
-                    <img src="/media/{{ user.profile.image }}" style="height: 30px; width: 30px; margin-top: 10px; float: left;" class="img-rounded";>
+                    {% thumbnail user.profile.image "30x30" crop="" as im %}
+                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
+                    {% endthumbnail %}
                     <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.username }}/Выйти</a>
                 </li>
                 <li>

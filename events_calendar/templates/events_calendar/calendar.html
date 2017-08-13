@@ -1,5 +1,6 @@
 
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 {% block content %}
 {% if user.username %}
@@ -39,7 +40,11 @@
                 <div class="row row-size">
                     <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         {% if event.image != '' %}
-                            <a href="{% url 'calendar:details' event.id %}"><img src="/media/{{ event.image }}" class="event-image"></a>
+                            <a href="{% url 'calendar:details' event.id %}">
+                                {% thumbnail event.image "400x300" crop="" as im %}
+                                    <img src="/media/{{ im.url }}" class="event-image">
+                                {% endthumbnail %}
+                            </a>
                         {% endif %}
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
