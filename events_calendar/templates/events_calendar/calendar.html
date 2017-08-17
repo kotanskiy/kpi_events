@@ -3,42 +3,46 @@
 {% load thumbnail %}
 
 {% block content %}
-{% if user.username %}
 
-    <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
 
-    <br>
-    <br>
-{% endif %}
-    <span class="text-info" style="color: #a1a1a1">{{ type }}</span>
-    <div class="row row-size">
-
-            <div class="pull-right col-lg-4 col-md-6 col-xs-12">
-            <!--<div style="background-color: #1b6d85; height: 400px;width: 200px;"></div>-->
-                По категориям:<hr>
-                {% if type != 'Моя лента событий' %}
-                    <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
+    <div class="row row-fluid">
+        <br><br>
+        <div class="col-lg-3 col-md-3 col-xs-12">
+            По категориям:<hr>
+            {% if type != 'Моя лента событий' %}
+                <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
+            {% else %}
+                <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
+            {% endif %}
+            {% csrf_token %}
+            {% for category in categories %}
+                {% if category in current_categories %}
+                    <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}" checked> {{ category.name }}<br>
                 {% else %}
-                    <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
+                    <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}"> {{ category.name }}<br>
                 {% endif %}
-                    {% csrf_token %}
-                    {% for category in categories %}
-                        {% if category in current_categories %}
-                            <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}" checked> {{ category.name }}<br>
-                        {% else %}
-                            <input class="checkbox-inline" type="checkbox" name="{{ category.name }}" value="{{ category.id }}"> {{ category.name }}<br>
-                        {% endif %}
-                    {% endfor %}
-                    <br>
-                    <input type="submit" value="Отфильтровать" class="btn btn-primary">
-                </form>
-                <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
-            </div>
+            {% endfor %}
+            <br>
+            <input type="submit" value="Отфильтровать" class="btn btn-primary">
+            </form>
+            <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
+            <br><br>
+        </div>
+        <div class="col-lg-9 col-md-9 col-xs-12">
 
+            {% if user.username %}
+
+                <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
+
+
+
+            {% endif %}
+        <br><br>
+        <span class="text-info" style="color: #a1a1a1">{{ type }}</span><br><br>
             {% for event in events %}
-                <div class="row row-size">
-                    <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <div class="row row-fluid">
+                    <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
                                 {% thumbnail event.image "400x300" crop="" as im %}
@@ -47,7 +51,7 @@
                             </a>
                         {% endif %}
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
                             <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
                             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
@@ -65,6 +69,8 @@
 
                 <br>
             {% endfor %}
+        </div>
+
 
 
     </div>
