@@ -20,12 +20,23 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+class Organization(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Наименование', null=False)
+    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Организация'
+        verbose_name_plural = 'Организации'
 
 class Event(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     description = models.TextField('Описание')
     image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default.jpg')
-    creator = CurrentUserField(add_only=True, related_name='Event_creator')
+    #creator = CurrentUserField(add_only=True, related_name='Event_creator')
+    creator = models.ForeignKey(Organization, verbose_name='Организация', null=True)
     start_date = models.DateTimeField('Дата начала')
     end_date = models.DateTimeField(verbose_name='Дата окончания', blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name='Категория')
@@ -56,17 +67,6 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-
-class Organization(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Наименование', null=False)
-    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Организация'
-        verbose_name_plural = 'Организации'
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

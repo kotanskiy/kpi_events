@@ -71,6 +71,8 @@ def calendar(request, page_number=1):
         info_filter = ''
     else:
         events = list(category_events)
+        if current_date_value == '2':
+            events.reverse()
         info_filter = ''
     current_page = Paginator(events, 5)
     context = {
@@ -109,7 +111,10 @@ def filter_by_signed_organizations(request, page_number=1):
                 events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
             elif current_date_value == '2':
                 events_date = Event.objects.filter(start_date__lte=timezone.now()).order_by('start_date')
-            del request.session['current_date']
+            try:
+                del request.session['current_date']
+            except KeyError:
+                pass
             request.session['current_date'] = current_date_value
 
     organizations = user.profile.signed_organizations.all()
@@ -118,7 +123,7 @@ def filter_by_signed_organizations(request, page_number=1):
     events = set()
     #filter by signed organizations
     for organization in organizations:
-        events.update(events_date.filter(creator__profile__organization=organization))
+        events.update(events_date.filter(creator=organization))
     #end filter
 
     #filter by categories
@@ -155,7 +160,7 @@ def filter_by_signed_organizations(request, page_number=1):
     if not events:
         info_filter = 'Отображены все события, на которые вы подписаны, т.к. по параметрам фильтра ничего не найдено.'
         for organization in organizations:
-            events.update(events_date.filter(creator__profile__organization=organization))
+            events.update(events_date.filter(creator=organization))
 
     events = list(events)
     if current_date_value == '2':
@@ -210,7 +215,7 @@ def add_comment(request, calendar_id):
 def organization_events(request, page_number=1):
     try:
         if request.user.profile.organization:
-            events = Event.objects.filter(creator__profile__organization=request.user.profile.organization)
+            events = Event.objects.filter(creator=request.user.profile.organization)
             events = list(events)
             current_page = Paginator(events, 5)
             context = {
@@ -285,6 +290,7 @@ def create_event(request):
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
+                        creator=request.user.profile.organization,
                     )
                     event.save()
                     return redirect('/organization_events')
@@ -332,6 +338,7 @@ def create_event(request):
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
+                        creator=request.user.profile.organization,
                     )
                     event.save()
                     return redirect('/organization_events')
@@ -345,7 +352,7 @@ def create_event(request):
 
 def edit_event(request, calendar_id):
     event = get_object_or_404(Event, pk=calendar_id)
-    if request.user.profile.organization == event.creator.profile.organization:
+    if request.user.profile.organization == event.creator:
         args = {}
         args.update(csrf(request))
         args['event'] = event
@@ -435,7 +442,7 @@ def edit_organization(request):
 def subscribe(request):
     if request.POST:
         event = get_object_or_404(Event, pk=request.POST.get('event'))
-        organization = event.creator.profile.organization
+        organization = event.creator
         user = request.user
         sub = request.POST.get('sub')
         if sub == 'Subscribe':
