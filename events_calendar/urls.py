@@ -22,4 +22,8 @@ urlpatterns = [
     url(r'^my_feed', views.filter_by_signed_organizations, name='filter_by_signed_organizations'),
     url(r'^searching_results', views.searching_results, name='searching_results'),
     url(r'^searching_results/page/(\d+)$', views.searching_results),
+    url(r'^suggest_an_event$', views.suggest_an_event, name='suggest_an_event'),
+    url(r'^proposed_events$', views.proposed_events, name='proposed_events'),
+    url(r'^proposed_events/page/(\d+)$', views.proposed_events),
+    url(r'^edit_proposed_event/(?P<event_id>[\d+]*)$', views.edit_proposed_event, name='edit_proposed_event')
 ]
