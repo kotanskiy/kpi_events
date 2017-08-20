@@ -38,6 +38,9 @@ class Event(models.Model):
         return self.name
 
     class Meta:
+        ordering = [
+            '-start_date',
+        ]
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
 

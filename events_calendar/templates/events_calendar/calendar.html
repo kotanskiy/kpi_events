@@ -6,14 +6,26 @@
 
 
     <div class="row row-fluid">
-        <br><br>
+        <br>
         <div class="col-lg-3 col-md-3 col-xs-12">
-            По категориям:<hr>
+            <br><br>
             {% if type != 'Моя лента событий' %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
+            <b>По дате:</b><hr>
+            {% if current_date == '1' %}
+                <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Ближайшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2"> Прошедшие события<br>
+            {% elif  current_date == '2'%}
+                <input class="radio-inline" type="radio" name="date_filter" value="1"> Ближайшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Прошедшие события<br>
+            {% endif %}
+
+
+            <br>
+            <b>По категориям:</b><hr>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
