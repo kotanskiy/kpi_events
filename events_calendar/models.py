@@ -111,8 +111,8 @@ class ProposedEvent(models.Model):
         ordering = [
             'start_date',
         ]
-        verbose_name = 'Событие'
-        verbose_name_plural = 'События'
+        verbose_name = 'Предложенное Событие'
+        verbose_name_plural = 'Предложка'
 
 
 
