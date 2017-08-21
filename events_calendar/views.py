@@ -451,6 +451,13 @@ def subscribe(request):
             user.profile.signed_organizations.remove(organization)
         return redirect('/event/' + str(event.id))
 
+def unsubscribe(request):
+    if request.POST:
+        if request.user.username:
+            organization = get_object_or_404(Organization, pk=request.POST.get('organization'))
+            user = request.user
+            user.profile.signed_organizations.remove(organization)
+    return redirect('/auth/edit_user/')
 
 def searching_results(request):
     user = auth.get_user(request)

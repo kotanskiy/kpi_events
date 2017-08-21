@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-
+{% load thumbnail %}
 {% block content %}
     <br><br>
-    <div class="col-lg-8 col-sm-12">
+    <div class="col-lg-6 col-sm-12">
+        <h6 class="text-info" style="color: #a1a1a1; font-size: large">Редактировать профиль:</h6>
         <form class="form-horizontal" action="{% url 'loginsys:edit_user' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="control-label" for="first_name">Имя</label>
@@ -13,6 +14,24 @@
             <input type="file" name="image" accept="image/jpeg"><br>
             <input class="btn btn-primary" type="submit" value="Сохранить">
         </form>
+    </div>
+    <div class="col-lg-4 col-sm-12">
+        <h6 class="text-info" style="color: #a1a1a1; font-size: large">Мои подписки:</h6><br>
+        {% for organization in organizations %}
+            <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:unsubscribe' %}" method="post">
+                {% csrf_token %}
+                {% if user.username %}
+                    <input type="hidden" name="organization" value="{{ organization.id }}">
+                    {% if organization.image %}
+                        {% thumbnail organization.image "30x30" crop="" as im %}
+                            <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
+                    {% endif %}
+                    <span class="text-info" style="color: #859aff; font-size: larger">{{ organization.name }}</span>&nbsp;&nbsp;&nbsp;
+                    <input id="subscribe_button" class="inline-block btn btn-default" type="submit" value="Отписаться">
+                {% endif %}
+            </form><br>
+        {% endfor %}
     </div>
 <br><br>
 {% endblock %}

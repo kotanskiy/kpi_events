@@ -53,7 +53,9 @@ def registration(request):
 
 def edit_user(request):
     if request.user.username:
+        signed_organizations = request.user.profile.signed_organizations.all()
         args = {}
+        args['organizations'] = signed_organizations
         args['page_header'] = 'Редактирование ' + request.user.username
         args.update(csrf(request))
         args['user'] = request.user

@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^suggest_an_event$', views.suggest_an_event, name='suggest_an_event'),
     url(r'^proposed_events$', views.proposed_events, name='proposed_events'),
     url(r'^proposed_events/page/(\d+)$', views.proposed_events),
-    url(r'^edit_proposed_event/(?P<event_id>[\d+]*)$', views.edit_proposed_event, name='edit_proposed_event')
+    url(r'^edit_proposed_event/(?P<event_id>[\d+]*)$', views.edit_proposed_event, name='edit_proposed_event'),
+    url(r'^unsubscribe$', views.unsubscribe, name='unsubscribe'),
 ]

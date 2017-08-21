@@ -41,7 +41,7 @@
                     <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.username }}/Выйти</a>
                 </li>
                 <li>
-                    <a href="{% url 'loginsys:edit_user' %}">Редактировать</a>
+                    <a href="{% url 'loginsys:edit_user' %}">Моя страница</a>
                 </li>
                 {% if user.profile.organization %}
                     <li>
