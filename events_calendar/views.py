@@ -415,28 +415,31 @@ def edit_event(request, calendar_id):
 
 
 def edit_organization(request):
-    args = {}
-    args.update(csrf(request))
-    organization = request.user.profile.organization
-    args['organization'] = organization
-    args['page_header'] = request.user.profile.organization.name
-    args['user'] = request.user
-    if request.POST:
-        try:
-            if request.POST.get('name').strip() != '':
-                organization.name = request.POST.get('name').strip()
-            for file in request.FILES.getlist('image'):
-                link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
-                with default_storage.open(link_image, 'wb+') as destination:
-                    for chunk in file.chunks():
-                        destination.write(chunk)
-            organization.image = link_image
-            organization.save()
-        except UnboundLocalError:
-            if request.POST.get('name').strip() != '':
-                organization.name = request.POST.get('name').strip()
-            organization.save()
-    return render_to_response('events_calendar/edit_organization.html', args)
+    if request.user.username and request.user.profile.organization:
+        args = {}
+        args.update(csrf(request))
+        organization = request.user.profile.organization
+        args['organization'] = organization
+        args['page_header'] = request.user.profile.organization.name
+        args['user'] = request.user
+        if request.POST:
+            try:
+                if request.POST.get('name').strip() != '':
+                    organization.name = request.POST.get('name').strip()
+                for file in request.FILES.getlist('image'):
+                    link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
+                    with default_storage.open(link_image, 'wb+') as destination:
+                        for chunk in file.chunks():
+                            destination.write(chunk)
+                organization.image = link_image
+                organization.save()
+            except UnboundLocalError:
+                if request.POST.get('name').strip() != '':
+                    organization.name = request.POST.get('name').strip()
+                organization.save()
+        return render_to_response('events_calendar/edit_organization.html', args)
+    else:
+        return redirect('/')
 
 
 def subscribe(request):
