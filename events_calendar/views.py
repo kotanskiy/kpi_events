@@ -615,7 +615,7 @@ def proposed_events(request, page_id=1):
 def edit_proposed_event(request, event_id):
     event = get_object_or_404(ProposedEvent, pk=event_id)
     organization = get_object_or_404(Organization, name='KPI Events')
-    if request.user.profile.organization.name == 'KPI Events':
+    if request.user.is_authenticated and request.user.profile.organization.name == 'KPI Events':
         args = {}
         args.update(csrf(request))
         args['event'] = event
@@ -793,3 +793,11 @@ def filter_by_organization(request, organization_id, page_number=1):
     }
     context.update(csrf(request))
     return render(request, 'events_calendar/organization.html', context)
+
+
+def remove_proposed_event(request, event_id):
+    user = request.user
+    if user.is_authenticated and user.profile.organization.name == 'KPI Events':
+        get_object_or_404(ProposedEvent, pk=event_id).delete()
+        return redirect('/proposed_events')
+    return redirect('/')

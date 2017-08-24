@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^unsubscribe$', views.unsubscribe, name='unsubscribe'),
     url(r'^filter_by_organization/(?P<organization_id>[\d+]*)$', views.filter_by_organization, name='filter_by_organization'),
     url(r'^filter_by_organization/(?P<organization_id>[\d+]*)/page/(?P<page_number>[\d+])$', views.filter_by_organization),
+    url(r'^remove_proposed_event/(?P<event_id>[\d+]*)$', views.remove_proposed_event, name='remove_proposed_event'),
 ]

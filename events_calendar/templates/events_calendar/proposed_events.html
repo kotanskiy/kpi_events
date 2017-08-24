@@ -31,6 +31,7 @@
                                 {% endif %}
                                 <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.username }}({{ event.creator.first_name }} {{ event.creator.last_name }})</span><br><br>
                                 <a href="{% url 'calendar:edit_proposed_event' event.id %}"><button class="btn btn-primary">Редактировать и опубликовать</button></a>
+                                <a href="{% url 'calendar:remove_proposed_event' event.id %}"><button class="btn btn-primary">Удалить</button></a>
                             </div>
                         </div>
                     </div>
