@@ -5,12 +5,12 @@
 {% block content %}
 
 
-    <div class="row row-fluid">
+    <div class="row row-size">
     <br>
         <h3 class="text-info" style="color: #a1a1a1; ">Предложка:</h3><br><br>
             {% for event in events %}
                 {% if not event.published %}
-                    <div class="row row-fluid">
+                    <div class="row">
                         <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
                             {% if event.image != '' %}
                                 {% thumbnail event.image "400x300" crop="" as im %}
