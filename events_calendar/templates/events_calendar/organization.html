@@ -12,13 +12,12 @@
                 <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Предложить событие</button></a>
             {% endif %}
 
+
             <br><br>
-            {% if type != 'Моя лента событий' %}
-                <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
-            {% else %}
-                <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
-            {% endif %}
+
+
             <b>По дате:</b><hr>
+            <form action="{% url 'calendar:filter_by_organization' organization.id %}" method="post">
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Ближайшие события<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="2"> Прошедшие события<br>
@@ -45,17 +44,18 @@
             <br><br>
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">
+            <div class="row">
+                <span class="text-info" style="color: #a1a1a1; font-size: large">Список событий от: &nbsp;&nbsp;</span>
+                {% if organization.image %}
+                    {% thumbnail organization.image "30x30" crop="" as im %}
+                        <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                {% endif %}
 
-            {% if user.username %}
 
-                <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
-
-
-
-            {% endif %}
-        <br><br>
-        <span class="text-info" style="color: #a1a1a1">{{ type }}</span><br><br>
+                &nbsp;&nbsp;<span class="text-info" style="color: #859aff; font-size: large;">{{ organization.name }}</span>
+            </div>
+            <br>
             {% for event in events %}
                 <div class="row row-fluid">
                     <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
@@ -75,12 +75,10 @@
                             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
                             {% if event.creator.image %}
                                 {% thumbnail event.creator.image "30x30" crop="" as im %}
-                                    <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
-                                        <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
-                                    </a>
+                                    <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                                 {% endthumbnail %}
                             {% endif %}
-                            <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
+                            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span>
                         </div>
                     </div>
                 </div>
@@ -88,62 +86,32 @@
                 <br>
             {% endfor %}
         </div>
-
-
+    </div>
+<br><br>
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <center>
+                <ul class="pagination">
+                    {% if events.has_previous %}
+                        <li class="arrow"><a href="/filter_by_organization/{{ organization.id }}/page/{{ events.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="arrow unavailable"><a href="">&laquo;</a></li>
+                    {% endif %}
+                    {% for page in events.paginator.page_range %}
+                        {% if page == events.number %}
+                            <li class="active"><a href="/filter_by_organization/{{ organization.id }}/page/{{ page }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="/filter_by_organization/{{ organization.id }}/page/{{ page }}">{{ page }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if events.has_next %}
+                        <li class="arrow"><a href="/filter_by_organization/{{ organization.id }}/page/{{ events.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="arrow unavailable"><a href="">&raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </center>
+        </div>
 
     </div>
-
-<br><br>
-
-<div class="row">
-    {% if type == 'Моя лента событий' %}
-        <div class="col-lg-8 col-sm-12">
-            <center>
-                <ul class="pagination">
-                {% if events.has_previous %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
-                {% endif %}
-                {% for page in events.paginator.page_range %}
-                    {% if page == events.number %}
-                        <li class="active"><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
-                    {% else %}
-                        <li><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if events.has_next %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
-                {% endif %}
-                </ul>
-            </center>
-        </div>
-    {% else %}
-        <div class="col-lg-8 col-sm-12">
-            <center>
-                <ul class="pagination">
-                {% if events.has_previous %}
-                    <li class="arrow"><a href="/page/{{ events.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
-                {% endif %}
-                {% for page in events.paginator.page_range %}
-                    {% if page == events.number %}
-                        <li class="active"><a href="/page/{{ page }}">{{ page }}</a></li>
-                    {% else %}
-                        <li><a href="/page/{{ page }}">{{ page }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if events.has_next %}
-                    <li class="arrow"><a href="/page/{{ events.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
-                {% endif %}
-                </ul>
-            </center>
-        </div>
-    {% endif %}
-</div>
 {% endblock %}

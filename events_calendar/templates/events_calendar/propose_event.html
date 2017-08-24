@@ -8,15 +8,15 @@
     {% endif %}
     <form class="form-horizontal" method="post" action="{% url 'calendar:suggest_an_event' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" class="form-control" name="name" placeholder="Название"><br>
-        <textarea class="form-control" placeholder="Описание" name="description" style="max-width: 100%;"></textarea><br>
+        <input type="text" class="form-control" name="name" placeholder="Название (Обязательное поле)"><br>
+        <textarea class="form-control" placeholder="Описание (Обязательное поле)" name="description" style="max-width: 100%;"></textarea><br>
         <label class="text-info">Картинка события:</label>
         <input type="file" name="image" accept="image/jpeg" class="file-upload"><br>
-        <label class="text-info">Дата начала:</label>
+        <label class="text-info">Дата начала (Обязательное поле):</label>
         <input type="datetime-local" name="start_date" class="form-control"><br>
         <label class="text-info">Дата окончания:</label>
         <input type="datetime-local" name="end_date" class="form-control"><br>
-        <label class="text-info">Категория:</label>
+        <label class="text-info">Категория (Обязательное поле):</label>
         <select class="form-control" name="category">
             <option>----------</option>
             {% for category in categories %}

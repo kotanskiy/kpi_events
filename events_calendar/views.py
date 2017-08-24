@@ -704,3 +704,92 @@ def edit_proposed_event(request, event_id):
         return render(request, 'events_calendar/edit_propose_event.html', args)
     else:
         return redirect('/')
+
+
+def filter_by_organization(request, organization_id, page_number=1):
+    current_date_value = '1'
+    user = auth.get_user(request)
+    events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
+    try:
+        if request.session['current_date']:
+            current_date_value = request.session['current_date']
+            if current_date_value == '1':
+                events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
+            elif current_date_value == '2':
+                events_date = Event.objects.filter(start_date__lte=timezone.now()).order_by('start_date')
+    except KeyError:
+        pass
+
+    if request.POST:
+        if request.POST['date_filter']:
+            current_date_value = request.POST['date_filter']
+            if current_date_value == '1':
+                events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
+            elif current_date_value == '2':
+                events_date = Event.objects.filter(start_date__lte=timezone.now()).order_by('start_date')
+            try:
+                del request.session['current_date']
+            except KeyError:
+                pass
+            request.session['current_date'] = current_date_value
+
+    organizations = Organization.objects.filter(pk=organization_id)
+    all_categories = Category.objects.all()
+    info_filter = ''
+    events = set()
+    # filter by signed organizations
+    for organization in organizations:
+        events.update(events_date.filter(creator=organization))
+    # end filter
+
+    # filter by categories
+    current_categories = set()
+    events_categories = set()
+    if request.POST:
+        for category in all_categories:
+            category_id = request.POST.get(category.name)
+            current_categories.update(Category.objects.filter(pk=category_id))
+            try:
+                del request.session[category.name]
+            except KeyError:
+                pass
+        for category in current_categories:
+            for event in events:
+                if event.category == category:
+                    events_categories.add(event)
+            # save input categories into session
+            request.session.set_expiry(3600)
+            request.session[category.name] = category.id
+        events = events_categories
+    else:
+        # load categories from session
+        for category in all_categories:
+            try:
+                category_id = request.session[category.name]
+                current_categories.update(Category.objects.filter(pk=category_id))
+            except KeyError:
+                pass
+        for category in current_categories:
+            events_categories.update(events_date.filter(category=category))
+        events = events_categories
+    # end filter
+    if not events:
+        for organization in organizations:
+            events.update(events_date.filter(creator=organization))
+
+    events = list(events)
+    if current_date_value == '2':
+        events.reverse()
+    current_page = Paginator(events, 5)
+    context = {
+        'page_header': 'Главная',
+        'events': current_page.page(page_number),
+        'user': user,
+        'categories': all_categories,
+        'current_categories': current_categories,
+        'organization': get_object_or_404(Organization, pk=organization_id),
+        'info_filter': info_filter,
+        'current_date': current_date_value,
+    }
+    context.update(csrf(request))
+    return render(request, 'events_calendar/organization.html', context)

@@ -31,10 +31,12 @@
     <div class="col-lg-4 col-sm-12">
         {% if event.creator.image %}
             {% thumbnail event.creator.image "30x30" crop="" as im %}
-                <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+                <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
+                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+                </a>
             {% endthumbnail %}
         {% endif %}
-        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span>
+        <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
         <br><br>
         <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
             {% csrf_token %}

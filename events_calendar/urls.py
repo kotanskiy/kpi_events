@@ -27,4 +27,6 @@ urlpatterns = [
     url(r'^proposed_events/page/(\d+)$', views.proposed_events),
     url(r'^edit_proposed_event/(?P<event_id>[\d+]*)$', views.edit_proposed_event, name='edit_proposed_event'),
     url(r'^unsubscribe$', views.unsubscribe, name='unsubscribe'),
+    url(r'^filter_by_organization/(?P<organization_id>[\d+]*)$', views.filter_by_organization, name='filter_by_organization'),
+    url(r'^filter_by_organization/(?P<organization_id>[\d+]*)/page/(?P<page_number>[\d+])$', views.filter_by_organization),
 ]
