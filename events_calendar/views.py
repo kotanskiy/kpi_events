@@ -600,7 +600,7 @@ def suggest_an_event(request):
 
 def proposed_events(request, page_id=1):
     if request.user.profile.organization.name == 'KPI Events':
-        events = ProposedEvent.objects.all()
+        events = ProposedEvent.objects.filter(published=False)
         current_page = Paginator(events, 5)
         context = {
             'page_header':'Предложка',
@@ -664,7 +664,7 @@ def edit_proposed_event(request, event_id):
                 new_event.save()
                 event.published = True
                 event.save()
-                return render(request, 'events_calendar/edit_propose_event.html', args)
+                return redirect('/proposed_events')
             except UnboundLocalError:
                 if request.POST.get('name').strip() != '':
                     event.name = request.POST.get('name').strip()
@@ -700,7 +700,7 @@ def edit_proposed_event(request, event_id):
                 new_event.save()
                 event.published = True
                 event.save()
-                return render(request, 'events_calendar/edit_propose_event.html', args)
+                return redirect('/proposed_events')
         return render(request, 'events_calendar/edit_propose_event.html', args)
     else:
         return redirect('/')
