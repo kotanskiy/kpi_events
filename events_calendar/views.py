@@ -42,6 +42,7 @@ def calendar(request, page_number=1):
                 del request.session['current_date']
             except KeyError:
                 pass
+            request.session.set_expiry(3600)
             request.session['current_date'] = current_date_value
         for category in all_categories:
             category_id = request.POST.get(category.name)
@@ -115,6 +116,7 @@ def filter_by_signed_organizations(request, page_number=1):
                 del request.session['current_date']
             except KeyError:
                 pass
+            request.session.set_expiry(3600)
             request.session['current_date'] = current_date_value
 
     organizations = user.profile.signed_organizations.all()
@@ -731,6 +733,7 @@ def filter_by_organization(request, organization_id, page_number=1):
                 del request.session['current_date']
             except KeyError:
                 pass
+            request.session.set_expiry(3600)
             request.session['current_date'] = current_date_value
 
     organizations = Organization.objects.filter(pk=organization_id)

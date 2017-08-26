@@ -17,10 +17,10 @@
             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
             <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
-            {% if event.creator.profile.organization.image %}
-            <img src="/media/{{ event.creator.profile.organization.image }}" style="height: 30px; width: 30px;" class="img-rounded";>
+            {% if event.creator.image %}
+                <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><img src="/media/{{ event.creator.image }}" style="height: 30px; width: 30px;" class="img-rounded";></a>
             {% endif %}
-            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.profile.organization.name }}</span>
+            <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
         </div>
     </div>
 </div>
