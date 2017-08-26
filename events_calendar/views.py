@@ -456,6 +456,7 @@ def subscribe(request):
             user.profile.signed_organizations.remove(organization)
         return redirect('/event/' + str(event.id))
 
+
 def unsubscribe(request):
     if request.POST:
         if request.user.username:
@@ -804,3 +805,15 @@ def remove_proposed_event(request, event_id):
         get_object_or_404(ProposedEvent, pk=event_id).delete()
         return redirect('/proposed_events')
     return redirect('/')
+
+
+def subscribe_on_organization(request):
+    if request.POST and request.user.is_authenticated:
+        user = request.user
+        organization = get_object_or_404(Organization, pk=request.POST.get('organization'))
+        sub = request.POST.get('sub')
+        if sub == 'Subscribe':
+            user.profile.signed_organizations.add(organization)
+        elif sub == 'Unsubscribe':
+            user.profile.signed_organizations.remove(organization)
+        return redirect('/filter_by_organization/' + str(organization.id))

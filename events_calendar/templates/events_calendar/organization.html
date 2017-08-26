@@ -45,15 +45,28 @@
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">
             <div class="row">
-                <span class="text-info" style="color: #a1a1a1; font-size: large">Список событий от: &nbsp;&nbsp;</span>
-                {% if organization.image %}
-                    {% thumbnail organization.image "30x30" crop="" as im %}
-                        <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
-                    {% endthumbnail %}
-                {% endif %}
+                <form action="{% url 'calendar:subscribe_on_organization' %}" method="post">
+                    <span class="text-info" style="color: #a1a1a1; font-size: large">Список событий от: &nbsp;&nbsp;</span>
+                    {% if organization.image %}
+                        {% thumbnail organization.image "30x30" crop="" as im %}
+                            <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                        {% endthumbnail %}
+                    {% endif %}
+                    &nbsp;&nbsp;<span class="text-info" style="color: #859aff; font-size: large;">{{ organization.name }}</span>
+                    {% if user.username %}
+                        {% csrf_token %}
+                        <input type="hidden" name="organization" value="{{ organization.id }}">
+                        {% if organization in user.profile.signed_organizations.all %}
+                            <input type="hidden" name="sub" value="Unsubscribe">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
+                        {% else %}
+                            <input type="hidden" name="sub" value="Subscribe">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+                        {% endif %}
+                    {% endif %}
 
+                </form>
 
-                &nbsp;&nbsp;<span class="text-info" style="color: #859aff; font-size: large;">{{ organization.name }}</span>
             </div>
             <br>
             {% for event in events %}
