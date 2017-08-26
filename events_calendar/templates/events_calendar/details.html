@@ -31,18 +31,18 @@
         {% endthumbnail %}
     </div>
     <div class="col-lg-4 col-sm-12">
-        {% if event.creator.image %}
-            {% thumbnail event.creator.image "30x30" crop="" as im %}
-                <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
-                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
-                </a>
-            {% endthumbnail %}
-        {% endif %}
-        <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
-        <br><br>
+
         <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="event" value="{{ event.id }}">
+            {% if event.creator.image %}
+                {% thumbnail event.creator.image "30x30" crop="" as im %}
+                    <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
+                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+                    </a>
+                {% endthumbnail %}
+            {% endif %}
+            <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
+            &nbsp;&nbsp;&nbsp;<input type="hidden" name="event" value="{{ event.id }}">
             {% if user.username %}
                 {% if event.creator in signed_organizations %}
                     <input type="hidden" name="sub" value="Unsubscribe">
@@ -52,7 +52,7 @@
                     <input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
                 {% endif %}
             {% endif %}
-        </form><br>
+        </form>
         {% if event.place_of_event != None %}
             <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
         {% endif %}
