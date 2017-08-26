@@ -1,17 +1,13 @@
-
 from django.contrib import auth
 from django.core.files.storage import default_storage
 from django.db import IntegrityError
-from django.db.models import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
-
-# Create your views here.
 from django.template.context_processors import csrf
 from events_calendar.models import Event, Comment, Category, ProposedEvent, Organization
 from datetime import datetime
 from django.utils import timezone
 from django.core.paginator import Paginator
-
+from PIL import Image
 
 def calendar(request, page_number=1):
     category_events = set()
@@ -257,6 +253,9 @@ def create_event(request):
                         with default_storage.open(link_image, 'wb+') as destination:
                             for chunk in file.chunks():
                                 destination.write(chunk)
+                        img = Image.open('media/' + link_image)
+                        img = img.convert('RGB')
+                        img.save('media/' + link_image)
                     if post.get('name').strip() == '':
                         args['error'] = 'Название события не заполнено'
                         return render_to_response('events_calendar/create_event.html', args)
@@ -372,6 +371,9 @@ def edit_event(request, calendar_id):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
+                    img = Image.open('media/' + link_image)
+                    img = img.convert('RGB')
+                    img.save('media/' + link_image)
                 if str(file).strip() != '':
                     event.image = link_image
                 categories = Category.objects.all().filter(name=request.POST.get('category'))
@@ -433,6 +435,9 @@ def edit_organization(request):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
+                    img = Image.open('media/' + link_image)
+                    img = img.convert('RGB')
+                    img.save('media/' + link_image)
                 organization.image = link_image
                 organization.save()
             except UnboundLocalError:
@@ -508,6 +513,9 @@ def suggest_an_event(request):
                         with default_storage.open(link_image, 'wb+') as destination:
                             for chunk in file.chunks():
                                 destination.write(chunk)
+                        img = Image.open('media/' + link_image)
+                        img = img.convert('RGB')
+                        img.save('media/' + link_image)
                     if post.get('name').strip() == '':
                         args['error'] = 'Название события не заполнено'
                         return render_to_response('events_calendar/propose_event.html', args)
@@ -636,6 +644,9 @@ def edit_proposed_event(request, event_id):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
+                    img = Image.open('media/' + link_image)
+                    img = img.convert('RGB')
+                    img.save('media/' + link_image)
                 if str(file).strip() != '':
                     event.image = link_image
                 categories = Category.objects.all().filter(name=request.POST.get('category'))

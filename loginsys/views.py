@@ -1,5 +1,6 @@
 import random
 
+from PIL import Image
 from django.contrib import auth
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, render_to_response
@@ -68,6 +69,9 @@ def edit_user(request):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
+                    img = Image.open('media/' + link_image)
+                    img = img.convert('RGB')
+                    img.save('media/' + link_image)
                 user = request.user
                 if first_name.strip() != '':
                     user.first_name = first_name
