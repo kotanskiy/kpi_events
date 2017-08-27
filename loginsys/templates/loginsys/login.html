@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load ulogin_tags %}
 {% block content %}
 <br><br>
 <div class="col-lg-8 col-sm-12">
@@ -10,7 +10,8 @@
         <label class="control-label" for="inputPassword">Пароль:</label>
         <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Пароль"><br>
         <button type="submit" class="btn btn-primary">Вход</button>
-        <a href="{% url 'loginsys:registration' %}">Регистрация</a>
+        &nbsp;&nbsp;&nbsp;<a href="{% url 'loginsys:registration' %}">Регистрация</a> <br><br>
+        {% ulogin_widget %}
         <br><br>
         {% if login_error %}
             <label class="error-login">{{ login_error }}</label>
@@ -18,7 +19,5 @@
 
     </form>
 </div>
-
-
 
 {% endblock %}

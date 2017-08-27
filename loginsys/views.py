@@ -24,10 +24,12 @@ def login(request):
             return redirect('/')
         else:
             args['login_error'] = 'Пароль или имя пользователя введены не правильно'
-            return render_to_response('loginsys/login.html', args)
+            return render(request, 'loginsys/login.html', args)
 
     else:
-        return render_to_response('loginsys/login.html', args)
+        if request.user.is_authenticated:
+            return redirect('/')
+        return render(request, 'loginsys/login.html', args)
 
 
 def logout(request):

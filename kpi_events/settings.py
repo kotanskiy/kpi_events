@@ -50,6 +50,12 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
 ]
 
+ULOGIN_PROVIDERS = ['google', 'vkontakte', 'facebook']
+ULOGIN_HIDDEN = []
+ULOGIN_DISPLAY = 'panel'
+ULOGIN_FIELDS = ['first_name', 'last_name', 'email']
+
+
 THUMBNAIL_DEBUG = True
 
 MIDDLEWARE = [

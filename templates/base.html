@@ -38,7 +38,7 @@
                     {% thumbnail user.profile.image "30x30" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
-                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.username }}/Выйти</a>
+                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.first_name }}/Выйти</a>
                 </li>
                 <li>
                     <a href="{% url 'loginsys:edit_user' %}">Моя страница</a>

@@ -11,6 +11,34 @@ from django.forms import EmailField
 #    first_name = forms.CharField(label='Имя', widget=forms.TextInput)
 #    last_name = forms.CharField(label='Фамилия', widget=forms.TextInput)
 
+from django_ulogin.models import ULoginUser
+from django_ulogin.signals import assign
+
+def catch_ulogin_signal(*args, **kwargs):
+    """
+    Обновляет модель пользователя: исправляет username, имя и фамилию на
+    полученные от провайдера.
+
+    В реальной жизни следует иметь в виду, что username должен быть уникальным,
+    а в социальной сети может быть много "тёзок" и, как следствие,
+    возможно нарушение уникальности.
+
+    """
+    user=kwargs['user']
+    json=kwargs['ulogin_data']
+
+    if kwargs['registered']:
+        #user.username = json['nickname']
+        user.first_name = json['first_name']
+        user.last_name = json['last_name']
+        user.email = json['email']
+        user.save()
+
+
+assign.connect(receiver=catch_ulogin_signal,
+               sender=ULoginUser,
+               dispatch_uid='customize.models')
+
 class customUserCreationForm(UserCreationForm):
     first_name = forms.CharField(label='Имя', widget=forms.TextInput)
     last_name = forms.CharField(label='Фамилия', widget=forms.TextInput)

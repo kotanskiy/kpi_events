@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load ulogin_tags %}
 {% block content %}
 <br><br>
 <div class="col-lg-8 col-sm-12">
@@ -7,9 +6,7 @@
         {% csrf_token %}
         {{ form }}
         <br>
-        <input id="reg" type="submit" value="Зарегистрироваться" style="float: left; margin-right: 20px;">
-        <script src="//ulogin.ru/js/ulogin.js"></script>
-        <div id="uLogin_baa243fe" data-uloginid="baa243fe">{% ulogin_widget %}</div>
+        <input id="reg" type="submit" value="Зарегистрироваться">
     </form>
     <br>
     <script type="text/javascript">
