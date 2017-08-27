@@ -93,3 +93,7 @@ def edit_user(request):
         return render_to_response('loginsys/edit_user.html', args)
     else:
         return redirect('/')
+
+
+def key(request):
+    return render(request, 'loginsys/7a2ef10772f2.html')

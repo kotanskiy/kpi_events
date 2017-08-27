@@ -19,10 +19,12 @@ from django.contrib import admin
 from django.views.static import serve
 
 from kpi_events import settings
+from loginsys import views
 
 urlpatterns = [
     url(r'^', include('events_calendar.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
+    url(r'^7a2ef10772f2.html/$', views.key),
 ]
