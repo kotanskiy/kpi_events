@@ -49,7 +49,7 @@ def registration(request):
         else:
             args['form'] = newuser_form
 
-    return render_to_response('loginsys/registration.html', args)
+    return render(request, 'loginsys/registration.html', args)
 
 
 def edit_user(request):
