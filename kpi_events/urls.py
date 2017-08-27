@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^auth/', include('loginsys.urls')),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
     url(r'^7a2ef10772f2.html/$', views.key),
+    url(r'^ulogin/', include('django_ulogin.urls')),
 ]
