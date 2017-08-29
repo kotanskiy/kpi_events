@@ -23,6 +23,7 @@ class Category(models.Model):
 class Organization(models.Model):
     name = models.CharField(max_length=50, verbose_name='Наименование', null=False)
     image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
+    access_to_the_offer = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return self.name

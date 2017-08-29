@@ -14,7 +14,7 @@
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
         <a href="{% url 'calendar:edit_organization' %}"><input type="button" class="form-control btn btn-primary" value="Редактировать организацию"></a>
     </div>
-    {% if user.profile.organization.name == 'KPI Events' %}
+    {% if user.profile.organization.access_to_the_offer %}
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
             <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Предложка"></a>
         </div>

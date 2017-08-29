@@ -610,7 +610,7 @@ def suggest_an_event(request):
 
 
 def proposed_events(request, page_id=1):
-    if request.user.profile.organization.name == 'KPI Events':
+    if request.user.profile.organization.access_to_the_offer:
         events = ProposedEvent.objects.filter(published=False)
         current_page = Paginator(events, 5)
         context = {
@@ -626,7 +626,7 @@ def proposed_events(request, page_id=1):
 def edit_proposed_event(request, event_id):
     event = get_object_or_404(ProposedEvent, pk=event_id)
     organization = get_object_or_404(Organization, name='KPI Events')
-    if request.user.is_authenticated and request.user.profile.organization.name == 'KPI Events':
+    if request.user.is_authenticated and request.user.profile.organization.access_to_the_offer:
         args = {}
         args.update(csrf(request))
         args['event'] = event

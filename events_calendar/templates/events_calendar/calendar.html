@@ -47,15 +47,19 @@
         <div class="col-lg-9 col-md-9 col-xs-12">
 
             {% if user.username %}
+                {% if type == 'Все события' %}
+                    <a href="{% url 'calendar:home' %}"><button class="btn btn-primary"><span class="title-font">Все события</span></button></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
+                {% else %}
+                    <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <a href="{% url 'calendar:filter_by_signed_organizations' %}"><button class="btn btn-primary"><span class="title-font">Моя лента событий</span></button></a>
+                {% endif %}
 
-                <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
 
 
 
             {% endif %}
         <br><br>
-        <span class="text-info" style="color: #a1a1a1">{{ type }}</span><br><br>
             {% for event in events %}
                 <div class="row row-fluid">
                     <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">

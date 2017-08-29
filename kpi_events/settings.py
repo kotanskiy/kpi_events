@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     'kotanskiy.pythonanywhere.com',
 ]
 
+#SECURE_SSL_REDIRECT = True
 
 # Application definition
 
