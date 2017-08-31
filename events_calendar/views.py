@@ -155,8 +155,10 @@ def filter_by_signed_organizations(request, page_number=1):
             events_categories.update(events_date.filter(category=category))
         events = events_categories
     #end filter
-    if not events:
-        info_filter = 'Отображены все события, на которые вы подписаны, т.к. по параметрам фильтра ничего не найдено.'
+
+    if len(current_categories) != 0 and len(events_categories) == 0:
+        events = set()
+    elif not events:
         for organization in organizations:
             events.update(events_date.filter(creator=organization))
 
@@ -788,7 +790,10 @@ def filter_by_organization(request, organization_id, page_number=1):
             events_categories.update(events_date.filter(category=category))
         events = events_categories
     # end filter
-    if not events:
+
+    if len(current_categories) != 0 and len(events_categories) == 0:
+        events = set()
+    elif not events:
         for organization in organizations:
             events.update(events_date.filter(creator=organization))
 
