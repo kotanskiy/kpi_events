@@ -98,4 +98,4 @@ def edit_user(request):
 
 
 def key(request):
-    return render(request, 'loginsys/7a2ef10772f2.html')
+    return render(request, 'loginsys/96f3c45875e1.html')
