@@ -59,7 +59,7 @@ def edit_user(request):
         signed_organizations = request.user.profile.signed_organizations.all()
         args = {}
         args['organizations'] = signed_organizations
-        args['page_header'] = 'Редактирование ' + request.user.username
+        args['page_header'] = 'Редактирование ' + request.user.firstname
         args.update(csrf(request))
         args['user'] = request.user
         if request.POST:
