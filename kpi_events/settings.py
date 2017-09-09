@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     'events.kpi.ua',
 ]
 
-#SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 # Application definition
 
