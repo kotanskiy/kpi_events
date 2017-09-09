@@ -23,12 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!3o+p4s%akp7!1e9ab9cgy3g8(lrrl&4=d^=4*mjkbcu2xfk%z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '192.168.0.105',
     'localhost',
     'kotanskiy.pythonanywhere.com',
+    'events.kpi.ua',
 ]
 
 #SECURE_SSL_REDIRECT = True
@@ -57,7 +58,7 @@ ULOGIN_DISPLAY = 'panel'
 ULOGIN_FIELDS = ['first_name', 'last_name', 'email']
 
 
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kpi_events',
         'USER': 'root',
-        'PASSWORD': 'learnenglish95',
+        'PASSWORD': 'ou8yooloomoo',
         'HOST': 'localhost',
     }
 }
@@ -146,9 +147,9 @@ USE_L10N = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'static'),
+#]
 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
