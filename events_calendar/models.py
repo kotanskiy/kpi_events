@@ -29,8 +29,8 @@ class Organization(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Организація'
-        verbose_name_plural = 'Организації'
+        verbose_name = 'Організація'
+        verbose_name_plural = 'Організації'
 
 class Event(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
