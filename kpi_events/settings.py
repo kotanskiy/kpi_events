@@ -100,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kpi_events',
         'USER': 'root',
-        'PASSWORD': 'learnenglish95',
+        'PASSWORD': '',
         'HOST': 'localhost',
     }
 }
