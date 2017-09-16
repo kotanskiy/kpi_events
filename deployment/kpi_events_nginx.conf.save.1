@@ -5,14 +5,12 @@ upstream events {
 }
 
 # configuration of the server
-
 server {
     # the port your site will be served on
-    listen      80;
+    listen      80 ssl;
     # the domain name it will serve for
     server_name events.kpi.ua; # substitute your machine's IP address or FQDN
     charset     utf-8;
-	
 
     # max upload size
     client_max_body_size 75M;   # adjust to taste
@@ -37,11 +35,14 @@ server {
     }
 
     listen 443 ssl; # managed by Certbot
-
     ssl_certificate /etc/letsencrypt/live/events.kpi.ua/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/events.kpi.ua/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
- 
-}
 
+
+    if ($scheme != "https") {
+        return 80 https://$host$request_uri;
+    } # managed by Certbot
+
+}
