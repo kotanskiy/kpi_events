@@ -1,7 +1,3 @@
 .idea
 db.sqlite3
 kpi_events/settings.py
-deployment
-oscar
-setuptools-33.1.1.zip
-python3

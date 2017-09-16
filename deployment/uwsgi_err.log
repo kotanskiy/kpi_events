@@ -1,0 +1,119 @@
+*** Starting uWSGI 2.0.15 (64bit) on [Sat Sep  9 18:37:42 2017] ***
+compiled with version: 4.9.2 on 08 September 2017 11:11:07
+os: Linux-3.16.0-4-amd64 #1 SMP Debian 3.16.43-2+deb8u3 (2017-08-15)
+nodename: events
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 1
+current working directory: /
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** WARNING: you are running uWSGI without its master process manager ***
+your processes number limit is 7975
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+*** starting uWSGI Emperor ***
+*** has_emperor mode detected (fd: 5) ***
+[uWSGI] getting INI configuration from /home/events/kpi_events/deployment/kpi_events_uwsgi.ini
+*** Starting uWSGI 2.0.15 (64bit) on [Sat Sep  9 18:37:42 2017] ***
+compiled with version: 4.9.2 on 08 September 2017 11:11:07
+os: Linux-3.16.0-4-amd64 #1 SMP Debian 3.16.43-2+deb8u3 (2017-08-15)
+nodename: events
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 1
+current working directory: /
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/events/kpi_events
+your processes number limit is 7975
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /home/events/kpi_events/uwsgi_nginx.sock fd 3
+Python version: 3.4.2 (default, Oct  8 2014, 10:47:48)  [GCC 4.9.1]
+Set PythonHome to /home/events/venv
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x11a5ab0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 800360 bytes (781 KB) for 10 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x11a5ab0 pid: 7708 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 7708)
+Sat Sep  9 18:37:42 2017 - [emperor] vassal /home/events/kpi_events/deployment/kpi_events_uwsgi.ini has been spawned
+spawned uWSGI worker 1 (pid: 7716, cores: 1)
+spawned uWSGI worker 2 (pid: 7717, cores: 1)
+spawned uWSGI worker 3 (pid: 7718, cores: 1)
+spawned uWSGI worker 4 (pid: 7719, cores: 1)
+spawned uWSGI worker 5 (pid: 7720, cores: 1)
+spawned uWSGI worker 6 (pid: 7721, cores: 1)
+spawned uWSGI worker 7 (pid: 7722, cores: 1)
+spawned uWSGI worker 8 (pid: 7723, cores: 1)
+spawned uWSGI worker 9 (pid: 7724, cores: 1)
+spawned uWSGI worker 10 (pid: 7725, cores: 1)
+Sat Sep  9 18:37:42 2017 - [emperor] vassal /home/events/kpi_events/deployment/kpi_events_uwsgi.ini is ready to accept requests
+[pid: 7716|app: 0|req: 1/1] 66.133.109.36 () {36 vars in 623 bytes} [Sat Sep  9 18:41:24 2017] GET /.well-known/acme-challenge/6WYe2SSTTNjdwENHoF0kEZIupzgNSJK1nT9MXpKXJwo => generated 2641 bytes in 215 msecs (HTTP/1.1 404) 4 headers in 131 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...
+Sat Sep  9 18:41:24 2017 - [emperor] vassal /home/events/kpi_events/deployment/kpi_events_uwsgi.ini is now loyal
+[pid: 7725|app: 0|req: 1/2] 66.133.109.36 () {36 vars in 627 bytes} [Sat Sep  9 18:41:24 2017] GET /.well-known/acme-challenge/zLy1QUD08m1NwNwtsIVgWrf_HOVg8pzbom6ObAKyYYA => generated 26 bytes in 240 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+announcing my loyalty to the Emperor...
+Sat Sep  9 18:41:24 2017 - [emperor] vassal /home/events/kpi_events/deployment/kpi_events_uwsgi.ini is now loyal
+[pid: 7716|app: 0|req: 2/3] 66.133.109.36 () {36 vars in 623 bytes} [Sat Sep  9 18:55:11 2017] GET /.well-known/acme-challenge/I8yiM4yo8YR582QymROjw--FQFKrMkK3Iyv9J4r5RJk => generated 2641 bytes in 14 msecs (HTTP/1.1 404) 4 headers in 131 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 2/4] 66.133.109.36 () {36 vars in 627 bytes} [Sat Sep  9 18:55:11 2017] GET /.well-known/acme-challenge/pasXHxO3GpbxXc0-4ckd2eMO1_W9u5B7ZrwbbHJcFO4 => generated 26 bytes in 24 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 3/5] 185.40.4.190 () {30 vars in 375 bytes} [Sat Sep  9 19:13:26 2017] GET / => generated 4479 bytes in 45 msecs (HTTP/1.0 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 4/6] 94.45.144.112 () {44 vars in 1058 bytes} [Sat Sep  9 19:26:10 2017] GET / => generated 4479 bytes in 19 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 5/7] 66.133.109.36 () {36 vars in 623 bytes} [Sat Sep  9 19:47:11 2017] GET /.well-known/acme-challenge/G64qq0AIu20VlTUJEEI1-l4Fus2Wr3-YuCVLwfBb7Vs => generated 2641 bytes in 5 msecs (HTTP/1.1 404) 4 headers in 131 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 3/8] 66.133.109.36 () {36 vars in 627 bytes} [Sat Sep  9 19:47:11 2017] GET /.well-known/acme-challenge/11NlT4oAo4fO1Ebn8G3-rSY_R-oCI0VEBq7Fm0y27BU => generated 26 bytes in 19 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 6/9] 66.133.109.36 () {36 vars in 623 bytes} [Sat Sep  9 19:50:54 2017] GET /.well-known/acme-challenge/1ozoUfkFzzOLQ4332ZTncr7ApnbhRuRikVzkvCXI9qY => generated 2641 bytes in 8 msecs (HTTP/1.1 404) 4 headers in 131 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 4/10] 66.133.109.36 () {36 vars in 627 bytes} [Sat Sep  9 19:50:54 2017] GET /.well-known/acme-challenge/6m8eOXsKn7iSEuWBFBHixbNaDkssieS_u5XC25BshgI => generated 26 bytes in 24 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 7/11] 85.9.20.145 () {36 vars in 559 bytes} [Sat Sep  9 19:52:20 2017] GET / => generated 26 bytes in 52 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 5/12] 85.9.20.145 () {36 vars in 559 bytes} [Sat Sep  9 19:52:21 2017] GET / => generated 26 bytes in 18 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 8/13] 85.9.20.145 () {36 vars in 559 bytes} [Sat Sep  9 19:52:21 2017] GET / => generated 26 bytes in 23 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 9/14] 94.45.144.112 () {46 vars in 1089 bytes} [Sat Sep  9 19:57:16 2017] GET / => generated 4479 bytes in 13 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 6/15] 94.45.144.112 () {46 vars in 1089 bytes} [Sat Sep  9 19:57:17 2017] GET / => generated 4479 bytes in 55 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 10/16] 92.249.81.251 () {36 vars in 562 bytes} [Sat Sep  9 20:24:52 2017] GET / => generated 26 bytes in 21 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 11/17] 92.249.81.251 () {36 vars in 562 bytes} [Sat Sep  9 20:24:56 2017] GET / => generated 26 bytes in 18 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 12/18] 92.249.81.251 () {36 vars in 562 bytes} [Sat Sep  9 20:24:58 2017] GET / => generated 26 bytes in 19 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 7/19] 92.249.81.251 () {38 vars in 611 bytes} [Sat Sep  9 20:25:00 2017] GET /HNAP1/ => generated 26 bytes in 21 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 13/20] 92.249.81.251 () {38 vars in 611 bytes} [Sat Sep  9 20:25:00 2017] GET /HNAP1/ => generated 26 bytes in 18 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 8/21] 92.249.81.251 () {38 vars in 611 bytes} [Sat Sep  9 20:25:00 2017] GET /HNAP1/ => generated 26 bytes in 17 msecs (HTTP/1.1 400) 1 headers in 53 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 14/22] 94.45.144.112 () {48 vars in 1106 bytes} [Sat Sep  9 20:59:38 2017] GET / => generated 4479 bytes in 8 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7725|app: 0|req: 9/23] 94.45.144.112 () {44 vars in 1006 bytes} [Sat Sep  9 20:59:38 2017] GET /favicon.ico => generated 2641 bytes in 8 msecs (HTTP/1.1 404) 4 headers in 131 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 15/24] 94.45.144.112 () {48 vars in 1106 bytes} [Sat Sep  9 21:00:07 2017] GET / => generated 4479 bytes in 6 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7725|app: 0|req: 10/25] 94.45.144.112 () {48 vars in 1106 bytes} [Sat Sep  9 21:00:08 2017] GET / => generated 4479 bytes in 8 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 16/26] 94.45.144.112 () {48 vars in 1106 bytes} [Sat Sep  9 21:00:14 2017] GET / => generated 4479 bytes in 7 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 17/27] 94.45.144.112 () {46 vars in 1065 bytes} [Sat Sep  9 21:00:16 2017] GET / => generated 4479 bytes in 6 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 18/28] 94.45.144.112 () {46 vars in 1065 bytes} [Sat Sep  9 21:00:17 2017] GET / => generated 4479 bytes in 6 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 11/29] 94.45.144.112 () {46 vars in 1087 bytes} [Sat Sep  9 21:00:19 2017] GET /auth/login/ => generated 3949 bytes in 14 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 19/30] 94.45.144.112 () {46 vars in 1076 bytes} [Sat Sep  9 21:00:20 2017] GET / => generated 4479 bytes in 11 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 20/31] 94.45.144.112 () {44 vars in 1153 bytes} [Sat Sep  9 21:01:08 2017] GET / => generated 4479 bytes in 7 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7725|app: 0|req: 12/32] 94.45.144.112 () {44 vars in 1132 bytes} [Sat Sep  9 21:01:09 2017] GET /favicon.ico => generated 2641 bytes in 5 msecs (HTTP/1.1 404) 4 headers in 131 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 21/33] 94.45.144.112 () {46 vars in 1191 bytes} [Sat Sep  9 21:01:10 2017] GET / => generated 4479 bytes in 9 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 22/34] 94.45.144.112 () {44 vars in 1027 bytes} [Sat Sep  9 21:01:54 2017] GET / => generated 4479 bytes in 7 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 23/35] 94.45.144.112 () {46 vars in 1058 bytes} [Sat Sep  9 21:01:57 2017] GET / => generated 4479 bytes in 9 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 24/36] 94.45.144.112 () {44 vars in 1027 bytes} [Sat Sep  9 21:02:12 2017] GET / => generated 4479 bytes in 8 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 25/37] 94.45.144.112 () {46 vars in 1058 bytes} [Sat Sep  9 21:04:03 2017] GET / => generated 4479 bytes in 8 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 26/38] 94.45.144.112 () {46 vars in 1065 bytes} [Sat Sep  9 21:04:04 2017] GET / => generated 4479 bytes in 12 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 13/39] 94.45.144.112 () {46 vars in 1087 bytes} [Sat Sep  9 21:04:05 2017] GET /auth/login/ => generated 3949 bytes in 5 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 27/40] 94.45.144.112 () {54 vars in 1367 bytes} [Sat Sep  9 21:04:10 2017] POST /ulogin/postback/?next=https://events.kpi.ua/auth/login/ => generated 0 bytes in 455 msecs (HTTP/1.1 302) 7 headers in 454 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 14/41] 94.45.144.112 () {48 vars in 1173 bytes} [Sat Sep  9 21:04:11 2017] GET /auth/login/ => generated 0 bytes in 10 msecs (HTTP/1.1 302) 5 headers in 137 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 28/42] 94.45.144.112 () {48 vars in 1151 bytes} [Sat Sep  9 21:04:11 2017] GET / => generated 5314 bytes in 22 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 15/43] 94.45.144.112 () {46 vars in 1109 bytes} [Sat Sep  9 21:04:12 2017] GET / => generated 5314 bytes in 19 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 29/44] 94.45.144.112 () {54 vars in 1291 bytes} [Sat Sep  9 21:04:15 2017] POST / => generated 5314 bytes in 22 msecs (HTTP/1.1 200) 6 headers in 406 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 30/45] 94.45.144.112 () {44 vars in 1153 bytes} [Sat Sep  9 21:04:37 2017] GET / => generated 4479 bytes in 14 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 31/46] 94.45.144.112 () {46 vars in 1191 bytes} [Sat Sep  9 21:04:40 2017] GET / => generated 4479 bytes in 10 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 32/47] 94.45.144.112 () {46 vars in 1102 bytes} [Sat Sep  9 21:08:11 2017] GET / => generated 5314 bytes in 17 msecs (HTTP/1.1 200) 5 headers in 278 bytes (2 switches on core 0)
+[pid: 7716|app: 0|req: 33/48] 94.45.144.112 () {44 vars in 1071 bytes} [Sat Sep  9 21:08:22 2017] GET / => generated 5314 bytes in 15 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+Sat Sep  9 21:10:44 2017 - uwsgi_response_writev_headers_and_body_do(): Broken pipe [core/writer.c line 296] during GET / (94.45.144.112)
+OSError: write error
+[pid: 7716|app: 0|req: 34/49] 94.45.144.112 () {44 vars in 1071 bytes} [Sat Sep  9 21:10:44 2017] GET / => generated 0 bytes in 19 msecs (HTTP/1.1 200) 5 headers in 0 bytes (1 switches on core 0)
+[pid: 7725|app: 0|req: 16/50] 94.45.144.112 () {44 vars in 1071 bytes} [Sat Sep  9 21:10:45 2017] GET / => generated 5314 bytes in 19 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 35/51] 94.45.144.112 () {44 vars in 1050 bytes} [Sat Sep  9 21:10:46 2017] GET /favicon.ico => generated 2739 bytes in 39 msecs (HTTP/1.1 404) 4 headers in 131 bytes (1 switches on core 0)
+[pid: 7716|app: 0|req: 36/52] 94.45.144.112 () {46 vars in 1109 bytes} [Sat Sep  9 21:10:49 2017] GET / => generated 5314 bytes in 17 msecs (HTTP/1.1 200) 5 headers in 278 bytes (1 switches on core 0)
