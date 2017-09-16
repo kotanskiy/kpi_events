@@ -9,26 +9,26 @@
         <br><br>
         <div class="col-lg-3 col-md-3 col-xs-12">
             {% if user.username %}
-                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Предложить событие</button></a>
+                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Запропонувати подію</button></a>
             {% endif %}
 
 
             <br><br>
 
 
-            <b>По дате:</b><hr>
+            <b>По даті:</b><hr>
             <form action="{% url 'calendar:filter_by_organization' organization.id %}" method="post">
             {% if current_date == '1' %}
-                <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Ближайшие события<br>
-                <input class="radio-inline" type="radio" name="date_filter" value="2"> Прошедшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
             {% elif  current_date == '2'%}
-                <input class="radio-inline" type="radio" name="date_filter" value="1"> Ближайшие события<br>
-                <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Прошедшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="1"> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Минулі події<br>
             {% endif %}
 
 
             <br>
-            <b>По категориям:</b><hr>
+            <b>За категоріями:</b><hr>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
@@ -38,7 +38,7 @@
                 {% endif %}
             {% endfor %}
             <br>
-            <input type="submit" value="Отфильтровать" class="btn btn-primary">
+            <input type="submit" value="Фільтрувати" class="btn btn-primary">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
             <br><br>
@@ -46,7 +46,7 @@
         <div class="col-lg-9 col-md-9 col-xs-12">
             <div class="row">
                 <form action="{% url 'calendar:subscribe_on_organization' %}" method="post">
-                    <span class="text-info" style="color: #a1a1a1; font-size: large">Список событий от: &nbsp;&nbsp;</span>
+                    <span class="text-info" style="color: #a1a1a1; font-size: large">Список подій від: &nbsp;&nbsp;</span>
                     {% if organization.image %}
                         {% thumbnail organization.image "30x30" crop="" as im %}
                             <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
@@ -58,10 +58,10 @@
                         <input type="hidden" name="organization" value="{{ organization.id }}">
                         {% if organization in user.profile.signed_organizations.all %}
                             <input type="hidden" name="sub" value="Unsubscribe">
-                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись">
                         {% else %}
                             <input type="hidden" name="sub" value="Subscribe">
-                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися">
                         {% endif %}
                     {% endif %}
 

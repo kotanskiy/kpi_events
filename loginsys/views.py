@@ -14,7 +14,7 @@ from loginsys.models import customUserCreationForm
 def login(request):
     args = {}
     args.update(csrf(request))
-    args['page_header'] = 'Аутентификация'
+    args['page_header'] = 'Аутентифікація'
     if request.POST:
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
@@ -23,7 +23,7 @@ def login(request):
             auth.login(request, user)
             return redirect('/')
         else:
-            args['login_error'] = 'Пароль или имя пользователя введены не правильно'
+            args['login_error'] = "Пароль або ім'я користувача введені не правильно"
             return render(request, 'loginsys/login.html', args)
 
     else:
@@ -38,7 +38,7 @@ def logout(request):
 
 def registration(request):
     args = {}
-    args['page_header'] = 'Регистрация'
+    args['page_header'] = 'Реєстрація'
     args.update(csrf(request))
     args['form'] = customUserCreationForm()
     if request.POST:
@@ -59,7 +59,7 @@ def edit_user(request):
         signed_organizations = request.user.profile.signed_organizations.all()
         args = {}
         args['organizations'] = signed_organizations
-        args['page_header'] = 'Редактирование ' + request.user.first_name
+        args['page_header'] = 'Редагування ' + request.user.first_name
         args.update(csrf(request))
         args['user'] = request.user
         if request.POST:

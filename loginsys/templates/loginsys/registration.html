@@ -6,7 +6,7 @@
         {% csrf_token %}
         {{ form }}
         <br>
-        <input id="reg" type="submit" value="Зарегистрироваться">
+        <input id="reg" type="submit" value="Зареєструватися">
     </form>
     <br>
     <script type="text/javascript">
@@ -15,7 +15,7 @@
         $(".helptext").after("<br>");
         $("#reg").addClass("btn btn-primary");
         $("#reg").removeClass("form-control");
-        $("label:contains('Имя пользователя:')").html("Логин:");
+        $('label:contains("Ім\'я користувача:")').html("Логін:");
     </script>
 </div>
 

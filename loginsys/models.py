@@ -40,8 +40,8 @@ assign.connect(receiver=catch_ulogin_signal,
                dispatch_uid='customize.models')
 
 class customUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(label='Имя', widget=forms.TextInput)
-    last_name = forms.CharField(label='Фамилия', widget=forms.TextInput)
+    first_name = forms.CharField(label="Ім'я", widget=forms.TextInput)
+    last_name = forms.CharField(label='Прізвище', widget=forms.TextInput)
 
 
     class Meta:

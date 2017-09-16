@@ -73,7 +73,7 @@ def calendar(request, page_number=1):
         info_filter = ''
     current_page = Paginator(events, 5)
     context = {
-        'page_header': 'Главная',
+        'page_header': 'Головна',
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Все события',
@@ -167,7 +167,7 @@ def filter_by_signed_organizations(request, page_number=1):
         events.reverse()
     current_page = Paginator(events, 5)
     context = {
-        'page_header': 'Главная',
+        'page_header': 'Головна',
         'events': current_page.page(page_number),
         'user': user,
         'type': 'Моя лента событий',
@@ -234,7 +234,7 @@ def create_event(request):
     args = {}
     args['user'] = request.user
     args.update(csrf(request))
-    args['page_header'] = 'Новое событие ' + request.user.profile.organization.name
+    args['page_header'] = 'Нова подія ' + request.user.profile.organization.name
     args['categories'] = Category.objects.all()
     if request.user.profile.organization:
         if request.POST:
@@ -259,10 +259,10 @@ def create_event(request):
                         img = img.convert('RGB')
                         img.save('media/' + link_image)
                     if post.get('name').strip() == '':
-                        args['error'] = 'Название события не заполнено'
+                        args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
                     if post.get('description').strip() == '':
-                        args['error'] = 'Описание не заполнено'
+                        args['error'] = 'Опис події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
@@ -281,7 +281,7 @@ def create_event(request):
                         for el in categories:
                             category = el
                     else:
-                        args['error'] = 'Категория не заполнена'
+                        args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/create_event.html', args)
                     event = Event(
                         name=post.get('name'),
@@ -308,10 +308,10 @@ def create_event(request):
                     else:
                         end_date = None
                     if post.get('name').strip() == '':
-                        args['error'] = 'Название события не заполнено'
+                        args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
                     if post.get('description').strip() == '':
-                        args['error'] = 'Описание не заполнено'
+                        args['error'] = 'Опис події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
@@ -330,7 +330,7 @@ def create_event(request):
                         for el in categories:
                             category = el
                     else:
-                        args['error'] = 'Категория не заполнена'
+                        args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/create_event.html', args)
                     event = Event(
                         name=post.get('name'),
@@ -346,7 +346,7 @@ def create_event(request):
                     event.save()
                     return redirect('/organization_events')
             except IntegrityError:
-                args['error'] = 'Не выбрана категория'
+                args['error'] = 'Не обрана категорія'
                 return render_to_response('events_calendar/create_event.html', args)
         return render_to_response('events_calendar/create_event.html', args)
     else:
@@ -484,7 +484,7 @@ def searching_results(request):
     events.reverse()
     context = {
         'user':user,
-        'page_header':'Результаты поиска',
+        'page_header':'Результати пошуку',
         'events':events,
     }
     return render(request, 'events_calendar/searching_results.html', context)
@@ -494,7 +494,7 @@ def suggest_an_event(request):
     args = {}
     args['user'] = request.user
     args.update(csrf(request))
-    args['page_header'] = 'Предложить событие '
+    args['page_header'] = 'Запропонувати подію'
     args['categories'] = Category.objects.all()
     if request.user.username:
         if request.POST:
@@ -519,10 +519,10 @@ def suggest_an_event(request):
                         img = img.convert('RGB')
                         img.save('media/' + link_image)
                     if post.get('name').strip() == '':
-                        args['error'] = 'Название события не заполнено'
+                        args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('description').strip() == '':
-                        args['error'] = 'Описание не заполнено'
+                        args['error'] = 'Опис події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
@@ -541,7 +541,7 @@ def suggest_an_event(request):
                         for el in categories:
                             category = el
                     else:
-                        args['error'] = 'Категория не заполнена'
+                        args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/propose_event.html', args)
                     event = ProposedEvent(
                         name=post.get('name'),
@@ -567,10 +567,10 @@ def suggest_an_event(request):
                     else:
                         end_date = None
                     if post.get('name').strip() == '':
-                        args['error'] = 'Название события не заполнено'
+                        args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('description').strip() == '':
-                        args['error'] = 'Описание не заполнено'
+                        args['error'] = 'Опис події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
@@ -589,7 +589,7 @@ def suggest_an_event(request):
                         for el in categories:
                             category = el
                     else:
-                        args['error'] = 'Категория не заполнена'
+                        args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/propose_event.html', args)
                     event = ProposedEvent(
                         name=post.get('name'),
@@ -604,7 +604,7 @@ def suggest_an_event(request):
                     event.save()
                     return redirect('/')
             except IntegrityError:
-                args['error'] = 'Не выбрана категория'
+                args['error'] = 'Не обрана категорія'
                 return render_to_response('events_calendar/propose_event.html', args)
         return render_to_response('events_calendar/propose_event.html', args)
     else:
@@ -627,8 +627,8 @@ def proposed_events(request, page_id=1):
 
 def edit_proposed_event(request, event_id):
     event = get_object_or_404(ProposedEvent, pk=event_id)
-    organization = get_object_or_404(Organization, name='KPI Events')
     if request.user.is_authenticated and request.user.profile.organization.access_to_the_offer:
+        organization = request.user.profile.organization
         args = {}
         args.update(csrf(request))
         args['event'] = event
@@ -802,7 +802,7 @@ def filter_by_organization(request, organization_id, page_number=1):
         events.reverse()
     current_page = Paginator(events, 5)
     context = {
-        'page_header': 'Главная',
+        'page_header': 'Головна',
         'events': current_page.page(page_number),
         'user': user,
         'categories': all_categories,
@@ -817,7 +817,7 @@ def filter_by_organization(request, organization_id, page_number=1):
 
 def remove_proposed_event(request, event_id):
     user = request.user
-    if user.is_authenticated and user.profile.organization.name == 'KPI Events':
+    if user.is_authenticated and user.profile.organization.access_to_the_offer:
         get_object_or_404(ProposedEvent, pk=event_id).delete()
         return redirect('/proposed_events')
     return redirect('/')

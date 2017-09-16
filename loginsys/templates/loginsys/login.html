@@ -5,12 +5,12 @@
 <div class="col-lg-8 col-sm-12">
     <form class="form-horizontal" action="{% url 'loginsys:login' %}" method="post">
         {% csrf_token %}
-        <label class="control-label" for="inputUsername">Логин:</label>
+        <label class="control-label" for="inputUsername">Логін:</label>
         <input class="form-control" type="text" id="inputUsername" name="username" placeholder="Логин пользователя">
         <label class="control-label" for="inputPassword">Пароль:</label>
         <input class="form-control" type="password" id="inputPassword" name="password" placeholder="Пароль"><br>
-        <button type="submit" class="btn btn-primary">Вход</button>
-        &nbsp;&nbsp;&nbsp;<a href="{% url 'loginsys:registration' %}">Регистрация</a> <br><br>
+        <button type="submit" class="btn btn-primary">Вхід</button>
+        &nbsp;&nbsp;&nbsp;<a href="{% url 'loginsys:registration' %}">Реєстрація</a> <br><br>
         {% ulogin_widget %}
         <br><br>
         {% if login_error %}

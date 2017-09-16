@@ -5,19 +5,19 @@
 <div class="col-lg-6 col-sm-8 col-xs-12">
     <form class="form-horizontal" method="post" action="{% url 'calendar:edit_proposed_event' event.id %}" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" class="form-control" name="name" placeholder="Название" value="{{ event.name }}"><br>
-        <textarea class="form-control" placeholder="Описание" name="description" style="max-width: 100%;" >{{ event.description }}</textarea><br>
-        <label class="text-info">Картинка события:</label><br>
+        <input type="text" class="form-control" name="name" placeholder="Назва" value="{{ event.name }}"><br>
+        <textarea class="form-control" placeholder="Опис події" name="description" style="max-width: 100%;" >{{ event.description }}</textarea><br>
+        <label class="text-info">Картинка події:</label><br>
         <img src="/media/{{ event.image }}" style="max-width: 200px"><br><br>
         <input type="file" name="image" accept="image/jpeg,image/png" class="file-upload"><br>
-        <label class="text-info">Дата начала:</label>&nbsp;&nbsp;&nbsp;<span class="text-info">{{ event.start_date }}</span>
+        <label class="text-info">Дата початку:</label>&nbsp;&nbsp;&nbsp;<span class="text-info">{{ event.start_date }}</span>
         <input type="datetime-local" name="start_date" class="form-control"><br>
-        <label class="text-info">Дата окончания:</label>
+        <label class="text-info">Дата закінчення:</label>
         {% if event.end_date != None %}
         &nbsp;&nbsp;&nbsp;<span class="text-info">{{ event.end_date }}</span>
         {% endif %}
         <input type="datetime-local" name="end_date" class="form-control"><br>
-        <label class="text-info">Категория:</label>
+        <label class="text-info">Категорія:</label>
         <select class="form-control" name="category">
             <option>{{ event.category.name }}</option>
             {% for category in categories %}
@@ -25,25 +25,25 @@
             {% endfor %}
         </select><br>
         {% if event.place_of_event != None %}
-        <input type="text" class="form-control" name="place_of_event" placeholder="Место события" value="{{ event.place_of_event }}"><br>
+        <input type="text" class="form-control" name="place_of_event" placeholder="Місце події" value="{{ event.place_of_event }}"><br>
         {% else %}
-        <input type="text" class="form-control" name="place_of_event" placeholder="Место события"><br>
+        <input type="text" class="form-control" name="place_of_event" placeholder="Місце події"><br>
         {% endif %}
 
         {% if event.vk_link != None %}
-        <input type="text" class="form-control" name="vk_link" placeholder="Ссылка вк" value="{{ event.vk_link }}"><br>
+        <input type="text" class="form-control" name="vk_link" placeholder="Посилання вк" value="{{ event.vk_link }}"><br>
         {% else %}
-        <input type="text" class="form-control" name="vk_link" placeholder="Ссылка вк"><br>
+        <input type="text" class="form-control" name="vk_link" placeholder="Посилання вк"><br>
         {% endif %}
 
         {% if event.fb_link != None %}
-        <input type="text" class="form-control" name="fb_link" placeholder="Ссылка fb" value="{{ event.fb_link }}"><br>
+        <input type="text" class="form-control" name="fb_link" placeholder="Посилання fb" value="{{ event.fb_link }}"><br>
         {% else %}
-        <input type="text" class="form-control" name="fb_link" placeholder="Ссылка fb"><br>
+        <input type="text" class="form-control" name="fb_link" placeholder="Посилання fb"><br>
         {% endif %}
 
 
-        <input type="submit" value="Опубликовать" class="btn btn-primary">
+        <input type="submit" value="Опублікувати" class="btn btn-primary">
     </form>
 </div>
 <br><br><br>

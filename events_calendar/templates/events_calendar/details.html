@@ -46,10 +46,10 @@
             {% if user.username %}
                 {% if event.creator in signed_organizations %}
                     <input type="hidden" name="sub" value="Unsubscribe">
-                    <input id="subscribe_button" class="btn btn-default" type="submit" value="Отписаться">
+                    <input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись">
                 {% else %}
                     <input type="hidden" name="sub" value="Subscribe">
-                    <input id="subscribe_button" class="btn btn-primary" type="submit" value="Подписаться">
+                    <input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися">
                 {% endif %}
             {% endif %}
         </form>
@@ -58,11 +58,11 @@
         {% endif %}
 
         {% if event.vk_link != None %}
-            <span class="text-info"><a href="{{ event.vk_link }}" target="_blank">Ссылка вк</a></span><br>
+            <span class="text-info"><a href="{{ event.vk_link }}" target="_blank">Посилання вк</a></span><br>
         {% endif %}
 
         {% if event.fb_link != None %}
-            <a href="{{ event.fb_link }}" target="_blank">Ссылка facebook</a><br>
+            <a href="{{ event.fb_link }}" target="_blank">Посилання facebook</a><br>
         {% endif %}
     </div>
 </div>
@@ -80,7 +80,7 @@
         <hr>
         {% if user.username %}
         {% else %}
-            <span class="text-comment"><a href="{% url 'loginsys:login' %}">Войдите или зарегистрируйтесь</a> что бы оставить свой комментарий</span>
+            <span class="text-comment"><a href="{% url 'loginsys:login' %}">Виконайте вхід,</a> щоб залишити свій коментар</span>
             <br><br>
         {% endif %}
         <div id="comments">
@@ -96,8 +96,8 @@
                     {% endthumbnail %}
                 </div>
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-10">
-                    <!--<input id="input_comment" class="form-control" placeholder="Отправить Enter"   name="text">-->
-                    <textarea id="input_comment" class="form-control" placeholder="Отправить Enter" name="text" style="max-width: 100%; max-height: 50px"></textarea>
+                    <!--<input id="input_comment" class="form-control" placeholder="Відправити Enter"   name="text">-->
+                    <textarea id="input_comment" class="form-control" placeholder="Відправити Enter" name="text" style="max-width: 100%; max-height: 50px"></textarea>
                 </div>
 
                 <script type="text/javascript">

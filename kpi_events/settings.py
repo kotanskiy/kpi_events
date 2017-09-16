@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!3o+p4s%akp7!1e9ab9cgy3g8(lrrl&4=d^=4*mjkbcu2xfk%z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.0.105',
@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     'events.kpi.ua',
 ]
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # Application definition
 
@@ -58,7 +58,7 @@ ULOGIN_DISPLAY = 'panel'
 ULOGIN_FIELDS = ['first_name', 'last_name', 'email']
 
 
-THUMBNAIL_DEBUG = False
+THUMBNAIL_DEBUG = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kpi_events',
         'USER': 'root',
-        'PASSWORD': 'ou8yooloomoo',
+        'PASSWORD': 'learnenglish95',
         'HOST': 'localhost',
     }
 }
@@ -125,13 +125,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SUIT_CONFIG = {
-    'ADMIN_NAME': 'Календарь событий КПИ'
+    'ADMIN_NAME': 'Календар подій КПІ'
 }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'Ru-ru'
+LANGUAGE_CODE = 'uk-UA'
 
 TIME_ZONE = 'Europe/Kiev'
 
@@ -147,9 +147,9 @@ USE_L10N = True
 
 STATIC_URL = '/static/'
 
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static'),
-#]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

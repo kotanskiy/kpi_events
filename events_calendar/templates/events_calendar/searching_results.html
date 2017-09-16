@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% load thumbnail %}
 {% block content %}
 
-    <h2 class="text-info" style="color: #a1a1a1;">Результаты поиска:</h2>
+    <h2 class="text-info" style="color: #a1a1a1;">Результати пошуку:</h2>
 
 {% for event in events %}
 <div class="row row-size" >
@@ -18,7 +18,11 @@
             <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
             {% if event.creator.image %}
-                <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><img src="/media/{{ event.creator.image }}" style="height: 30px; width: 30px;" class="img-rounded";></a>
+                <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
+                    {% thumbnail event.creator.image "30x30" crop="" as im %}
+                        <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                    {% endthumbnail %}
+                </a>
             {% endif %}
             <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
         </div>

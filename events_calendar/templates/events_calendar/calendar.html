@@ -9,27 +9,27 @@
         <br><br>
         <div class="col-lg-3 col-md-3 col-xs-12">
             {% if user.username %}
-                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Предложить событие</button></a>
+                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Запропонувати подію</button></a>
             {% endif %}
 
             <br><br>
-            {% if type != 'Моя лента событий' %}
+            {% if type != 'Мої події' %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
-            <b>По дате:</b><hr>
+            <b>По даті:</b><hr>
             {% if current_date == '1' %}
-                <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Ближайшие события<br>
-                <input class="radio-inline" type="radio" name="date_filter" value="2"> Прошедшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
             {% elif  current_date == '2'%}
-                <input class="radio-inline" type="radio" name="date_filter" value="1"> Ближайшие события<br>
-                <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Прошедшие события<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="1"> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Минулі події<br>
             {% endif %}
 
 
             <br>
-            <b>По категориям:</b><hr>
+            <b>За категоріями:</b><hr>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
@@ -39,7 +39,7 @@
                 {% endif %}
             {% endfor %}
             <br>
-            <input type="submit" value="Отфильтровать" class="btn btn-primary">
+            <input type="submit" value="Фільтрувати" class="btn btn-primary">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
             <br><br>
@@ -48,11 +48,11 @@
 
             {% if user.username %}
                 {% if type == 'Все события' %}
-                    <a href="{% url 'calendar:home' %}"><button class="btn btn-primary"><span class="title-font">Все события</span></button></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Моя лента событий</a></span>
+                    <a href="{% url 'calendar:home' %}"><button class="btn btn-primary"><span class="title-font">Всі події</span></button></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></span>
                 {% else %}
-                    <span class="title-font"><a href="{% url 'calendar:home' %}">Все события</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <a href="{% url 'calendar:filter_by_signed_organizations' %}"><button class="btn btn-primary"><span class="title-font">Моя лента событий</span></button></a>
+                    <span class="title-font"><a href="{% url 'calendar:home' %}">Всі події</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <a href="{% url 'calendar:filter_by_signed_organizations' %}"><button class="btn btn-primary"><span class="title-font">Мої події</span></button></a>
                 {% endif %}
 
 

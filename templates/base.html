@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
     {% block add_head %}
     {% endblock %}
-    <title>{{ page_header }} | Календарь событий КПИ</title>
+    <title>{{ page_header }} | Календар подій КПІ</title>
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -22,7 +22,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu" aria-expanded="true">
-            <span class="sr-only">Открыть навигацию</span>
+            <span class="sr-only">Відкрити навігацію</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -38,10 +38,10 @@
                     {% thumbnail user.profile.image "30x30" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
-                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.first_name }} / Выйти</a>
+                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.first_name }} / Вийти</a>
                 </li>
                 <li>
-                    <a href="{% url 'loginsys:edit_user' %}">Моя страница</a>
+                    <a href="{% url 'loginsys:edit_user' %}">Моя сторінка</a>
                 </li>
                 {% if user.profile.organization %}
                     <li>
@@ -50,15 +50,15 @@
                 {% endif %}
             {% else %}
                 <li>
-                    <a href="{% url 'loginsys:login' %}">Вход и регистрация</a>
+                    <a href="{% url 'loginsys:login' %}">Вхід і реєстрація</a>
                 </li>
             {% endif %}
             <li>
                 <form class="navbar-form navbar-right" method="get" action="{% url 'calendar:searching_results' %}">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Поиск" name="text">
+                        <input type="text" class="form-control" placeholder="Пошук" name="text">
                     </div>
-                    <button type="submit" class="btn btn-default">Поиск</button>
+                    <button type="submit" class="btn btn-default">Пошук</button>
                 </form>
             </li>
         </ul>

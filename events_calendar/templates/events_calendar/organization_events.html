@@ -4,15 +4,15 @@
 <br><br>
 
 {% if not events %}
-    <b>Список ваших событий пуст</b>
+    <b>Список ваших подій порожній</b>
 {% endif %}
 
 <div class="row row-size">
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
-        <a href="{% url 'calendar:create_event' %}"><input type="button" class="form-control btn btn-primary" value="Добавить новое событие"></a>
+        <a href="{% url 'calendar:create_event' %}"><input type="button" class="form-control btn btn-primary" value="Додати нову подію"></a>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
-        <a href="{% url 'calendar:edit_organization' %}"><input type="button" class="form-control btn btn-primary" value="Редактировать организацию"></a>
+        <a href="{% url 'calendar:edit_organization' %}"><input type="button" class="form-control btn btn-primary" value="Редагувати організацію"></a>
     </div>
     {% if user.profile.organization.access_to_the_offer %}
         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
@@ -39,7 +39,7 @@
             <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
         </div>
-        <a href="{% url 'calendar:edit_event' event.id %}">Редактировать</a>
+        <a href="{% url 'calendar:edit_event' event.id %}">Редагувати</a>
     </div>
 </div>
 <br>

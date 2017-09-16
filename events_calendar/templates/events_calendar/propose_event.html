@@ -8,25 +8,25 @@
     {% endif %}
     <form class="form-horizontal" method="post" action="{% url 'calendar:suggest_an_event' %}" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" class="form-control" name="name" placeholder="Название (Обязательное поле)"><br>
-        <textarea class="form-control" placeholder="Описание (Обязательное поле)" name="description" style="max-width: 100%;"></textarea><br>
-        <label class="text-info">Картинка события:</label>
+        <input type="text" class="form-control" name="name" placeholder="Назва (Обов'язкове поле)"><br>
+        <textarea class="form-control" placeholder="Опис Події (Обов'язкове поле)" name="description" style="max-width: 100%;"></textarea><br>
+        <label class="text-info">Картинка події:</label>
         <input type="file" name="image" accept="image/jpeg,image/png" class="file-upload"><br>
-        <label class="text-info">Дата начала (Обязательное поле):</label>
+        <label class="text-info">Дата початку (Обов'язкове поле):</label>
         <input type="datetime-local" name="start_date" class="form-control"><br>
-        <label class="text-info">Дата окончания:</label>
+        <label class="text-info">Дата закінчення:</label>
         <input type="datetime-local" name="end_date" class="form-control"><br>
-        <label class="text-info">Категория (Обязательное поле):</label>
+        <label class="text-info">Категорія (Обов'язкове поле):</label>
         <select class="form-control" name="category">
             <option>----------</option>
             {% for category in categories %}
                 <option>{{ category.name }}</option>
             {% endfor %}
         </select><br>
-        <input type="text" class="form-control" name="place_of_event" placeholder="Место события"><br>
-        <input type="text" class="form-control" name="vk_link" placeholder="Ссылка вк"><br>
-        <input type="text" class="form-control" name="fb_link" placeholder="Ссылка fb"><br>
-        <input type="submit" value="Предложить" class="btn btn-primary">
+        <input type="text" class="form-control" name="place_of_event" placeholder="Місце події"><br>
+        <input type="hidden" class="form-control" name="vk_link" placeholder="Посилання вк">
+        <input type="text" class="form-control" name="fb_link" placeholder="Посилання fb"><br>
+        <input type="submit" value="Запропонувати" class="btn btn-primary">
     </form>
 </div>
 <br><br><br>
