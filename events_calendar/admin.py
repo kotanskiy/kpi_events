@@ -18,6 +18,17 @@ class AdminProfileInline(admin.StackedInline):
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
+    fields = [
+        'is_staff',
+        'is_active',
+        'date_joined',
+        'last_login',
+        'email',
+        'first_name',
+        'last_name',
+        'groups',
+        'user_permissions',
+    ]
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('username', 'first_name', 'last_name', 'email')
