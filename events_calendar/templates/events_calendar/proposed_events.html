@@ -28,7 +28,7 @@
                                 <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                             {% endthumbnail %}
                         {% endif %}
-                        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.username }}({{ event.creator.first_name }} {{ event.creator.last_name }})</span><br><br>
+                        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.email }}({{ event.creator.first_name }} {{ event.creator.last_name }})</span><br><br>
                         <a href="{% url 'calendar:edit_proposed_event' event.id %}"><button class="btn btn-primary">Редагувати і опублікувати</button></a>
                         <a href="{% url 'calendar:remove_proposed_event' event.id %}"><button class="btn btn-primary">Видалити</button></a>
                     </div>
