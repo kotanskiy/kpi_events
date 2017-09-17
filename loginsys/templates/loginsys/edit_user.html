@@ -6,6 +6,8 @@
         <h6 class="text-info" style="color: #a1a1a1; font-size: large">Редагувати профіль:</h6>
         <form class="form-horizontal" action="{% url 'loginsys:edit_user' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <label class="control-label" for="email">email</label>
+            <input class="form-control" type="text" id="email" name="email" value="{{ user.email }}">
             <label class="control-label" for="first_name">Ім'я</label>
             <input class="form-control" type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
             <label class="control-label" for="last_name">Прізвище</label>

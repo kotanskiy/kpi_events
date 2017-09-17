@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 ULOGIN_PROVIDERS = ['google', 'facebook']
 ULOGIN_HIDDEN = []
 ULOGIN_DISPLAY = 'panel'
-ULOGIN_FIELDS = ['first_name', 'last_name', 'email']
+ULOGIN_FIELDS = ['first_name', 'last_name', 'email', 'photo_big']
 
 
 THUMBNAIL_DEBUG = False

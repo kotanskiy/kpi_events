@@ -66,6 +66,7 @@ def edit_user(request):
             try:
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
+                email = request.POST.get('email')
                 for file in request.FILES.getlist('image'):
                     link_image = 'images/users/' + str(random.random()) + str(file)
                     with default_storage.open(link_image, 'wb+') as destination:
@@ -75,6 +76,8 @@ def edit_user(request):
                     img = img.convert('RGB')
                     img.save('media/' + link_image)
                 user = request.user
+                if email.strip() != '':
+                    user.email = email
                 if first_name.strip() != '':
                     user.first_name = first_name
                 if last_name.strip() != '':
@@ -85,6 +88,8 @@ def edit_user(request):
             except UnboundLocalError:
                 link_image = ''
                 user = request.user
+                if email.strip() != '':
+                    user.email = email
                 if first_name.strip() != '':
                     user.first_name = first_name
                 if last_name.strip() != '':
