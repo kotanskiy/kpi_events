@@ -13,7 +13,7 @@
             {% endif %}
 
             <br><br>
-            {% if type != 'Мої події' %}
+            {% if type != 'Моя лента событий' %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
