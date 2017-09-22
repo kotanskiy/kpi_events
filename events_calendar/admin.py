@@ -27,12 +27,11 @@ class AdminUser(admin.ModelAdmin):
         'first_name',
         'last_name',
         'groups',
-        'user_permissions',
     ]
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('username', 'first_name', 'last_name', 'email')
-    filter_horizontal = ('groups', 'user_permissions',)
+    filter_horizontal = ('groups',)
     inlines = [
         AdminProfileInline,
     ]
