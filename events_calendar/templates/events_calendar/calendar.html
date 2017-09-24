@@ -105,19 +105,19 @@
             <center>
                 <ul class="pagination">
                 {% if events.has_previous %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.previous_page_number }}">&laquo;</a></li>
+                    <li class="arrow"><a href="/my_feed/page/{{ events.previous_page_number }}">&laquo;</a></li>
                 {% else %}
                     <li class="arrow unavailable"><a href="">&laquo;</a></li>
                 {% endif %}
                 {% for page in events.paginator.page_range %}
                     {% if page == events.number %}
-                        <li class="active"><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
+                        <li class="active"><a href="/my_feed/page/{{ page }}">{{ page }}</a></li>
                     {% else %}
-                        <li><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
+                        <li><a href="/my_feed/page/{{ page }}">{{ page }}</a></li>
                     {% endif %}
                 {% endfor %}
                 {% if events.has_next %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.next_page_number }}">&raquo;</a></li>
+                    <li class="arrow"><a href="/my_feed/page/{{ events.next_page_number }}">&raquo;</a></li>
                 {% else %}
                     <li class="arrow unavailable"><a href="">&raquo;</a></li>
                 {% endif %}
