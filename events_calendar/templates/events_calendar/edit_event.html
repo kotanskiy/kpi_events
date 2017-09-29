@@ -6,7 +6,7 @@
     <form class="form-horizontal" method="post" action="{% url 'calendar:edit_event' event.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" class="form-control" name="name" placeholder="Назва" value="{{ event.name }}"><br>
-        <textarea class="form-control" placeholder="Опис події" name="description" style="max-width: 100%;" >{{ event.description }}</textarea><br>
+        <textarea rows="15" class="form-control" placeholder="Опис події" name="description" style="max-width: 100%;" >{{ event.description }}</textarea><br>
         <label class="text-info">Картинка події:</label><br>
         <img src="/media/{{ event.image }}" style="max-width: 200px"><br><br>
         <input type="file" name="image" accept="image/jpeg,image/png" class="file-upload"><br>
