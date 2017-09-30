@@ -79,9 +79,7 @@
                             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
                             {% if event.creator.image %}
                                 {% thumbnail event.creator.image "30x30" crop="" as im %}
-                                    <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
-                                        <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
-                                    </a>
+                                    <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                                 {% endthumbnail %}
                             {% endif %}
                             <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
