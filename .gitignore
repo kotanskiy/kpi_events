@@ -3,3 +3,4 @@ db.sqlite3
 kpi_events/settings.py
 *.jpg
 *.png
+*.pyc
