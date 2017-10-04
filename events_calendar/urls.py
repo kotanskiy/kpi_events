@@ -7,8 +7,8 @@ from kpi_events import settings
 
 app_name = 'calendar'
 urlpatterns = [
-    url(r'^$', views.calendar, name='home'),
-    url(r'^page/(\d+)$', views.calendar),
+    url(r'^$', views.all_events, name='home'),
+    url(r'^page/(\d+)$', views.all_events),
     url(r'^organization_events/page/(\d+)$', views.organization_events),
     url(r'^my_feed/page/(\d+)$', views.filter_by_signed_organizations),
     url(r'^event/(?P<calendar_id>[\d+]*)$', views.calendar_details, name='details'),
