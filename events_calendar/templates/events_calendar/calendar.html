@@ -54,10 +54,6 @@
                     <span class="title-font"><a href="{% url 'calendar:home' %}">Всі події</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <a href="{% url 'calendar:filter_by_signed_organizations' %}"><button class="btn btn-primary"><span class="title-font">Мої події</span></button></a>
                 {% endif %}
-
-
-
-
             {% endif %}
         <br><br>
             {% for event in events %}

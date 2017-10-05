@@ -4,7 +4,7 @@ from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
-from events_calendar.models import Event, Comment, Category, ProposedEvent, Organization
+from events_calendar.models import Event, Comment, Category, Organization
 from datetime import datetime
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -60,9 +60,9 @@ def all_events(request, page_number=1):
             for_filter_categories.append(category)
     # get data with our filters
     if current_date == '1':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(start_date__gte=timezone.now()).order_by('start_date')
+        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(start_date__gte=timezone.now()).order_by('start_date')
     elif current_date == '2':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(start_date__lte=timezone.now()).order_by('-start_date')
+        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(start_date__lte=timezone.now()).order_by('-start_date')
 
     info_filter = ''
     current_page = Paginator(events, 5)
@@ -135,12 +135,11 @@ def filter_by_signed_organizations(request, page_number=1):
         for_filter_categories = []
         for category in all_categories:
             for_filter_categories.append(category)
-    print(signed_organizations)
     if current_date == '1':
-        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(
+        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
             start_date__gte=timezone.now()).order_by('start_date')
     elif current_date == '2':
-        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(
+        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
             start_date__lte=timezone.now()).order_by('-start_date')
 
     info_filter = ''
@@ -233,9 +232,6 @@ def create_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
-                    if post.get('description').strip() == '':
-                        args['error'] = 'Опис події не заповнено'
-                        return render_to_response('events_calendar/create_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -282,9 +278,6 @@ def create_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
-                    if post.get('description').strip() == '':
-                        args['error'] = 'Опис події не заповнено'
-                        return render_to_response('events_calendar/create_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -298,7 +291,7 @@ def create_event(request):
                     else:
                         fb_link = None
                     if post.get('category') != '----------':
-                        categories = Category.objects.all().filter(name=post.get('category'))
+                        categories = Category.objects.filter(name=post.get('category'))
                         for el in categories:
                             category = el
                     else:
@@ -422,7 +415,7 @@ def edit_organization(request):
     else:
         return redirect('/')
 
-
+@login_required
 def subscribe(request):
     if request.POST:
         event = get_object_or_404(Event, pk=request.POST.get('event'))
@@ -435,13 +428,12 @@ def subscribe(request):
             user.profile.signed_organizations.remove(organization)
         return redirect('/event/' + str(event.id))
 
-
+@login_required
 def unsubscribe(request):
     if request.POST:
-        if request.user.username:
-            organization = get_object_or_404(Organization, pk=request.POST.get('organization'))
-            user = request.user
-            user.profile.signed_organizations.remove(organization)
+        organization = get_object_or_404(Organization, pk=request.POST.get('organization'))
+        user = request.user
+        user.profile.signed_organizations.remove(organization)
     return redirect('/auth/edit_user/')
 
 def searching_results(request):
@@ -449,9 +441,9 @@ def searching_results(request):
     text = request.GET.get('text').strip()
     if text == '' or len(text) < 5:
         return redirect('/')
-    events = Event.objects.filter(name__icontains=text)
+    events = Event.objects.filter(name__icontains=text).filter(published=True)
     if not events:
-        events = Event.objects.filter(description__icontains=text)
+        events = Event.objects.filter(description__icontains=text).filter(published=True)
     events = list(events)
     events.reverse()
     context = {
@@ -493,9 +485,6 @@ def suggest_an_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
-                    if post.get('description').strip() == '':
-                        args['error'] = 'Опис події не заповнено'
-                        return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -515,7 +504,7 @@ def suggest_an_event(request):
                     else:
                         args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/propose_event.html', args)
-                    event = ProposedEvent(
+                    event = Event(
                         name=post.get('name'),
                         description=post.get('description'),
                         start_date=start_date,
@@ -525,6 +514,7 @@ def suggest_an_event(request):
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
+                        published=False,
                     )
                     event.save()
                     return redirect('/')
@@ -541,9 +531,6 @@ def suggest_an_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
-                    if post.get('description').strip() == '':
-                        args['error'] = 'Опис події не заповнено'
-                        return render_to_response('events_calendar/propose_event.html', args)
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -563,7 +550,7 @@ def suggest_an_event(request):
                     else:
                         args['error'] = 'Категорія не заповнена'
                         return render_to_response('events_calendar/propose_event.html', args)
-                    event = ProposedEvent(
+                    event = Event(
                         name=post.get('name'),
                         description=post.get('description'),
                         start_date=start_date,
@@ -572,6 +559,7 @@ def suggest_an_event(request):
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
+                        published=False,
                     )
                     event.save()
                     return redirect('/')
@@ -582,10 +570,10 @@ def suggest_an_event(request):
     else:
         return redirect('/')
 
-
+@login_required
 def proposed_events(request, page_id=1):
     if request.user.profile.organization.access_to_the_offer:
-        events = ProposedEvent.objects.filter(published=False)
+        events = Event.objects.filter(published=False).order_by('-start_date')
         current_page = Paginator(events, 5)
         context = {
             'page_header':'Предложка',
@@ -593,12 +581,10 @@ def proposed_events(request, page_id=1):
             'events':current_page.page(page_id),
         }
         return render(request, 'events_calendar/proposed_events.html', context)
-    else:
-        return redirect('/')
 
 
 def edit_proposed_event(request, event_id):
-    event = get_object_or_404(ProposedEvent, pk=event_id)
+    event = get_object_or_404(Event, pk=event_id)
     if request.user.is_authenticated and request.user.profile.organization.access_to_the_offer:
         organization = request.user.profile.organization
         args = {}
@@ -637,20 +623,8 @@ def edit_proposed_event(request, event_id):
                     event.vk_link = request.POST.get('vk_link').strip()
                 if request.POST.get('fb_link').strip() != '':
                     event.fb_link = request.POST.get('fb_link').strip()
-                new_event = Event(
-                    name=event.name,
-                    description=event.description,
-                    image=event.image,
-                    category=event.category,
-                    start_date=event.start_date,
-                    end_date=event.end_date,
-                    place_of_event=event.place_of_event,
-                    vk_link=event.vk_link,
-                    fb_link=event.fb_link,
-                    creator=organization,
-                )
-                new_event.save()
                 event.published = True
+                event.creator = organization
                 event.save()
                 return redirect('/proposed_events')
             except UnboundLocalError:
@@ -673,20 +647,8 @@ def edit_proposed_event(request, event_id):
                 if request.POST.get('fb_link').strip() != '':
                     event.fb_link = request.POST.get('fb_link').strip()
                 print(event.image)
-                new_event = Event(
-                    name=event.name,
-                    description=event.description,
-                    category=event.category,
-                    start_date=event.start_date,
-                    image=event.image,
-                    end_date=event.end_date,
-                    place_of_event=event.place_of_event,
-                    vk_link=event.vk_link,
-                    fb_link=event.fb_link,
-                    creator=organization,
-                )
-                new_event.save()
                 event.published = True
+                event.creator = organization
                 event.save()
                 return redirect('/proposed_events')
         return render(request, 'events_calendar/edit_propose_event.html', args)
@@ -695,93 +657,79 @@ def edit_proposed_event(request, event_id):
 
 
 def filter_by_organization(request, organization_id, page_number=1):
-    current_date_value = '1'
-    user = auth.get_user(request)
-    events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
+    select_organization = get_object_or_404(Organization, pk=organization_id)
+    events = Event.objects.none()
+    all_categories = Category.objects.all()
+    current_date = ''
+    current_categories = []
     try:
-        if request.session['current_date']:
-            current_date_value = request.session['current_date']
-            if current_date_value == '1':
-                events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
-            elif current_date_value == '2':
-                events_date = Event.objects.filter(start_date__lte=timezone.now()).order_by('start_date')
+        current_date = request.session['current_date']
     except KeyError:
         pass
-
+    list_categories_id = []
+    for category in all_categories:
+        try:
+            category_id = request.session[category.name]
+            list_categories_id.append(category_id)
+        except KeyError:
+            pass
+    for categ in Category.objects.filter(pk__in=list_categories_id):
+        current_categories.append(categ)
+    list_categories_id = []
     if request.POST:
+        for category in all_categories:
+            category_id = request.POST.get(category.name)
+            list_categories_id.append(category_id)
+            try:
+                del request.session[category.name]
+            except KeyError:
+                pass
+        current_categories = []
+        for categ in Category.objects.filter(pk__in=list_categories_id):
+            current_categories.append(categ)
+            # update current date from post request
         if request.POST['date_filter']:
-            current_date_value = request.POST['date_filter']
-            if current_date_value == '1':
-                events_date = Event.objects.filter(start_date__gte=timezone.now()).order_by('start_date')
-            elif current_date_value == '2':
-                events_date = Event.objects.filter(start_date__lte=timezone.now()).order_by('start_date')
+            current_date = request.POST['date_filter']
+            # update current_date into session
             try:
                 del request.session['current_date']
             except KeyError:
                 pass
             request.session.set_expiry(3600)
-            request.session['current_date'] = current_date_value
+            request.session['current_date'] = current_date
 
-    organizations = Organization.objects.filter(pk=organization_id)
-    all_categories = Category.objects.all()
+    for category in current_categories:
+        request.session.set_expiry(3600)
+        request.session[category.name] = category.id
+
+    if not current_date:
+        current_date = '1'
+    for_filter_categories = current_categories
+    if not for_filter_categories:
+        for_filter_categories = []
+        for category in all_categories:
+            for_filter_categories.append(category)
+    if current_date == '1':
+        events = Event.objects.filter(creator=select_organization).filter(
+            category__in=for_filter_categories).filter(published=True).filter(
+            start_date__gte=timezone.now()).order_by('start_date')
+    elif current_date == '2':
+        events = Event.objects.filter(creator=select_organization).filter(
+            category__in=for_filter_categories).filter(published=True).filter(
+            start_date__lte=timezone.now()).order_by('-start_date')
+
     info_filter = ''
-    events = set()
-    # filter by signed organizations
-    for organization in organizations:
-        events.update(events_date.filter(creator=organization))
-    # end filter
-
-    # filter by categories
-    current_categories = set()
-    events_categories = set()
-    if request.POST:
-        for category in all_categories:
-            category_id = request.POST.get(category.name)
-            current_categories.update(Category.objects.filter(pk=category_id))
-            try:
-                del request.session[category.name]
-            except KeyError:
-                pass
-        for category in current_categories:
-            for event in events:
-                if event.category == category:
-                    events_categories.add(event)
-            # save input categories into session
-            request.session.set_expiry(3600)
-            request.session[category.name] = category.id
-        events = events_categories
-    else:
-        # load categories from session
-        for category in all_categories:
-            try:
-                category_id = request.session[category.name]
-                current_categories.update(Category.objects.filter(pk=category_id))
-            except KeyError:
-                pass
-        for category in current_categories:
-            events_categories.update(events_date.filter(category=category))
-        events = events_categories
-    # end filter
-
-    if len(current_categories) != 0 and len(events_categories) == 0:
-        events = set()
-    elif not events:
-        for organization in organizations:
-            events.update(events_date.filter(creator=organization))
-
-    events = list(events)
-    if current_date_value == '2':
-        events.reverse()
     current_page = Paginator(events, 5)
     context = {
         'page_header': 'Головна',
         'events': current_page.page(page_number),
-        'user': user,
+        'user': request.user,
+        'type': 'Моя лента событий',
         'categories': all_categories,
         'current_categories': current_categories,
-        'organization': get_object_or_404(Organization, pk=organization_id),
         'info_filter': info_filter,
-        'current_date': current_date_value,
+        'current_date': current_date,
+        'organization': select_organization,
     }
     context.update(csrf(request))
     return render(request, 'events_calendar/organization.html', context)
@@ -790,7 +738,7 @@ def filter_by_organization(request, organization_id, page_number=1):
 def remove_proposed_event(request, event_id):
     user = request.user
     if user.is_authenticated and user.profile.organization.access_to_the_offer:
-        get_object_or_404(ProposedEvent, pk=event_id).delete()
+        get_object_or_404(Event, pk=event_id).delete()
         return redirect('/proposed_events')
     return redirect('/')
 

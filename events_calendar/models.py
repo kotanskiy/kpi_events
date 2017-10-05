@@ -1,7 +1,6 @@
 import datetime
 
 from cuser.fields import CurrentUserField
-from django.contrib.admin import ModelAdmin
 from django.contrib.auth.models import User
 from django.db import models
 # Create your models here.
@@ -36,7 +35,7 @@ class Event(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
     description = models.TextField('Опис', null=True)
     image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default.jpg')
-    #creator = CurrentUserField(add_only=True, related_name='Event_creator')
+    creator_user = CurrentUserField(add_only=True, related_name='Юзер')
     creator = models.ForeignKey(Organization, verbose_name='Організація', null=True)
     start_date = models.DateTimeField('Дата початку')
     end_date = models.DateTimeField(verbose_name='Дата закінчення', blank=True, null=True)
@@ -44,7 +43,7 @@ class Event(models.Model):
     place_of_event = models.CharField(max_length=100, verbose_name='Місце події', blank=True, null=True)
     vk_link = models.CharField(max_length=50, verbose_name='Посилання в Вк', blank=True, null=True)
     fb_link = models.CharField(max_length=50, verbose_name='Посилання в fb', blank=True, null=True)
-
+    published = models.BooleanField(default=True, verbose_name='Опублікований')
 
     def __str__(self):
         return self.name
@@ -91,29 +90,29 @@ class Profile(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
-class ProposedEvent(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Назва')
-    description = models.TextField('Опис', null=True)
-    image = models.ImageField(upload_to='images/events_calendar', blank=True,
-                              default='images/events_calendar/default.jpg')
-    creator = CurrentUserField(add_only=True, related_name='Event_creator')
-    start_date = models.DateTimeField('Дата початку')
-    end_date = models.DateTimeField(verbose_name='Дата закінчення', blank=True, null=True)
-    category = models.ForeignKey(Category, verbose_name='Категорія')
-    place_of_event = models.CharField(max_length=100, verbose_name='Місце події', blank=True, null=True)
-    vk_link = models.CharField(max_length=50, verbose_name='Посилання в Вк', blank=True, null=True)
-    fb_link = models.CharField(max_length=50, verbose_name='Посилання в Фэйсбук', blank=True, null=True)
-    published = models.BooleanField(default=False, verbose_name='Опублікований')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = [
-            'start_date',
-        ]
-        verbose_name = 'Запропонована подія'
-        verbose_name_plural = 'Предложка'
+# class ProposedEvent(models.Model):
+#     name = models.CharField(max_length=50, verbose_name='Назва')
+#     description = models.TextField('Опис', null=True)
+#     image = models.ImageField(upload_to='images/events_calendar', blank=True,
+#                               default='images/events_calendar/default.jpg')
+#     creator = CurrentUserField(add_only=True, related_name='Event_creator')
+#     start_date = models.DateTimeField('Дата початку')
+#     end_date = models.DateTimeField(verbose_name='Дата закінчення', blank=True, null=True)
+#     category = models.ForeignKey(Category, verbose_name='Категорія')
+#     place_of_event = models.CharField(max_length=100, verbose_name='Місце події', blank=True, null=True)
+#     vk_link = models.CharField(max_length=50, verbose_name='Посилання в Вк', blank=True, null=True)
+#     fb_link = models.CharField(max_length=50, verbose_name='Посилання в Фэйсбук', blank=True, null=True)
+#     published = models.BooleanField(default=False, verbose_name='Опублікований')
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         ordering = [
+#             'start_date',
+#         ]
+#         verbose_name = 'Запропонована подія'
+#         verbose_name_plural = 'Предложка'
 
 
 

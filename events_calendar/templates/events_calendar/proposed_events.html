@@ -24,11 +24,11 @@
                         <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
                         <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
                         {% if event.creator.profile.image %}
-                            {% thumbnail event.creator.profile.image "30x30" crop="" as im %}
+                            {% thumbnail event.creator_user.profile.image "30x30" crop="" as im %}
                                 <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                             {% endthumbnail %}
                         {% endif %}
-                        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.email }}({{ event.creator.first_name }} {{ event.creator.last_name }})</span><br><br>
+                        <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator_user.email }}({{ event.creator_user.first_name }} {{ event.creator_user.last_name }})</span><br><br>
                         <a href="{% url 'calendar:edit_proposed_event' event.id %}"><button class="btn btn-primary">Редагувати і опублікувати</button></a>
                         <a href="{% url 'calendar:remove_proposed_event' event.id %}"><button class="btn btn-primary">Видалити</button></a>
                     </div>
