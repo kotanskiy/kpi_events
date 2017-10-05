@@ -25,9 +25,9 @@
             {% endfor %}
         </select><br>
         {% if event.web_site != None %}
-        <input type="text" class="form-control" name="web_site" placeholder="Сайт події" value="{{ event.web_site }}"><br>
+        <input type="text" class="form-control" name="web_site" placeholder="Посилання на сайт події" value="{{ event.web_site }}"><br>
         {% else %}
-        <input type="text" class="form-control" name="web_site" placeholder="Сайт події"><br>
+        <input type="text" class="form-control" name="web_site" placeholder="Посилання на сайт події"><br>
         {% endif %}
 
         {% if event.place_of_event != None %}
