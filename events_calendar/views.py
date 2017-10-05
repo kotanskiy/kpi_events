@@ -40,21 +40,17 @@ def all_events(request, page_number=1):
         current_categories = []
         for categ in Category.objects.filter(pk__in = list_categories_id):
             current_categories.append(categ)
-                # update current date from post request
         if request.POST['date_filter']:
             current_date = request.POST['date_filter']
-            # update current_date into session
             try:
                 del request.session['current_date']
             except KeyError:
                 pass
             request.session.set_expiry(3600)
             request.session['current_date'] = current_date
-
     for category in current_categories:
         request.session.set_expiry(3600)
         request.session[category.name] = category.id
-
     if not current_date:
         current_date = '1'
     for_filter_categories = current_categories
@@ -62,6 +58,7 @@ def all_events(request, page_number=1):
         for_filter_categories = []
         for category in all_categories:
             for_filter_categories.append(category)
+    # get data with our filters
     if current_date == '1':
         events = Event.objects.filter(category__in=for_filter_categories).filter(start_date__gte=timezone.now()).order_by('start_date')
     elif current_date == '2':
@@ -172,8 +169,6 @@ def calendar_details(request, calendar_id):
     if request.user.username:
         signed_organizations = user.profile.signed_organizations.all()
         context['signed_organizations'] = signed_organizations
-
-
     return render(request, 'events_calendar/details.html', context)
 
 def comments(request, calendar_id):
@@ -193,23 +188,18 @@ def add_comment(request, calendar_id):
         comment.save()
     return redirect('/')
 
-
+@login_required
 def organization_events(request, page_number=1):
-    try:
-        if request.user.profile.organization:
-            events = Event.objects.filter(creator=request.user.profile.organization)
-            events = list(events)
-            current_page = Paginator(events, 5)
-            context = {
-                'page_header': request.user.profile.organization.name,
-                'events': current_page.page(page_number),
-                'user':request.user
-            }
-            return render(request, 'events_calendar/organization_events.html', context)
-        else:
-            return redirect('/')
-    except:
-        return redirect('/')
+    if request.user.profile.organization:
+        events = Event.objects.filter(creator=request.user.profile.organization).order_by('-start_date')
+        current_page = Paginator(events, 5)
+        context = {
+            'page_header': request.user.profile.organization.name,
+            'events': current_page.page(page_number),
+            'user':request.user
+        }
+        return render(request, 'events_calendar/organization_events.html', context)
+
 
 
 def create_event(request):
