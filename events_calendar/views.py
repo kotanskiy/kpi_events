@@ -244,6 +244,10 @@ def create_event(request):
                         fb_link = post.get('fb_link').strip()
                     else:
                         fb_link = None
+                    if post.get('web_site').strip() != '':
+                        web_site = post.get('web_site').strip()
+                    else:
+                        web_site = None
                     if post.get('category') != '----------':
                         categories = Category.objects.all().filter(name=post.get('category'))
                         for el in categories:
@@ -258,6 +262,7 @@ def create_event(request):
                         end_date=end_date,
                         category=category,
                         image=link_image,
+                        web_site=web_site,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
@@ -282,6 +287,10 @@ def create_event(request):
                         place_of_event = post.get('place_of_event').strip()
                     else:
                         place_of_event = None
+                    if post.get('web_site').strip() != '':
+                        web_site = post.get('web_site').strip()
+                    else:
+                        web_site = None
                     if post.get('vk_link').strip() != '':
                         vk_link = post.get('vk_link').strip()
                     else:
@@ -303,6 +312,7 @@ def create_event(request):
                         start_date=start_date,
                         end_date=end_date,
                         category=category,
+                        web_site = web_site,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
@@ -351,6 +361,8 @@ def edit_event(request, calendar_id):
                     event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
                 if request.POST.get('end_date') != '':
                     event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
+                if request.POST.get('web_site').strip() != '':
+                    event.web_site = request.POST.get('web_site').strip()
                 if request.POST.get('place_of_event').strip() != '':
                     event.place_of_event = request.POST.get('place_of_event').strip()
                 if request.POST.get('vk_link').strip() != '':
@@ -372,6 +384,8 @@ def edit_event(request, calendar_id):
                     event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
                 if request.POST.get('end_date') != '':
                     event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
+                if request.POST.get('web_site').strip() != '':
+                    event.web_site = request.POST.get('web_site').strip()
                 if request.POST.get('place_of_event').strip() != '':
                     event.place_of_event = request.POST.get('place_of_event').strip()
                 if request.POST.get('vk_link').strip() != '':
@@ -485,6 +499,10 @@ def suggest_an_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
+                    if post.get('web_site').strip() != '':
+                        web_site = post.get('web_site').strip()
+                    else:
+                        web_site = None
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -511,6 +529,7 @@ def suggest_an_event(request):
                         end_date=end_date,
                         category=category,
                         image=link_image,
+                        web_site=web_site,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
@@ -531,6 +550,10 @@ def suggest_an_event(request):
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
+                    if post.get('web_site').strip() != '':
+                        web_site = post.get('web_site').strip()
+                    else:
+                        web_site = None
                     if post.get('place_of_event').strip() != '':
                         place_of_event = post.get('place_of_event').strip()
                     else:
@@ -556,6 +579,7 @@ def suggest_an_event(request):
                         start_date=start_date,
                         end_date=end_date,
                         category=category,
+                        web_site=web_site,
                         place_of_event=place_of_event,
                         vk_link=vk_link,
                         fb_link=fb_link,
@@ -617,6 +641,8 @@ def edit_proposed_event(request, event_id):
                     event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
                 if request.POST.get('end_date') != '':
                     event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
+                if request.POST.get('web_site').strip() != '':
+                    event.web_site = request.POST.get('web_site').strip()
                 if request.POST.get('place_of_event').strip() != '':
                     event.place_of_event = request.POST.get('place_of_event').strip()
                 if request.POST.get('vk_link').strip() != '':
@@ -640,6 +666,8 @@ def edit_proposed_event(request, event_id):
                     event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
                 if request.POST.get('end_date') != '':
                     event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
+                if request.POST.get('web_site').strip() != '':
+                    event.web_site = request.POST.get('web_site').strip()
                 if request.POST.get('place_of_event').strip() != '':
                     event.place_of_event = request.POST.get('place_of_event').strip()
                 if request.POST.get('vk_link').strip() != '':

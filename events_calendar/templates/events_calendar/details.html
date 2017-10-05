@@ -65,6 +65,10 @@
         {% if event.fb_link != None %}
             <a href="{{ event.fb_link }}" target="_blank">Посилання facebook</a><br>
         {% endif %}
+
+        {% if event.web_site != None %}
+            <span class="text-info"><a href="{{ event.web_site }}" target="_blank">Посилання на сайт події</a></span><br>
+        {% endif %}
     </div>
 </div>
 <div class="row">

@@ -24,6 +24,13 @@
                 <option>{{ category.name }}</option>
             {% endfor %}
         </select><br>
+
+        {% if event.web_site != None %}
+        <input type="text" class="form-control" name="web_site" placeholder="Сайт події" value="{{ event.web_site }}"><br>
+        {% else %}
+        <input type="text" class="form-control" name="web_site" placeholder="Сайт події"><br>
+        {% endif %}
+
         {% if event.place_of_event != None %}
         <input type="text" class="form-control" name="place_of_event" placeholder="Місце події" value="{{ event.place_of_event }}"><br>
         {% else %}
