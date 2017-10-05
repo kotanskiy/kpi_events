@@ -107,6 +107,16 @@
                 </div>
 
                 <script type="text/javascript">
+                    function clickable(){
+                        var codeElems = $(".description-font"); //jQuery
+                        var strHttps=/(https:\/\/.+\.[a-z]{2,3})/gi;
+                        for (var c=0; c<codeElems.length; c++){
+                            codeElems[c].innerHTML=codeElems[c].innerHTML.replace(strHttps, '<a href="$1" target="blank">$1</a>');
+                        }
+
+
+                    }
+                    clickable();
                     function getAjax() {
                         var textComment   = $('#form').serialize();
                         $.ajax({
