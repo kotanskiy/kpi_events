@@ -44,7 +44,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
                 <li>
-                    {% thumbnail user.profile.image "30x30" crop="" as im %}
+                    {% thumbnail user.profile.image "30x30" format="PNG" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
                     <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.first_name }} / Вийти</a>

@@ -25,7 +25,7 @@
                 {% if user.username %}
                     <input type="hidden" name="organization" value="{{ organization.id }}">
                     {% if organization.image %}
-                        {% thumbnail organization.image "30x30" crop="" as im %}
+                        {% thumbnail organization.image "30x30" format="PNG" crop="" as im %}
                             <a href="{% url 'calendar:filter_by_organization' organization.id %}"><img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}"></a>
                         {% endthumbnail %}
                     {% endif %}

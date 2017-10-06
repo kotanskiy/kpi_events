@@ -1,5 +1,7 @@
+import random
 import urllib.request
 
+from PIL import Image
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -20,14 +22,24 @@ def catch_ulogin_signal(*args, **kwargs):
     user=kwargs['user']
     json=kwargs['ulogin_data']
 
+    # link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
+    # with default_storage.open(link_image, 'wb+') as destination:
+    #     for chunk in file.chunks():
+    #         destination.write(chunk)
+    # im = Image.open('media/' + link_image)
+    # bg = Image.new("RGB", im.size, (255, 255, 255))
+    # bg.paste(im, im)
+    # bg.save('media/' + link_image)
+
+
     if kwargs['registered']:
         user.first_name = json['first_name']
         user.last_name = json['last_name']
         user.email = json['email']
         url_image = json['photo_big']
-        link = 'images/users/'  + 'img_' + json['email'] + '.jpg'
+        link = 'images/users/'  + str(random.randint(0,1000)) + 'img_' + json['email']
         img = urllib.request.urlopen(url_image).read()
-        f = default_storage.open(link, "wb")
+        f = default_storage.open(link, "wb+")
         f.write(img)
         f.close()
         user.profile.image = link

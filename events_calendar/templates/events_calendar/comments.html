@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-8 col-sm-8">
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            {% thumbnail comment.creator.profile.image "40x40" crop="" as im %}
+            {% thumbnail comment.creator.profile.image "40x40" format="PNG" crop="" as im %}
                 <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 5px">
             {% endthumbnail %}
         </div>

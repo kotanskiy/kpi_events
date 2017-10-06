@@ -28,7 +28,7 @@
 </div>
 <div class="row">
     <div class="col-lg-4 col-sm-12">
-        {% thumbnail event.image "850x500" crop="" as im %}
+        {% thumbnail event.image format="PNG" "850x500" crop="" as im %}
             <img src="/media/{{ im.url }}" width="100%">
         {% endthumbnail %}
     </div>
@@ -37,7 +37,7 @@
         <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
             {% csrf_token %}
             {% if event.creator.image %}
-                {% thumbnail event.creator.image "30x30" crop="" as im %}
+                {% thumbnail event.creator.image format="PNG" "30x30" crop="" as im %}
                     <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
                     </a>
@@ -98,7 +98,7 @@
             <form id="form" class="form-horizontal" onsubmit="getAjax()" action="javascript:void(null);">
                 {% csrf_token %}
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
-                    {% thumbnail user.profile.image "50x50" crop="" as im %}
+                    {% thumbnail user.profile.image format="PNG" "50x50" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
                     {% endthumbnail %}
                 </div>

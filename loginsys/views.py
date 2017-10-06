@@ -72,9 +72,6 @@ def edit_user(request):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
-                    img = Image.open('media/' + link_image)
-                    img = img.convert('RGB')
-                    img.save('media/' + link_image)
                 user = request.user
                 if email.strip() != '':
                     user.email = email

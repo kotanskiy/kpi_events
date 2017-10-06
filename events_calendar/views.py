@@ -227,9 +227,6 @@ def create_event(request):
                         with default_storage.open(link_image, 'wb+') as destination:
                             for chunk in file.chunks():
                                 destination.write(chunk)
-                        img = Image.open('media/' + link_image)
-                        img = img.convert('RGB')
-                        img.save('media/' + link_image)
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/create_event.html', args)
@@ -349,9 +346,6 @@ def edit_event(request, calendar_id):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
-                    img = Image.open('media/' + link_image)
-                    img = img.convert('RGB')
-                    img.save('media/' + link_image)
                 if str(file).strip() != '':
                     event.image = link_image
                 categories = Category.objects.all().filter(name=request.POST.get('category'))
@@ -417,9 +411,6 @@ def edit_organization(request):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
-                    img = Image.open('media/' + link_image)
-                    img = img.convert('RGB')
-                    img.save('media/' + link_image)
                 organization.image = link_image
                 organization.save()
             except UnboundLocalError:
@@ -494,9 +485,6 @@ def suggest_an_event(request):
                         with default_storage.open(link_image, 'wb+') as destination:
                             for chunk in file.chunks():
                                 destination.write(chunk)
-                        img = Image.open('media/' + link_image)
-                        img = img.convert('RGB')
-                        img.save('media/' + link_image)
                     if post.get('name').strip() == '':
                         args['error'] = 'Назва події не заповнено'
                         return render_to_response('events_calendar/propose_event.html', args)
@@ -629,9 +617,6 @@ def edit_proposed_event(request, event_id):
                     with default_storage.open(link_image, 'wb+') as destination:
                         for chunk in file.chunks():
                             destination.write(chunk)
-                    img = Image.open('media/' + link_image)
-                    img = img.convert('RGB')
-                    img.save('media/' + link_image)
                 if str(file).strip() != '':
                     event.image = link_image
                 categories = Category.objects.all().filter(name=request.POST.get('category'))
