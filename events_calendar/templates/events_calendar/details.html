@@ -38,9 +38,7 @@
             {% csrf_token %}
             {% if event.creator.image %}
                 {% thumbnail event.creator.image "30x30" format="PNG" crop="" as im %}
-                    <a href="{% url 'calendar:filter_by_organization' event.creator.id %}">
-                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
-                    </a>
+                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
                 {% endthumbnail %}
             {% endif %}
             <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
