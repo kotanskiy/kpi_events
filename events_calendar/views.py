@@ -2,10 +2,11 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db import IntegrityError
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
 from events_calendar.models import Event, Comment, Category, Organization
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 from django.core.paginator import Paginator
 from PIL import Image
@@ -55,14 +56,15 @@ def all_events(request, page_number=1):
         current_date = '1'
     for_filter_categories = current_categories
     if not for_filter_categories:
-        for_filter_categories = []
-        for category in all_categories:
-            for_filter_categories.append(category)
+        for_filter_categories = all_categories[:]
     # get data with our filters
+    end_date = timezone.now() - timedelta(hours=1)
     if current_date == '1':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(start_date__gte=timezone.now()).order_by('start_date')
+        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
+        start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
     elif current_date == '2':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(start_date__lte=timezone.now()).order_by('-start_date')
+        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
+            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__gte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
@@ -132,15 +134,14 @@ def filter_by_signed_organizations(request, page_number=1):
         current_date = '1'
     for_filter_categories = current_categories
     if not for_filter_categories:
-        for_filter_categories = []
-        for category in all_categories:
-            for_filter_categories.append(category)
+        for_filter_categories = all_categories[:]
+    end_date = timezone.now() - timedelta(hours=1)
     if current_date == '1':
         events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__gte=timezone.now()).order_by('start_date')
+            start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
     elif current_date == '2':
         events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=timezone.now()).order_by('-start_date')
+            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__lte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
@@ -734,17 +735,16 @@ def filter_by_organization(request, organization_id, page_number=1):
         current_date = '1'
     for_filter_categories = current_categories
     if not for_filter_categories:
-        for_filter_categories = []
-        for category in all_categories:
-            for_filter_categories.append(category)
+        for_filter_categories = all_categories[:]
+    end_date = timezone.now() - timedelta(hours=1)
     if current_date == '1':
         events = Event.objects.filter(creator=select_organization).filter(
             category__in=for_filter_categories).filter(published=True).filter(
-            start_date__gte=timezone.now()).order_by('start_date')
+            start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
     elif current_date == '2':
         events = Event.objects.filter(creator=select_organization).filter(
             category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=timezone.now()).order_by('-start_date')
+            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__lte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
