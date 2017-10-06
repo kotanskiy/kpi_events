@@ -64,7 +64,7 @@ def all_events(request, page_number=1):
         start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
     elif current_date == '2':
         events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__gte=timezone.now())
+            start_date__lte=end_date).order_by('-start_date').exclude(end_date__gte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
@@ -141,7 +141,7 @@ def filter_by_signed_organizations(request, page_number=1):
             start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
     elif current_date == '2':
         events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__lte=timezone.now())
+            start_date__lte=end_date).order_by('-start_date').exclude(end_date__lte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
@@ -744,7 +744,7 @@ def filter_by_organization(request, organization_id, page_number=1):
     elif current_date == '2':
         events = Event.objects.filter(creator=select_organization).filter(
             category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=timezone.now()).order_by('-start_date').exclude(end_date__lte=timezone.now())
+            start_date__lte=end_date).order_by('-start_date').exclude(end_date__lte=timezone.now())
 
     info_filter = ''
     current_page = Paginator(events, 5)
