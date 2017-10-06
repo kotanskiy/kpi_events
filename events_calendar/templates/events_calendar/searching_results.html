@@ -13,7 +13,11 @@
     </div>
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
         <div class="text">
-            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
+            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
+            {% if request.user.profile.organization == event.creator %}
+                <a href="{% url 'calendar:edit_event' event.id %}">Редагувати</a>
+            {% endif %}
+            <br>
             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
             <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
