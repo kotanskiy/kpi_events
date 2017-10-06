@@ -12,7 +12,6 @@
 
         gtag('config', 'UA-106618032-1');
     </script>
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,8 +76,8 @@
 </nav>
 <div class="container">
 
-<br><br>
-{% block content %}{% endblock %}
+    <br><br>
+    {% block content %}{% endblock %}
 </div>
 <footer id="footer" class="footer" style="background-color: #397dfa;"><!--Footer-->
     <div class="container" >
@@ -93,8 +92,8 @@
             $("footer.footer").removeClass("navbar-fixed-bottom");
         }
     }
-footer();
-setInterval('footer()', 1000);
+    footer();
+    setInterval('footer()', 1000);
 </script>
 </body>
 </html>
