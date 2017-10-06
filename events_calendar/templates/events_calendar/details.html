@@ -138,7 +138,7 @@
             var codeElems = $(".description-font"); //jQuery
             var regStr= /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
             for (var c=0; c<codeElems.length; c++){
-                codeElems[c].innerHTML=codeElems[c].innerHTML.replace(regStr, '<a href="$1">$1</a>');
+                codeElems[c].innerHTML=codeElems[c].innerHTML.replace(regStr, '<a href="$1" target="blank">$1</a>');
             }
         }
         clickable();
