@@ -58,7 +58,7 @@ def all_events(request, page_number=1):
     if not for_filter_categories:
         for_filter_categories = all_categories[:]
     # get data with our filters
-    end_date = timezone.now() - timedelta(hours=1)
+    end_date = timezone.now() - timedelta(hours=3)
     if current_date == '1':
         events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
         start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
@@ -135,7 +135,7 @@ def filter_by_signed_organizations(request, page_number=1):
     for_filter_categories = current_categories
     if not for_filter_categories:
         for_filter_categories = all_categories[:]
-    end_date = timezone.now() - timedelta(hours=1)
+    end_date = timezone.now() - timedelta(hours=3)
     if current_date == '1':
         events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
             start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
@@ -736,7 +736,7 @@ def filter_by_organization(request, organization_id, page_number=1):
     for_filter_categories = current_categories
     if not for_filter_categories:
         for_filter_categories = all_categories[:]
-    end_date = timezone.now() - timedelta(hours=1)
+    end_date = timezone.now() - timedelta(hours=3)
     if current_date == '1':
         events = Event.objects.filter(creator=select_organization).filter(
             category__in=for_filter_categories).filter(published=True).filter(
