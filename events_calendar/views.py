@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from events_calendar.models import Event, Comment, Category, Organization
 from datetime import datetime, timedelta
@@ -20,7 +20,7 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
     template_name = 'events_calendar/calendar.html'
     paginate_by = 5
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         current_date = request.POST['date_filter']
         try:
             del request.session['current_date']
@@ -121,35 +121,39 @@ class EventsBySignedOrganizationsListView(EventsWithBasicFiltersListView):
                 start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
         return events
 
-def calendar_details(request, calendar_id):
-    user = auth.get_user(request)
-    event = get_object_or_404(Event, pk=calendar_id)
-    context = {
-        'page_header': event.name,
-        'event': event,
-        'user': user,
-    }
-    if request.user.username:
-        signed_organizations = user.profile.signed_organizations.all()
-        context['signed_organizations'] = signed_organizations
-    return render(request, 'events_calendar/details.html', context)
+class EventDetailsView(DetailView):
+    model = Event
+    context_object_name = 'event'
+    template_name = 'events_calendar/details.html'
 
-def comments(request, calendar_id):
-    event = get_object_or_404(Event, pk=calendar_id)
-    comments = Comment.objects.filter(event=event)
-    context = {
-        'comments': comments
-    }
-    return render(request, 'events_calendar/comments.html', context)
+    def get_context_data(self, **kwargs):
+        event = self.get_object()
+        context = super(EventDetailsView, self).get_context_data()
+        context['page_header'] = event.name
+        context['user'] = self.request.user
+        if self.request.user.username:
+            signed_organizations = self.request.user.profile.signed_organizations.all()
+            context['signed_organizations'] = signed_organizations
+        return context
 
-def add_comment(request, calendar_id):
-    event = get_object_or_404(Event, pk=calendar_id)
-    text = request.POST.get('text')
-    text = text.strip()
-    if text != '':
-        comment = Comment(creator=request.user, text=text, event=event)
-        comment.save()
+class CommentsListView(ListView):
+    model = Comment
+    template_name = 'events_calendar/comments.html'
+    context_object_name = 'comments'
 
+    def get_queryset(self):
+        return Comment.objects.filter(event__pk=self.kwargs['event_id'])
+
+@login_required
+def add_comment(request, event_id):
+    if request.POST:
+        event = get_object_or_404(Event, pk=event_id)
+        text = request.POST.get('text')
+        text = text.strip()
+        if text != '':
+            comment = Comment(creator=request.user, text=text, event=event)
+            comment.save()
+        return redirect('/')
 
 @login_required
 def organization_events(request, page_number=1):
@@ -633,90 +637,33 @@ def edit_proposed_event(request, event_id):
         return redirect('/')
 
 
-def filter_by_organization(request, organization_id, page_number=1):
-    select_organization = get_object_or_404(Organization, pk=organization_id)
-    events = Event.objects.none()
-    all_categories = Category.objects.all()
-    current_date = ''
-    current_categories = []
-    try:
-        current_date = request.session['current_date']
-    except KeyError:
-        pass
-    list_categories_id = []
-    for category in all_categories:
-        try:
-            category_id = request.session[category.name]
-            list_categories_id.append(category_id)
-        except KeyError:
-            pass
-    for categ in Category.objects.filter(pk__in=list_categories_id):
-        current_categories.append(categ)
-    list_categories_id = []
-    if request.POST:
-        for category in all_categories:
-            category_id = request.POST.get(category.name)
-            list_categories_id.append(category_id)
-            try:
-                del request.session[category.name]
-            except KeyError:
-                pass
-        current_categories = []
-        for categ in Category.objects.filter(pk__in=list_categories_id):
-            current_categories.append(categ)
-            # update current date from post request
-        if request.POST['date_filter']:
-            current_date = request.POST['date_filter']
-            # update current_date into session
-            try:
-                del request.session['current_date']
-            except KeyError:
-                pass
-            request.session.set_expiry(3600)
-            request.session['current_date'] = current_date
+class EventsByOrganizationListView(EventsWithBasicFiltersListView):
+    template_name = 'events_calendar/organization.html'
 
-    for category in current_categories:
-        request.session.set_expiry(3600)
-        request.session[category.name] = category.id
+    def get_context_data(self, **kwargs):
+        context = super(EventsByOrganizationListView, self).get_context_data()
+        context['organization'] = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        context['type'] = ''
+        return context
 
-    if not current_date:
-        current_date = '1'
-    for_filter_categories = current_categories
-    if not for_filter_categories:
-        for_filter_categories = all_categories[:]
-    end_date = timezone.now() - timedelta(hours=3)
-    if current_date == '1':
-        events = Event.objects.filter(creator=select_organization).filter(
-            category__in=for_filter_categories).filter(published=True).filter(
-            start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
-    elif current_date == '2':
-        events = Event.objects.filter(creator=select_organization).filter(
-            category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=end_date).order_by('-start_date').exclude(end_date__lte=timezone.now())
-
-    info_filter = ''
-    current_page = Paginator(events, 5)
-    context = {
-        'page_header': 'Головна',
-        'events': current_page.page(page_number),
-        'user': request.user,
-        'type': 'Моя лента событий',
-        'categories': all_categories,
-        'current_categories': current_categories,
-        'info_filter': info_filter,
-        'current_date': current_date,
-        'organization': select_organization,
-    }
-    context.update(csrf(request))
-    return render(request, 'events_calendar/organization.html', context)
-
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        filters_data = self.get_filters_data()
+        if filters_data['current_date'] == '1':
+            events = Event.objects.filter(creator=organization).filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
+                start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
+        elif filters_data['current_date'] == '2':
+            events = Event.objects.filter(creator=organization).filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
+                start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        return events
 
 def remove_proposed_event(request, event_id):
     user = request.user
     if user.is_authenticated and user.profile.organization.access_to_the_offer:
         get_object_or_404(Event, pk=event_id).delete()
         return redirect('/proposed_events')
-    return redirect('/')
 
 
 def subscribe_on_organization(request):
