@@ -20,16 +20,16 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
     paginate_by = 5
 
     def post(self, request, *args, **kwargs):
-        current_date = '1'
         current_date = request.POST['date_filter']
         try:
             del request.session['current_date']
         except KeyError:
             pass
+        if not current_date:
+            current_date = '1'
         request.session.set_expiry(3600)
         request.session['current_date'] = current_date
 
-        current_categories = []
         list_categories_id = []
         for category in self.all_categories:
             category_id = request.POST.get(category.name)
@@ -38,8 +38,7 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
                 del request.session[category.name]
             except KeyError:
                 pass
-        for categ in Category.objects.filter(pk__in=list_categories_id):
-            current_categories.append(categ)
+        current_categories = Category.objects.filter(pk__in=list_categories_id)
         for category in current_categories:
             request.session.set_expiry(3600)
             request.session[category.name] = category.id
