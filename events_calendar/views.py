@@ -12,6 +12,7 @@ from events_calendar.models import Event, Comment, Category, Organization
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+
 class EventsWithBasicFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
     model = Event
@@ -19,7 +20,7 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
     template_name = 'events_calendar/calendar.html'
     paginate_by = 5
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         current_date = request.POST['date_filter']
         try:
             del request.session['current_date']
@@ -53,7 +54,6 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
         return current_date
 
     def get_list_current_categories_from_session(self):
-        current_categories = []
         list_categories_id = []
         for category in self.all_categories:
             try:
@@ -61,8 +61,7 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
                 list_categories_id.append(category_id)
             except KeyError:
                 pass
-        for categ in Category.objects.filter(pk__in=list_categories_id):
-            current_categories.append(categ)
+        current_categories = Category.objects.filter(pk__in=list_categories_id)
         return current_categories
 
     def get_context_data(self, **kwargs):
@@ -150,7 +149,7 @@ def add_comment(request, calendar_id):
     if text != '':
         comment = Comment(creator=request.user, text=text, event=event)
         comment.save()
-    return redirect('/')
+
 
 @login_required
 def organization_events(request, page_number=1):

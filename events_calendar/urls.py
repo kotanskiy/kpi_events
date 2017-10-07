@@ -1,8 +1,7 @@
 from django.conf.urls import url
-from django.views.static import serve
-
+from django.contrib.auth.decorators import login_required
 from events_calendar import views
-from kpi_events import settings
+
 
 
 app_name = 'calendar'
@@ -17,7 +16,7 @@ urlpatterns = [
     url(r'^organization_events/edit_event/(?P<calendar_id>[\d+]*)$', views.edit_event, name='edit_event'),
     url(r'^organization_events/edit_organization$', views.edit_organization, name='edit_organization'),
     url(r'^subscribe$', views.subscribe, name='subscribe'),
-    url(r'^my_feed', views.EventsBySignedOrganizationsListView.as_view(), name='filter_by_signed_organizations'),
+    url(r'^my_feed$', login_required(views.EventsBySignedOrganizationsListView.as_view()), name='filter_by_signed_organizations'),
     url(r'^searching_results', views.searching_results, name='searching_results'),
     url(r'^searching_results/page/(\d+)$', views.searching_results),
     url(r'^suggest_an_event$', views.suggest_an_event, name='suggest_an_event'),
