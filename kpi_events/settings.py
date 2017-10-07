@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'loginsys',
     'cuser',
     'sorl.thumbnail',
+    'pure_pagination',
 ]
 
 ULOGIN_PROVIDERS = ['google', 'facebook']
@@ -57,6 +58,16 @@ ULOGIN_HIDDEN = []
 ULOGIN_DISPLAY = 'panel'
 ULOGIN_FIELDS = ['first_name', 'last_name', 'email', 'photo_big']
 
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Календар подій КПІ'
+}
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
 
 THUMBNAIL_DEBUG = False
 
@@ -123,10 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-SUIT_CONFIG = {
-    'ADMIN_NAME': 'Календар подій КПІ'
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

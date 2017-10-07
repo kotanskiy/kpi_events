@@ -1,162 +1,127 @@
+from pure_pagination.mixins import PaginationMixin
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
+from django.views.generic import ListView
+
 from events_calendar.models import Event, Comment, Category, Organization
 from datetime import datetime, timedelta
 from django.utils import timezone
-from django.core.paginator import Paginator
-from PIL import Image
 
-def all_events(request, page_number=1):
-    events = Event.objects.none()
+class EventsWithBasicFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
-    current_date = ''
-    current_categories = []
-    try:
-        current_date = request.session['current_date']
-    except KeyError:
-        pass
-    list_categories_id = []
-    for category in all_categories:
-        try:
-            category_id = request.session[category.name]
-            list_categories_id.append(category_id)
-        except KeyError:
-            pass
-    for categ in Category.objects.filter(pk__in = list_categories_id):
-        current_categories.append(categ)
-    list_categories_id = []
-    if request.POST:
-        for category in all_categories:
-            category_id = request.POST.get(category.name)
-            list_categories_id.append(category_id)
-            try:
-                del request.session[category.name]
-            except KeyError:
-                pass
-        current_categories = []
-        for categ in Category.objects.filter(pk__in = list_categories_id):
-            current_categories.append(categ)
-        if request.POST['date_filter']:
-            current_date = request.POST['date_filter']
-            try:
-                del request.session['current_date']
-            except KeyError:
-                pass
-            request.session.set_expiry(3600)
-            request.session['current_date'] = current_date
-    for category in current_categories:
-        request.session.set_expiry(3600)
-        request.session[category.name] = category.id
-    if not current_date:
+    model = Event
+    context_object_name = 'events'
+    template_name = 'events_calendar/calendar.html'
+    paginate_by = 5
+
+    def post(self, request, *args, **kwargs):
         current_date = '1'
-    for_filter_categories = current_categories
-    if not for_filter_categories:
-        for_filter_categories = all_categories[:]
-    # get data with our filters
-    end_date = timezone.now() - timedelta(hours=3)
-    if current_date == '1':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
-        start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
-    elif current_date == '2':
-        events = Event.objects.filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=end_date).order_by('-start_date').exclude(end_date__gte=timezone.now())
-
-    info_filter = ''
-    current_page = Paginator(events, 5)
-    context = {
-        'page_header': 'Головна',
-        'events': current_page.page(page_number),
-        'user': request.user,
-        'type': 'Все события',
-        'categories': all_categories,
-        'current_categories': current_categories,
-        'info_filter': info_filter,
-        'current_date': current_date,
-    }
-    context.update(csrf(request))
-    return render(request, 'events_calendar/calendar.html', context)
-
-@login_required
-def filter_by_signed_organizations(request, page_number=1):
-    signed_organizations = []
-    for organization in request.user.profile.signed_organizations.all():
-        signed_organizations.append(organization)
-    events = Event.objects.none()
-    all_categories = Category.objects.all()
-    current_date = ''
-    current_categories = []
-    try:
-        current_date = request.session['current_date']
-    except KeyError:
-        pass
-    list_categories_id = []
-    for category in all_categories:
+        current_date = request.POST['date_filter']
         try:
-            category_id = request.session[category.name]
-            list_categories_id.append(category_id)
+            del request.session['current_date']
         except KeyError:
             pass
-    for categ in Category.objects.filter(pk__in=list_categories_id):
-        current_categories.append(categ)
-    list_categories_id = []
-    if request.POST:
-        for category in all_categories:
+        request.session.set_expiry(3600)
+        request.session['current_date'] = current_date
+
+        current_categories = []
+        list_categories_id = []
+        for category in self.all_categories:
             category_id = request.POST.get(category.name)
             list_categories_id.append(category_id)
             try:
                 del request.session[category.name]
             except KeyError:
                 pass
-        current_categories = []
         for categ in Category.objects.filter(pk__in=list_categories_id):
             current_categories.append(categ)
-            # update current date from post request
-        if request.POST['date_filter']:
-            current_date = request.POST['date_filter']
-            # update current_date into session
+        for category in current_categories:
+            request.session.set_expiry(3600)
+            request.session[category.name] = category.id
+        return render(request, self.template_name, self.get_context_data())
+
+    def get_current_date_from_session(self):
+        current_date = '1'
+        try:
+            current_date = self.request.session['current_date']
+        except KeyError:
+            pass
+        return current_date
+
+    def get_list_current_categories_from_session(self):
+        current_categories = []
+        list_categories_id = []
+        for category in self.all_categories:
             try:
-                del request.session['current_date']
+                category_id = self.request.session[category.name]
+                list_categories_id.append(category_id)
             except KeyError:
                 pass
-            request.session.set_expiry(3600)
-            request.session['current_date'] = current_date
+        for categ in Category.objects.filter(pk__in=list_categories_id):
+            current_categories.append(categ)
+        return current_categories
 
-    for category in current_categories:
-        request.session.set_expiry(3600)
-        request.session[category.name] = category.id
+    def get_context_data(self, **kwargs):
+        self.object_list = self.get_queryset()
+        context = super(EventsWithBasicFiltersListView, self).get_context_data(**kwargs)
+        context['page_header'] = 'Головна'
+        context['user'] = self.request.user
+        context['type'] = 'Все события'
+        context['categories'] = self.all_categories
+        context['current_categories'] = self.get_list_current_categories_from_session()
+        context['info_filter'] = ''
+        context['current_date'] = self.get_current_date_from_session()
+        return context
 
-    if not current_date:
-        current_date = '1'
-    for_filter_categories = current_categories
-    if not for_filter_categories:
-        for_filter_categories = all_categories[:]
-    end_date = timezone.now() - timedelta(hours=3)
-    if current_date == '1':
-        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__gte=end_date).order_by('start_date').exclude(end_date__lte=timezone.now())
-    elif current_date == '2':
-        events = Event.objects.filter(creator__in=signed_organizations).filter(category__in=for_filter_categories).filter(published=True).filter(
-            start_date__lte=end_date).order_by('-start_date').exclude(end_date__lte=timezone.now())
+    def get_filters_data(self):
+        current_date = self.get_current_date_from_session()
+        end_date = timezone.now() - timedelta(hours=3)
+        for_filter_categories = self.get_list_current_categories_from_session()
+        if not for_filter_categories:
+            for_filter_categories = self.all_categories[:]
+        filters_data = {
+            'current_date':current_date,
+            'for_filter_categories':for_filter_categories,
+            'end_date':end_date,
+        }
+        return filters_data
 
-    info_filter = ''
-    current_page = Paginator(events, 5)
-    context = {
-        'page_header': 'Головна',
-        'events': current_page.page(page_number),
-        'user': request.user,
-        'type': 'Моя лента событий',
-        'categories': all_categories,
-        'current_categories': current_categories,
-        'info_filter': info_filter,
-        'current_date': current_date,
-    }
-    context.update(csrf(request))
-    return render(request, 'events_calendar/calendar.html', context)
+    def get_queryset(self):
+        filters_data = self.get_filters_data()
+        if filters_data['current_date'] == '1':
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(published=True).filter(
+                start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
+        elif filters_data['current_date'] == '2':
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(published=True).filter(
+                start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        return events
+
+
+class EventsBySignedOrganizationsListView(EventsWithBasicFiltersListView):
+    def get_signed_organizations(self):
+        return self.request.user.profile.signed_organizations.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(EventsBySignedOrganizationsListView, self).get_context_data(**kwargs)
+        context['type'] = 'Моя лента событий'
+        return context
+
+    def get_queryset(self):
+        filters_data = self.get_filters_data()
+        if filters_data['current_date'] == '1':
+            events = Event.objects.filter(creator__in=self.get_signed_organizations()).filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
+                start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
+        elif filters_data['current_date'] == '2':
+            events = Event.objects.filter(creator__in=self.get_signed_organizations()).filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
+                start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        return events
 
 def calendar_details(request, calendar_id):
     user = auth.get_user(request)

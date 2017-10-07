@@ -1,15 +1,47 @@
 import random
+import urllib
 
-from PIL import Image
+from django_ulogin.models import ULoginUser
+from django_ulogin.signals import assign
 from django.contrib import auth
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, render_to_response
-from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 from django.template.context_processors import csrf
-from loginsys.models import customUserCreationForm
+from loginsys.forms import customUserCreationForm
 
+
+def catch_ulogin_signal(*args, **kwargs):
+    """
+    Обновляет модель пользователя: исправляет username, имя и фамилию на
+    полученные от провайдера.
+
+    В реальной жизни следует иметь в виду, что username должен быть уникальным,
+    а в социальной сети может быть много "тёзок" и, как следствие,
+    возможно нарушение уникальности.
+
+    """
+    user=kwargs['user']
+    json=kwargs['ulogin_data']
+
+    if kwargs['registered']:
+        user.first_name = json['first_name']
+        user.last_name = json['last_name']
+        user.email = json['email']
+        url_image = json['photo_big']
+        link = 'images/users/'  + str(random.randint(0,1000)) + 'img_' + json['email']
+        img = urllib.request.urlopen(url_image).read()
+        f = default_storage.open(link, "wb+")
+        f.write(img)
+        f.close()
+        user.profile.image = link
+        user.save()
+
+
+assign.connect(receiver=catch_ulogin_signal,
+               sender=ULoginUser,
+               dispatch_uid='customize.models')
 
 def login(request):
     args = {}
