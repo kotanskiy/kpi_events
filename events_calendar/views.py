@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 
 
-class EventsWithBasicFiltersListView(PaginationMixin, ListView):
+class EventsWithBaseFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
     model = Event
     context_object_name = 'events'
@@ -66,7 +66,7 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
 
     def get_context_data(self, **kwargs):
         self.object_list = self.get_queryset()
-        context = super(EventsWithBasicFiltersListView, self).get_context_data(**kwargs)
+        context = super(EventsWithBaseFiltersListView, self).get_context_data(**kwargs)
         context['page_header'] = 'Головна'
         context['user'] = self.request.user
         context['type'] = 'Все события'
@@ -89,18 +89,24 @@ class EventsWithBasicFiltersListView(PaginationMixin, ListView):
         }
         return filters_data
 
-    def get_queryset(self):
+    def get_queryset_with_base_filters(self):
         filters_data = self.get_filters_data()
         if filters_data['current_date'] == '1':
-            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(published=True).filter(
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
                 start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
         elif filters_data['current_date'] == '2':
-            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(published=True).filter(
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(
+                published=True).filter(
                 start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
         return events
 
+    def get_queryset(self):
+        events = self.get_queryset_with_base_filters()
+        return events
 
-class EventsBySignedOrganizationsListView(EventsWithBasicFiltersListView):
+
+class EventsBySignedOrganizationsListView(EventsWithBaseFiltersListView):
     def get_signed_organizations(self):
         return self.request.user.profile.signed_organizations.all()
 
@@ -110,15 +116,8 @@ class EventsBySignedOrganizationsListView(EventsWithBasicFiltersListView):
         return context
 
     def get_queryset(self):
-        filters_data = self.get_filters_data()
-        if filters_data['current_date'] == '1':
-            events = Event.objects.filter(creator__in=self.get_signed_organizations()).filter(category__in=filters_data['for_filter_categories']).filter(
-                published=True).filter(
-                start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
-        elif filters_data['current_date'] == '2':
-            events = Event.objects.filter(creator__in=self.get_signed_organizations()).filter(category__in=filters_data['for_filter_categories']).filter(
-                published=True).filter(
-                start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        events = self.get_queryset_with_base_filters()
+        events.filter(creator__in=self.get_signed_organizations())
         return events
 
 class EventDetailsView(DetailView):
@@ -637,7 +636,7 @@ def edit_proposed_event(request, event_id):
         return redirect('/')
 
 
-class EventsByOrganizationListView(EventsWithBasicFiltersListView):
+class EventsByOrganizationListView(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization.html'
 
     def get_context_data(self, **kwargs):
@@ -648,15 +647,8 @@ class EventsByOrganizationListView(EventsWithBasicFiltersListView):
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
-        filters_data = self.get_filters_data()
-        if filters_data['current_date'] == '1':
-            events = Event.objects.filter(creator=organization).filter(category__in=filters_data['for_filter_categories']).filter(
-                published=True).filter(
-                start_date__gte=filters_data['end_date']).order_by('start_date').exclude(end_date__lte=timezone.now())
-        elif filters_data['current_date'] == '2':
-            events = Event.objects.filter(creator=organization).filter(category__in=filters_data['for_filter_categories']).filter(
-                published=True).filter(
-                start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        events = self.get_queryset_with_base_filters()
+        events.filter(creator=organization)
         return events
 
 def remove_proposed_event(request, event_id):

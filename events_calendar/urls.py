@@ -4,7 +4,7 @@ from events_calendar import views
 
 app_name = 'calendar'
 urlpatterns = [
-    url(r'^$', views.EventsWithBasicFiltersListView.as_view(), name='home'),
+    url(r'^$', views.EventsWithBaseFiltersListView.as_view(), name='home'),
     url(r'^organization_events/page/(\d+)$', views.organization_events),
     url(r'^event/(?P<pk>[\d+]*)$', views.EventDetailsView.as_view(), name='details'),
     url(r'^comments/(?P<event_id>[\d+]*)$', views.CommentsListView.as_view(), name='comments'),
