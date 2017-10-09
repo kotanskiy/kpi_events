@@ -27,5 +27,9 @@
         $('label[for^="id_name"]').before('*  ');
         $('label[for^="id_start_date"]').before('*  ');
         $('label[for^="id_category"]').before('*  ');
+        $('p').find('a').remove();
+        $('#image-clear_id').remove();
+        $('label[for^="image-clear_id"]').remove();
+        $('label[for^="id_image"]').remove();
 </script>
 {% endblock %}

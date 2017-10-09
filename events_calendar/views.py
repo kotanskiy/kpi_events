@@ -26,7 +26,6 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
             pass
         if not current_date:
             current_date = '1'
-        request.session.set_expiry(3600)
         request.session['current_date'] = current_date
 
         list_categories_id = []
@@ -39,7 +38,6 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
                 pass
         current_categories = Category.objects.filter(pk__in=list_categories_id)
         for category in current_categories:
-            request.session.set_expiry(3600)
             request.session[category.name] = category.id
         return render(request, self.template_name, self.get_context_data())
 

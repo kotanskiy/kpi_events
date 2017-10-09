@@ -12,6 +12,10 @@
 </div>
 <script type="text/javascript">
     $('#id_image').before('<img src="/media/{{ organization.image }}" style="max-width: 200px"><br><br>').attr('accept', 'image/jpeg,image/png');
+    $('p').find('a').remove();
+    $('#image-clear_id').remove();
+    $('label[for^="image-clear_id"]').remove();
+    $('label[for^="id_image"]').remove();
 </script>
 
 {% endblock %}

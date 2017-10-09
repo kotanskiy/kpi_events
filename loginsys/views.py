@@ -1,6 +1,8 @@
 import random
 import urllib
 
+from django.views import View
+from django.views.generic import FormView
 from django_ulogin.models import ULoginUser
 from django_ulogin.signals import assign
 from django.contrib import auth
@@ -9,7 +11,7 @@ from django.shortcuts import render, redirect, render_to_response
 
 # Create your views here.
 from django.template.context_processors import csrf
-from loginsys.forms import customUserCreationForm
+from loginsys.forms import customUserCreationForm, UserEditForm
 
 
 def catch_ulogin_signal(*args, **kwargs):
@@ -85,50 +87,34 @@ def registration(request):
 
     return render(request, 'loginsys/registration.html', args)
 
+class UserEditView(FormView):
+    template_name = 'loginsys/edit_user.html'
+    form_class = UserEditForm
 
-def edit_user(request):
-    if request.user.username:
-        signed_organizations = request.user.profile.signed_organizations.all()
-        args = {}
-        args['organizations'] = signed_organizations
-        args['page_header'] = 'Редагування ' + request.user.first_name
-        args.update(csrf(request))
-        args['user'] = request.user
-        if request.POST:
-            try:
-                first_name = request.POST.get('first_name')
-                last_name = request.POST.get('last_name')
-                email = request.POST.get('email')
-                for file in request.FILES.getlist('image'):
-                    link_image = 'images/users/' + str(random.random()) + str(file)
-                    with default_storage.open(link_image, 'wb+') as destination:
-                        for chunk in file.chunks():
-                            destination.write(chunk)
-                user = request.user
-                if email.strip() != '':
-                    user.email = email
-                if first_name.strip() != '':
-                    user.first_name = first_name
-                if last_name.strip() != '':
-                    user.last_name = last_name
-                if link_image != '':
-                    user.profile.image = link_image
-                user.save()
-            except UnboundLocalError:
-                link_image = ''
-                user = request.user
-                if email.strip() != '':
-                    user.email = email
-                if first_name.strip() != '':
-                    user.first_name = first_name
-                if last_name.strip() != '':
-                    user.last_name = last_name
-                if link_image != '':
-                    user.profile.image = link_image
-                user.save()
-        return render_to_response('loginsys/edit_user.html', args)
-    else:
-        return redirect('/')
+    def get_context_data(self, **kwargs):
+        context = super(UserEditView, self).get_context_data()
+        context['organizations'] = self.request.user.profile.signed_organizations.all()
+        context['page_header'] = 'Редагування ' + self.request.user.first_name
+        context['user'] = self.request.user
+        return context
+
+    def get_initial(self):
+        initial = super(UserEditView, self).get_initial()
+        initial['first_name'] = self.request.user.first_name
+        initial['last_name'] = self.request.user.last_name
+        initial['email'] = self.request.user.email
+        initial['image'] = self.request.user.profile.image
+        return initial
+
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        user = self.request.user
+        user.first_name = cleaned_data['first_name']
+        user.last_name = cleaned_data['last_name']
+        user.email = cleaned_data['email']
+        user.profile.image = cleaned_data['image']
+        user.save()
+        return super(UserEditView, self).form_valid(form)
 
 
 def key(request):
