@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br>
+    <div class="col-lg-6 col-sm-8 col-xs-12">
+    <form class="form-horizontal" method="post" action="{% url 'calendar:edit_organization' request.user.profile.organization.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Зберегти" class="btn btn-primary">
+        <br>
+    </form>
+</div>
+<script type="text/javascript">
+    $('#id_image').before('<img src="/media/{{ organization.image }}" style="max-width: 200px"><br><br>').attr('accept', 'image/jpeg,image/png');
+</script>
+
+{% endblock %}

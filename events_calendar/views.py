@@ -3,11 +3,11 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
-from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
+from events_calendar.forms import EventForm, OrganizationForm
 from events_calendar.models import Event, Comment, Category, Organization
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -154,238 +154,75 @@ def add_comment(request, event_id):
             comment.save()
         return redirect('/')
 
-@login_required
-def organization_events(request, page_number=1):
-    if request.user.profile.organization:
-        events = Event.objects.filter(creator=request.user.profile.organization).order_by('-start_date')
-        current_page = Paginator(events, 5)
-        context = {
-            'page_header': request.user.profile.organization.name,
-            'events': current_page.page(page_number),
-            'user':request.user
-        }
-        return render(request, 'events_calendar/organization_events.html', context)
+class AdminOrganizationEvents(EventsWithBaseFiltersListView):
+    template_name = 'events_calendar/organization_events.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(AdminOrganizationEvents, self).get_context_data()
+        context['type'] = ''
+        context['page_header'] = self.request.user.profile.organization.name
+        return context
 
+    def get_queryset(self):
+        events = self.get_queryset_with_base_filters()
+        events.filter(creator=self.request.user.profile.organization)
+        return events
 
-def create_event(request):
-    args = {}
-    args['user'] = request.user
-    args.update(csrf(request))
-    args['page_header'] = 'Нова подія ' + request.user.profile.organization.name
-    args['categories'] = Category.objects.all()
-    if request.user.profile.organization:
-        if request.POST:
-            try:
-                try:
-                    post = request.POST
-                    if post.get('start_date') != '':
-                        start_date = str(datetime.strptime(post.get('start_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        start_date = None
-                    if post.get('end_date') != '':
-                        end_date = str(datetime.strptime(post.get('end_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        end_date = None
+class EventCreateView(CreateView):
+    form_class = EventForm
+    template_name = 'events_calendar/create_event.html'
 
-                    for file in request.FILES.getlist('image'):
-                        link_image = 'images/organization/' + request.user.profile.organization.name + str(file)
-                        with default_storage.open(link_image, 'wb+') as destination:
-                            for chunk in file.chunks():
-                                destination.write(chunk)
-                    if post.get('name').strip() == '':
-                        args['error'] = 'Назва події не заповнено'
-                        return render_to_response('events_calendar/create_event.html', args)
-                    if post.get('place_of_event').strip() != '':
-                        place_of_event = post.get('place_of_event').strip()
-                    else:
-                        place_of_event = None
-                    if post.get('vk_link').strip() != '':
-                        vk_link = post.get('vk_link').strip()
-                    else:
-                        vk_link = None
-                    if post.get('fb_link').strip() != '':
-                        fb_link = post.get('fb_link').strip()
-                    else:
-                        fb_link = None
-                    if post.get('web_site').strip() != '':
-                        web_site = post.get('web_site').strip()
-                    else:
-                        web_site = None
-                    if post.get('category') != '----------':
-                        categories = Category.objects.all().filter(name=post.get('category'))
-                        for el in categories:
-                            category = el
-                    else:
-                        args['error'] = 'Категорія не заповнена'
-                        return render_to_response('events_calendar/create_event.html', args)
-                    event = Event(
-                        name=post.get('name'),
-                        description=post.get('description'),
-                        start_date=start_date,
-                        end_date=end_date,
-                        category=category,
-                        image=link_image,
-                        web_site=web_site,
-                        place_of_event=place_of_event,
-                        vk_link=vk_link,
-                        fb_link=fb_link,
-                        creator=request.user.profile.organization,
-                    )
-                    event.save()
-                    return redirect('/organization_events')
-                except UnboundLocalError:
-                    post = request.POST
-                    if post.get('start_date') != '':
-                        start_date = str(datetime.strptime(post.get('start_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        start_date = None
-                    if post.get('end_date') != '':
-                        end_date = str(datetime.strptime(post.get('end_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        end_date = None
-                    if post.get('name').strip() == '':
-                        args['error'] = 'Назва події не заповнено'
-                        return render_to_response('events_calendar/create_event.html', args)
-                    if post.get('place_of_event').strip() != '':
-                        place_of_event = post.get('place_of_event').strip()
-                    else:
-                        place_of_event = None
-                    if post.get('web_site').strip() != '':
-                        web_site = post.get('web_site').strip()
-                    else:
-                        web_site = None
-                    if post.get('vk_link').strip() != '':
-                        vk_link = post.get('vk_link').strip()
-                    else:
-                        vk_link = None
-                    if post.get('fb_link').strip() != '':
-                        fb_link = post.get('fb_link').strip()
-                    else:
-                        fb_link = None
-                    if post.get('category') != '----------':
-                        categories = Category.objects.filter(name=post.get('category'))
-                        for el in categories:
-                            category = el
-                    else:
-                        args['error'] = 'Категорія не заповнена'
-                        return render_to_response('events_calendar/create_event.html', args)
-                    event = Event(
-                        name=post.get('name'),
-                        description=post.get('description'),
-                        start_date=start_date,
-                        end_date=end_date,
-                        category=category,
-                        web_site = web_site,
-                        place_of_event=place_of_event,
-                        vk_link=vk_link,
-                        fb_link=fb_link,
-                        creator=request.user.profile.organization,
-                    )
-                    event.save()
-                    return redirect('/organization_events')
-            except IntegrityError:
-                args['error'] = 'Не обрана категорія'
-                return render_to_response('events_calendar/create_event.html', args)
-        return render_to_response('events_calendar/create_event.html', args)
-    else:
-        return redirect('/')
+    def get_context_data(self, **kwargs):
+        context = super(EventCreateView, self).get_context_data()
+        context['page_header'] = 'Нова подія'
+        context['button_info'] = 'Опублікувати'
+        context['type'] = 'create'
+        context.update(csrf(self.request))
+        return context
 
+    def form_valid(self, form):
+        if self.request.user.profile.organization:
+            form.instance.creator = self.request.user.profile.organization
+            return super(EventCreateView, self).form_valid(form)
 
-def edit_event(request, calendar_id):
-    event = get_object_or_404(Event, pk=calendar_id)
-    if request.user.profile.organization == event.creator:
-        args = {}
-        args.update(csrf(request))
-        args['event'] = event
-        args['categories'] = Category.objects.all()
-        args['page_header'] = event.name
-        args['user'] = request.user
-        if request.POST:
-            try:
-                if request.POST.get('name').strip() != '':
-                    event.name = request.POST.get('name').strip()
-                if request.POST.get('description').strip() != '':
-                    event.description = request.POST.get('description').strip()
-                for file in request.FILES.getlist('image'):
-                    link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
-                    with default_storage.open(link_image, 'wb+') as destination:
-                        for chunk in file.chunks():
-                            destination.write(chunk)
-                if str(file).strip() != '':
-                    event.image = link_image
-                categories = Category.objects.all().filter(name=request.POST.get('category'))
-                for el in categories:
-                    category = el
-                event.category = category
-                if request.POST.get('start_date') != '':
-                    event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('end_date') != '':
-                    event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('web_site').strip() != '':
-                    event.web_site = request.POST.get('web_site').strip()
-                if request.POST.get('place_of_event').strip() != '':
-                    event.place_of_event = request.POST.get('place_of_event').strip()
-                if request.POST.get('vk_link').strip() != '':
-                    event.vk_link = request.POST.get('vk_link').strip()
-                if request.POST.get('fb_link').strip() != '':
-                    event.fb_link = request.POST.get('fb_link').strip()
-                event.save()
-                return render(request, 'events_calendar/edit_event.html', args)
-            except UnboundLocalError:
-                if request.POST.get('name').strip() != '':
-                    event.name = request.POST.get('name').strip()
-                if request.POST.get('description').strip() != '':
-                    event.description = request.POST.get('description').strip()
-                categories = Category.objects.all().filter(name=request.POST.get('category'))
-                for el in categories:
-                    category = el
-                event.category = category
-                if request.POST.get('start_date') != '':
-                    event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('end_date') != '':
-                    event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('web_site').strip() != '':
-                    event.web_site = request.POST.get('web_site').strip()
-                if request.POST.get('place_of_event').strip() != '':
-                    event.place_of_event = request.POST.get('place_of_event').strip()
-                if request.POST.get('vk_link').strip() != '':
-                    event.vk_link = request.POST.get('vk_link').strip()
-                if request.POST.get('fb_link').strip() != '':
-                    event.fb_link = request.POST.get('fb_link').strip()
-                event.save()
-                return render(request, 'events_calendar/edit_event.html', args)
-        return render(request, 'events_calendar/edit_event.html', args)
-    else:
-        return redirect('/')
+class ProposeEventCreateView(EventCreateView):
 
+    def get_context_data(self, **kwargs):
+        context = super(ProposeEventCreateView, self).get_context_data()
+        context['page_header'] = 'Запропонувати'
+        context['button_info'] = 'Запропонувати'
+        context['type'] = 'propose'
+        return context
 
-def edit_organization(request):
-    if request.user.username and request.user.profile.organization:
-        args = {}
-        args.update(csrf(request))
-        organization = request.user.profile.organization
-        args['organization'] = organization
-        args['page_header'] = request.user.profile.organization.name
-        args['user'] = request.user
-        if request.POST:
-            try:
-                if request.POST.get('name').strip() != '':
-                    organization.name = request.POST.get('name').strip()
-                for file in request.FILES.getlist('image'):
-                    link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
-                    with default_storage.open(link_image, 'wb+') as destination:
-                        for chunk in file.chunks():
-                            destination.write(chunk)
-                organization.image = link_image
-                organization.save()
-            except UnboundLocalError:
-                if request.POST.get('name').strip() != '':
-                    organization.name = request.POST.get('name').strip()
-                organization.save()
-        return render_to_response('events_calendar/edit_organization.html', args)
-    else:
-        return redirect('/')
+    def form_valid(self, form):
+        form.instance.published = False
+        return super(EventCreateView, self).form_valid(form)
+
+class EventEditView(UpdateView):
+    model = Event
+    form_class = EventForm
+    template_name_suffix = '_update_form'
+
+    def get_context_data(self, **kwargs):
+        context = super(EventEditView, self).get_context_data()
+        context['page_header'] = 'Редагувати'
+        context['button_info'] = 'Зберегти'
+        context['start_time'] = str(timezone.now().date())
+        context['type'] = 'event'
+        return context
+
+    def form_valid(self, form):
+        if self.request.user.profile.organization == form.instance.creator:
+            return super(EventEditView, self).form_valid(form)
+
+class OrganizationEditView(UpdateView):
+    model = Organization
+    form_class = OrganizationForm
+    template_name_suffix = '_update_form'
+
+    def form_valid(self, form):
+        if self.request.user.profile.organization == form.instance:
+            return super(OrganizationEditView, self).form_valid(form)
 
 @login_required
 def subscribe(request):
@@ -425,215 +262,34 @@ def searching_results(request):
     }
     return render(request, 'events_calendar/searching_results.html', context)
 
+class ProposedEventsListView(PaginationMixin, ListView):
+    model = Event
+    template_name = 'events_calendar/proposed_events.html'
+    context_object_name = 'events'
+    paginate_by = 5
 
-def suggest_an_event(request):
-    args = {}
-    args['user'] = request.user
-    args.update(csrf(request))
-    args['page_header'] = 'Запропонувати подію'
-    args['categories'] = Category.objects.all()
-    if request.user.username:
-        if request.POST:
-            try:
-                try:
-                    post = request.POST
-                    if post.get('start_date') != '':
-                        start_date = str(datetime.strptime(post.get('start_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        start_date = None
-                    if post.get('end_date') != '':
-                        end_date = str(datetime.strptime(post.get('end_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        end_date = None
+    def get_context_data(self, **kwargs):
+        context = super(ProposedEventsListView, self).get_context_data(**kwargs)
+        context['page_header'] = 'Предложка'
+        context['user'] = self.request.user
+        return context
 
-                    for file in request.FILES.getlist('image'):
-                        link_image = 'images/events_calendar/' + str(file)
-                        with default_storage.open(link_image, 'wb+') as destination:
-                            for chunk in file.chunks():
-                                destination.write(chunk)
-                    if post.get('name').strip() == '':
-                        args['error'] = 'Назва події не заповнено'
-                        return render_to_response('events_calendar/propose_event.html', args)
-                    if post.get('web_site').strip() != '':
-                        web_site = post.get('web_site').strip()
-                    else:
-                        web_site = None
-                    if post.get('place_of_event').strip() != '':
-                        place_of_event = post.get('place_of_event').strip()
-                    else:
-                        place_of_event = None
-                    if post.get('vk_link').strip() != '':
-                        vk_link = post.get('vk_link').strip()
-                    else:
-                        vk_link = None
-                    if post.get('fb_link').strip() != '':
-                        fb_link = post.get('fb_link').strip()
-                    else:
-                        fb_link = None
-                    if post.get('category') != '----------':
-                        categories = Category.objects.all().filter(name=post.get('category'))
-                        for el in categories:
-                            category = el
-                    else:
-                        args['error'] = 'Категорія не заповнена'
-                        return render_to_response('events_calendar/propose_event.html', args)
-                    event = Event(
-                        name=post.get('name'),
-                        description=post.get('description'),
-                        start_date=start_date,
-                        end_date=end_date,
-                        category=category,
-                        image=link_image,
-                        web_site=web_site,
-                        place_of_event=place_of_event,
-                        vk_link=vk_link,
-                        fb_link=fb_link,
-                        published=False,
-                    )
-                    event.save()
-                    return redirect('/')
-                except UnboundLocalError:
-                    post = request.POST
-                    if post.get('start_date') != '':
-                        start_date = str(datetime.strptime(post.get('start_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        start_date = None
-                    if post.get('end_date') != '':
-                        end_date = str(datetime.strptime(post.get('end_date'), '%Y-%m-%dT%H:%M'))
-                    else:
-                        end_date = None
-                    if post.get('name').strip() == '':
-                        args['error'] = 'Назва події не заповнено'
-                        return render_to_response('events_calendar/propose_event.html', args)
-                    if post.get('web_site').strip() != '':
-                        web_site = post.get('web_site').strip()
-                    else:
-                        web_site = None
-                    if post.get('place_of_event').strip() != '':
-                        place_of_event = post.get('place_of_event').strip()
-                    else:
-                        place_of_event = None
-                    if post.get('vk_link').strip() != '':
-                        vk_link = post.get('vk_link').strip()
-                    else:
-                        vk_link = None
-                    if post.get('fb_link').strip() != '':
-                        fb_link = post.get('fb_link').strip()
-                    else:
-                        fb_link = None
-                    if post.get('category') != '----------':
-                        categories = Category.objects.all().filter(name=post.get('category'))
-                        for el in categories:
-                            category = el
-                    else:
-                        args['error'] = 'Категорія не заповнена'
-                        return render_to_response('events_calendar/propose_event.html', args)
-                    event = Event(
-                        name=post.get('name'),
-                        description=post.get('description'),
-                        start_date=start_date,
-                        end_date=end_date,
-                        category=category,
-                        web_site=web_site,
-                        place_of_event=place_of_event,
-                        vk_link=vk_link,
-                        fb_link=fb_link,
-                        published=False,
-                    )
-                    event.save()
-                    return redirect('/')
-            except IntegrityError:
-                args['error'] = 'Не обрана категорія'
-                return render_to_response('events_calendar/propose_event.html', args)
-        return render_to_response('events_calendar/propose_event.html', args)
-    else:
-        return redirect('/')
+    def get_queryset(self):
+        if self.request.user.profile.organization.access_to_the_offer:
+            return Event.objects.filter(published=False).order_by('-start_date')
 
-@login_required
-def proposed_events(request, page_id=1):
-    if request.user.profile.organization.access_to_the_offer:
-        events = Event.objects.filter(published=False).order_by('-start_date')
-        current_page = Paginator(events, 5)
-        context = {
-            'page_header':'Предложка',
-            'user':request.user,
-            'events':current_page.page(page_id),
-        }
-        return render(request, 'events_calendar/proposed_events.html', context)
+class ProposeEventEditView(EventEditView):
+    def get_context_data(self, **kwargs):
+        context = super(ProposeEventEditView, self).get_context_data(**kwargs)
+        context['button_info'] = 'Опублікувати'
+        context['type'] = 'propose_event'
+        return context
 
-
-def edit_proposed_event(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    if request.user.is_authenticated and request.user.profile.organization.access_to_the_offer:
-        organization = request.user.profile.organization
-        args = {}
-        args.update(csrf(request))
-        args['event'] = event
-        args['categories'] = Category.objects.all()
-        args['page_header'] = event.name
-        args['user'] = request.user
-        if request.POST:
-            try:
-                if request.POST.get('name').strip() != '':
-                    event.name = request.POST.get('name').strip()
-                if request.POST.get('description').strip() != '':
-                    event.description = request.POST.get('description').strip()
-                for file in request.FILES.getlist('image'):
-                    link_image = 'images/events_calendar/' + request.user.profile.organization.name + str(file)
-                    with default_storage.open(link_image, 'wb+') as destination:
-                        for chunk in file.chunks():
-                            destination.write(chunk)
-                if str(file).strip() != '':
-                    event.image = link_image
-                categories = Category.objects.all().filter(name=request.POST.get('category'))
-                for el in categories:
-                    category = el
-                event.category = category
-                if request.POST.get('start_date') != '':
-                    event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('end_date') != '':
-                    event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('web_site').strip() != '':
-                    event.web_site = request.POST.get('web_site').strip()
-                if request.POST.get('place_of_event').strip() != '':
-                    event.place_of_event = request.POST.get('place_of_event').strip()
-                if request.POST.get('vk_link').strip() != '':
-                    event.vk_link = request.POST.get('vk_link').strip()
-                if request.POST.get('fb_link').strip() != '':
-                    event.fb_link = request.POST.get('fb_link').strip()
-                event.published = True
-                event.creator = organization
-                event.save()
-                return redirect('/proposed_events')
-            except UnboundLocalError:
-                if request.POST.get('name').strip() != '':
-                    event.name = request.POST.get('name').strip()
-                if request.POST.get('description').strip() != '':
-                    event.description = request.POST.get('description').strip()
-                categories = Category.objects.all().filter(name=request.POST.get('category'))
-                for el in categories:
-                    category = el
-                event.category = category
-                if request.POST.get('start_date') != '':
-                    event.start_date = str(datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('end_date') != '':
-                    event.end_date = str(datetime.strptime(request.POST.get('end_date'), '%Y-%m-%dT%H:%M'))
-                if request.POST.get('web_site').strip() != '':
-                    event.web_site = request.POST.get('web_site').strip()
-                if request.POST.get('place_of_event').strip() != '':
-                    event.place_of_event = request.POST.get('place_of_event').strip()
-                if request.POST.get('vk_link').strip() != '':
-                    event.vk_link = request.POST.get('vk_link').strip()
-                if request.POST.get('fb_link').strip() != '':
-                    event.fb_link = request.POST.get('fb_link').strip()
-                print(event.image)
-                event.published = True
-                event.creator = organization
-                event.save()
-                return redirect('/proposed_events')
-        return render(request, 'events_calendar/edit_propose_event.html', args)
-    else:
-        return redirect('/')
+    def form_valid(self, form):
+        if self.request.user.profile.organization.access_to_the_offer:
+            form.instance.published = True
+            form.instance.creator = self.request.user.profile.organization
+            return super(EventEditView, self).form_valid(form)
 
 
 class EventsByOrganizationListView(EventsWithBaseFiltersListView):

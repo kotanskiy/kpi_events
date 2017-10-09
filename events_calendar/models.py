@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -37,7 +38,6 @@ class Event(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата закінчення', blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name='Категорія')
     place_of_event = models.CharField(max_length=100, verbose_name='Місце події', blank=True, null=True)
-    vk_link = models.CharField(max_length=50, verbose_name='Посилання в Вк', blank=True, null=True)
     fb_link = models.CharField(max_length=50, verbose_name='Посилання в fb', blank=True, null=True)
     web_site = models.CharField(max_length=50, verbose_name='Посилання на сайт події', blank=True, null=True)
     published = models.BooleanField(default=True, verbose_name='Опублікований')

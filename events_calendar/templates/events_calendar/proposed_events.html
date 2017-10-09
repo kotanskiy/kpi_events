@@ -40,55 +40,35 @@
 
 <br><br>
 
-<div class="row">
-    {% if type == 'Моя лента событий' %}
+    <div class="row">
         <div class="col-lg-8 col-sm-12">
-            <center>
-                <ul class="pagination">
-                {% if events.has_previous %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
+            {% load i18n %}
+            <ul class="pagination pagination-sm">
+                {% if page_obj.has_previous %}
+                    <li><a href="/proposed_events?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
+                        {% else %}
+                    <li class="disabled"><a>&larr;</a>
                 {% endif %}
-                {% for page in events.paginator.page_range %}
-                    {% if page == events.number %}
-                        <li class="active"><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
+
+                {% for page in page_obj.pages %}
+                    <li {% if page == page_obj.number %}class="active"{% endif %}>
+                    {% if not page %}<li class="disabled"><a>...</a>
                     {% else %}
-                        <li><a href="my_feed/page/{{ page }}">{{ page }}</a></li>
+                        {% if page == page_obj.number %}
+                            <a>{{ page }}</a>
+                        {% else %}
+                            <a href="/proposed_events?page={{ page }}">{{ page }}</a>
+                        {% endif %}
                     {% endif %}
+                </li>
                 {% endfor %}
-                {% if events.has_next %}
-                    <li class="arrow"><a href="my_feed/page/{{ events.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
+
+                {% if page_obj.has_next %}
+                    <li><a href="/proposed_events?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
+                        {% else %}
+                    <li class="disabled"><a>&rarr;</a>
                 {% endif %}
-                </ul>
-            </center>
+            </ul>
         </div>
-    {% else %}
-        <div class="col-lg-8 col-sm-12">
-            <center>
-                <ul class="pagination">
-                {% if events.has_previous %}
-                    <li class="arrow"><a href="/page/{{ events.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
-                {% endif %}
-                {% for page in events.paginator.page_range %}
-                    {% if page == events.number %}
-                        <li class="active"><a href="/page/{{ page }}">{{ page }}</a></li>
-                    {% else %}
-                        <li><a href="/page/{{ page }}">{{ page }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if events.has_next %}
-                    <li class="arrow"><a href="/page/{{ events.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
-                {% endif %}
-                </ul>
-            </center>
-        </div>
-    {% endif %}
-</div>
+    </div>
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block add_head %}
+    <script src="{% static 'js/picker/js/bootstrap-datetimepicker.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'js/picker/css/bootstrap-datetimepicker.css' %}">
+{% endblock %}
+{% block content %}
+<br><br>
+<div class="col-lg-6 col-sm-8 col-xs-12">
+    {% if type == 'event' %}
+        <form class="form-horizontal" method="post" action="{% url 'calendar:edit_event' event.id %}" enctype="multipart/form-data">
+    {% elif type == 'propose_event' %}
+        <form class="form-horizontal" method="post" action="{% url 'calendar:edit_proposed_event' event.id %}" enctype="multipart/form-data">
+    {% endif %}
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{{ button_info }}" class="btn btn-primary">
+    </form>
+    <br>
+</div>
+<script type="text/javascript">
+        var placeholder = 'Ввести дату';
+        $('#id_start_date').datetimepicker('setStartDate', '{{ start_time }}').attr('placeholder', placeholder);
+        $('#id_end_date').datetimepicker().attr('placeholder', placeholder);
+        $('#id_image').attr('accept', 'image/jpeg,image/png').before('<img src="/media/{{ event.image }}" style="max-width: 200px"><br><br>');
+        $('label[for^="id_name"]').before('*  ');
+        $('label[for^="id_start_date"]').before('*  ');
+        $('label[for^="id_category"]').before('*  ');
+</script>
+{% endblock %}
