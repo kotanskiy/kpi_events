@@ -1,15 +1,13 @@
 from pure_pagination.mixins import PaginationMixin
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.core.files.storage import default_storage
-from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.context_processors import csrf
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from events_calendar.forms import EventForm, OrganizationForm
 from events_calendar.models import Event, Comment, Category, Organization
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils import timezone
 
 
@@ -164,9 +162,10 @@ class AdminOrganizationEvents(EventsWithBaseFiltersListView):
         return context
 
     def get_queryset(self):
-        events = self.get_queryset_with_base_filters()
-        events.filter(creator=self.request.user.profile.organization)
-        return events
+        if self.request.user.profile.organization:
+            events = self.get_queryset_with_base_filters()
+            events.filter(creator=self.request.user.profile.organization)
+            return events
 
 class EventCreateView(CreateView):
     form_class = EventForm

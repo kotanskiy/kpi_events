@@ -19,6 +19,13 @@
             {% endif %}
             <br>
             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
+            {% if event.end_date %}
+                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
+            {% endif %}
+            <br>
+            {% if event.place_of_event %}
+                <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
+            {% endif %}
             <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
             <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
             {% if event.creator.image %}
