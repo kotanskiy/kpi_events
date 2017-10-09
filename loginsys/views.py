@@ -1,13 +1,12 @@
 import random
 import urllib
 
-from django.views import View
 from django.views.generic import FormView
 from django_ulogin.models import ULoginUser
 from django_ulogin.signals import assign
 from django.contrib import auth
 from django.core.files.storage import default_storage
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.template.context_processors import csrf
