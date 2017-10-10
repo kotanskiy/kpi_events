@@ -85,7 +85,7 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
         }
         return filters_data
 
-    def get_queryset_with_base_filters(self):
+    def get_queryset(self):
         filters_data = self.get_filters_data()
         if filters_data['current_date'] == '1':
             events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(
@@ -95,10 +95,6 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
             events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(
                 published=True).filter(
                 start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
-        return events
-
-    def get_queryset(self):
-        events = self.get_queryset_with_base_filters()
         return events
 
 
@@ -112,9 +108,8 @@ class EventsBySignedOrganizationsListView(EventsWithBaseFiltersListView):
         return context
 
     def get_queryset(self):
-        events = self.get_queryset_with_base_filters()
-        events.filter(creator__in=self.get_signed_organizations())
-        return events
+        return super(EventsBySignedOrganizationsListView, self).get_queryset()\
+            .filter(creator__in=self.get_signed_organizations())
 
 class EventDetailsView(DetailView):
     model = Event
@@ -161,9 +156,8 @@ class AdminOrganizationEvents(EventsWithBaseFiltersListView):
 
     def get_queryset(self):
         if self.request.user.profile.organization:
-            events = self.get_queryset_with_base_filters()
-            events.filter(creator=self.request.user.profile.organization)
-            return events
+            return super(AdminOrganizationEvents, self).get_queryset().filter(creator=self.request.user.profile.organization)
+
 
 class EventCreateView(CreateView):
     form_class = EventForm
@@ -300,9 +294,8 @@ class EventsByOrganizationListView(EventsWithBaseFiltersListView):
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
-        events = self.get_queryset_with_base_filters()
-        events.filter(creator=organization)
-        return events
+        return super(EventsByOrganizationListView, self).get_queryset().filter(creator=organization)
+
 
 def remove_proposed_event(request, event_id):
     user = request.user
