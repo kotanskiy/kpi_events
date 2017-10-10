@@ -1,6 +1,15 @@
 .idea
 db.sqlite3
-kpi_events/settings.py
 *.jpg
 *.png
 *.pyc
+*.log
+kpi_events/events_calendar/migrations/*
+kpi_events/events_calendar/migrations
+events_calendar/migrations
+.idea
+kpi_events/media/*
+kpi_events/media
+media/*
+media
+
