@@ -47,10 +47,10 @@
                     {% thumbnail user.profile.image "30x30" format="PNG" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
-                    <a href="{% url 'loginsys:logout' %}" style="padding-left: 40px;">{{ user.first_name }} / Вийти</a>
+                    <a href="{% url 'loginsys:edit_user' %}" style="padding-left: 40px;">{{ user.first_name }}</a>
                 </li>
                 <li>
-                    <a href="{% url 'loginsys:edit_user' %}">Моя сторінка</a>
+                    <a href="{% url 'loginsys:logout' %}">Вийти</a>
                 </li>
                 {% if user.profile.organization %}
                     <li>
