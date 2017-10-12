@@ -152,6 +152,7 @@ class AdminOrganizationEvents(EventsWithBaseFiltersListView):
         context = super(AdminOrganizationEvents, self).get_context_data()
         context['type'] = ''
         context['page_header'] = self.request.user.profile.organization.name
+        context['count_proposed_events'] = Event.objects.filter(published=False).count()
         return context
 
     def get_queryset(self):

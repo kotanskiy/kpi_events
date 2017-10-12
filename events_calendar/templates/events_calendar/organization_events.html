@@ -46,7 +46,7 @@
             </div>
             {% if user.profile.organization.access_to_the_offer %}
                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
-                    <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Предложка"></a>
+                    <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Предложка{% if count_proposed_events != 0 %} ({{ count_proposed_events }}){% endif %}"></a>
                 </div>
             {% endif %}
 
