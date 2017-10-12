@@ -12,7 +12,7 @@
         {% if type == 'create' %}
             <form class="form-horizontal" method="post" action="{% url 'calendar:create_event' %}" enctype="multipart/form-data">
         {% elif type == 'propose' %}
-            <form class="form-horizontal" method="post" action="{% url 'calendar:suggest_an_event' %}" enctype="multipart/form-data">
+            <form class="form-horizontal" method="post" action="{% url 'calendar:suggest_an_event' %}" enctype="multipart/form-data" onsubmit="alert('Ваша подія буде розглянута адміністрацією KPI Events.');">
         {% endif %}
             {% csrf_token %}
             {{ form.as_table }}<br>
@@ -29,5 +29,4 @@
         $('label[for^="id_start_date"]').before('*  ');
         $('label[for^="id_category"]').before('*  ');
     </script>
-
 {% endblock %}

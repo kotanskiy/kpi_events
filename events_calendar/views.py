@@ -20,10 +20,6 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         current_date = request.POST['date_filter']
-        try:
-            del request.session['current_date']
-        except KeyError:
-            pass
         if not current_date:
             current_date = '1'
         request.session['current_date'] = current_date
