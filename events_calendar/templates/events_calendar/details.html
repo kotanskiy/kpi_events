@@ -53,10 +53,11 @@
                 {% endif %}
             {% endif %}
         </form>
-        <form class="form-horizontal" action="{% url 'calendar:insert_event_into_google_calendar' %}" method="post">
+        <form class="form-horizontal" action="{% url 'calendar:insert_into_google_calendar' %}" method="post"
+        onsubmit="alert('Ця подія додана у ваш google календар');">
             {% csrf_token %}
-            <input type="hidden" name="event" value="{{ event.id }}">
-            <input class="btn btn-primary" type="hidden" value="Додати у google calendar">
+            <input type="hidden" name="event_id" value="{{ event.id }}">
+            <input type="submit" value="Додати в google календар" class="btn btn-primary">
         </form>
         {% if event.place_of_event != None %}
             <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>

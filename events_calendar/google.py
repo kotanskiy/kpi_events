@@ -7,7 +7,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-from _datetime import datetime
+import datetime
 
 try:
     import argparse
@@ -36,7 +36,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'calendar-python-quickstart.json')
+                                   'calendar-python.json')
 
     store = Storage(credential_path)
     credentials = store.get()
@@ -50,14 +50,20 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def transform_date(date):
+def transform_datetime(date, start_date):
     try:
-        result = str(datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
-    except ValueError:
-        result = ''
+        result = str(date.strftime('%Y-%m-%dT%H:%M:%S'))
+    except AttributeError:
+        new_date = start_date + datetime.timedelta(hours=3)
+        result = str(new_date.strftime('%Y-%m-%dT%H:%M:%S'))
     return result
 
 def create_event(event):
+    """Shows basic usage of the Google Calendar API.
+
+    Creates a Google Calendar API service object and outputs a list of the next
+    10 events on the user's calendar.
+    """
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
@@ -67,45 +73,24 @@ def create_event(event):
         'location': event.place_of_event,
         'description': event.description,
         'start': {
-            'dateTime': transform_date(event.start_date),
+            'dateTime': transform_datetime(event.start_date, event.start_date),
             'timeZone': 'Europe/Kiev',
         },
         'end': {
-            'dateTime': transform_date(event.end_date),
+            'dateTime': transform_datetime(event.end_date, event.start_date),
             'timeZone': 'Europe/Kiev',
         },
         'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=2'
-        ]
+            'RRULE:FREQ=DAILY;COUNT=1'
+        ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
     }
 
-    # event = {
-    #     'summary': 'Google I/O 2015',
-    #     'location': '800 Howard St., San Francisco, CA 94103',
-    #     'description': 'A chance to hear more about Google\'s developer products.',
-    #     'start': {
-    #         'dateTime': '2015-05-28T09:00:00-07:00',
-    #         'timeZone': 'America/Los_Angeles',
-    #     },
-    #     'end': {
-    #         'dateTime': '2015-05-28T17:00:00-07:00',
-    #         'timeZone': 'America/Los_Angeles',
-    #     },
-    #     'recurrence': [
-    #         'RRULE:FREQ=DAILY;COUNT=2'
-    #     ],
-    #     'attendees': [
-    #         {'email': 'lpage@example.com'},
-    #         {'email': 'sbrin@example.com'},
-    #     ],
-    #     'reminders': {
-    #         'useDefault': False,
-    #         'overrides': [
-    #             {'method': 'email', 'minutes': 24 * 60},
-    #             {'method': 'popup', 'minutes': 10},
-    #         ],
-    #     },
-    # }
-
     event = service.events().insert(calendarId='primary', body=event).execute()
-    return event
+    print('Event created: %s' % (event.get('htmlLink')))

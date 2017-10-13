@@ -6,7 +6,7 @@ from django.template.context_processors import csrf
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from events_calendar.forms import EventForm, OrganizationForm
-from events_calendar.google_calendar_api import create_event
+from events_calendar.google import create_event
 from events_calendar.models import Event, Comment, Category, Organization
 from datetime import timedelta
 from django.utils import timezone
@@ -123,12 +123,11 @@ class EventDetailsView(DetailView):
             context['signed_organizations'] = signed_organizations
         return context
 
-def insert_event_into_google_calendar(request):
+def insert_into_google_calendar(request):
     if request.POST:
-        event = get_object_or_404(Event, pk=request.POST.get('event'))
-        context = dict()
-        context.update(csrf(request))
+        event = get_object_or_404(Event, pk=request.POST.get('event_id'))
         create_event(event)
+        print('done')
         return redirect('/event/'+str(event.id))
 
 class CommentsListView(ListView):
