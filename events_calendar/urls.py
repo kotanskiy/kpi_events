@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^filter_by_organization/(?P<organization_id>[\d+]*)$', views.EventsByOrganizationListView.as_view(), name='filter_by_organization'),
     url(r'^remove_proposed_event/(?P<event_id>[\d+]*)$', views.remove_proposed_event, name='remove_proposed_event'),
     url(r'^subscribe_on_organization$', views.subscribe_on_organization, name='subscribe_on_organization'),
+    url(r'^insert_event_into_google_calendar$', views.insert_event_into_google_calendar, name='insert_event_into_google_calendar'),
 ]
