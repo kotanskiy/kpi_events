@@ -19,7 +19,7 @@ except ImportError:
 # at ~/.credentials/calendar-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'events_calendar/client_secret.json'
-APPLICATION_NAME = 'Веб-клиент'
+APPLICATION_NAME = 'KPI Events'
 
 
 
