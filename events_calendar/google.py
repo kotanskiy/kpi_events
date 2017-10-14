@@ -11,7 +11,7 @@ import datetime
 
 try:
     import argparse
-    flags = tools.argparser.parse_args(['--noauth_local_webserver'])
+    flags = tools.argparser.parse_args([])
 except ImportError:
     flags = None
 
