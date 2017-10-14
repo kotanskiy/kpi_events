@@ -19,7 +19,9 @@ except ImportError:
 # at ~/.credentials/calendar-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'events_calendar/client_secret.json'
-APPLICATION_NAME = 'KPI Events'
+APPLICATION_NAME = 'Веб-клиент'
+
+
 
 
 def get_credentials():
@@ -36,19 +38,19 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'calendar-python.json')
+                                   'events_calendar.json')
 
     store = Storage(credential_path)
     credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-        flow.user_agent = APPLICATION_NAME
-        if flags:
-            credentials = tools.run_flow(flow, store, flags)
-        else: # Needed only for compatibility with Python 2.6
-            credentials = tools.run(flow, store)
-        print('Storing credentials to ' + credential_path)
+    flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+    flow.user_agent = APPLICATION_NAME
+    if flags:
+        credentials = tools.run_flow(flow, store, flags)
+    else: # Needed only for compatibility with Python 2.6
+        credentials = tools.run(flow, store)
+    print('Storing credentials to ' + credential_path)
     return credentials
+
 
 def transform_datetime(date, start_date):
     try:
