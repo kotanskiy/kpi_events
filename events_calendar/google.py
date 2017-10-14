@@ -41,7 +41,6 @@ def get_credentials():
                                    'events_calendar.json')
 
     store = Storage(credential_path)
-    credentials = store.get()
     flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
     flow.user_agent = APPLICATION_NAME
     if flags:
