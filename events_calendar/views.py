@@ -333,7 +333,7 @@ FLOW = flow_from_clientsecrets(
     scope='https://www.googleapis.com/auth/calendar',
     redirect_uri='https://events.kpi.ua/oauth2callback')
 
-event_id = None
+
 
 def transform_datetime(date, start_date):
     try:
@@ -345,7 +345,8 @@ def transform_datetime(date, start_date):
 
 def create_event(credential, event_id):
     event = get_object_or_404(Event, pk=event_id)
-
+    if not event:
+        print('Мы не получили event через event_id')
     http = credential.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
@@ -381,7 +382,7 @@ def auth_calendar_api(request):
   storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
   credential = storage.get()
   global event_id
-  event_id = str(request.GET.get('event_id'))
+  event_id = request.GET.get('event_id')
   if credential is None or credential.invalid == True:
     # FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
     #                    request.user)
