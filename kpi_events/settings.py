@@ -112,7 +112,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kpi_events',
-        'USER': 'root2',
+        'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
     }
