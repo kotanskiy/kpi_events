@@ -3,8 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib.auth.models import User, Permission, PermissionsMixin, Group
 
-from events_calendar.models import Event, Category, Comment, Profile, Organization
-
+from events_calendar.models import Event, Category, Comment, Profile, Organization, CredentialsModel
 
 #Пример
 #@admin.register(User)
@@ -59,3 +58,4 @@ class AdminComment(admin.ModelAdmin):
 
 
 admin.site.register(Organization)
+admin.site.register(CredentialsModel)
