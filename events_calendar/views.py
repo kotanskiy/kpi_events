@@ -339,7 +339,7 @@ def auth_calendar_api(request):
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
                                                    request.user)
     authorize_url = FLOW.step1_get_authorize_url()
-    return HttpResponseRedirect(authorize_url + '?event_id=' + str(request.GET.get('event_id')))
+    return HttpResponseRedirect(authorize_url)
   else:
     http = httplib2.Http()
     http = credential.authorize(http)
