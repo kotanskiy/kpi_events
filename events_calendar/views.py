@@ -345,7 +345,7 @@ def auth_calendar_api(request):
     http = credential.authorize(http)
     service = build("calendar", "v3", http=http)
 
-    return redirect('/event/'+str(request.POST.get('event')))
+    return redirect('/event/'+str(request.GET.get('event')))
 
 def auth_return(request):
     # if not xsrfutil.validate_token(bytes(settings.SECRET_KEY, "utf-8"), request.GET.get('state'),
