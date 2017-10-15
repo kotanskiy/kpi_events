@@ -344,7 +344,7 @@ def auth_calendar_api(request):
     http = httplib2.Http()
     http = credential.authorize(http)
     service = build("calendar", "v3", http=http)
-
+    print('auth')
     return redirect('/event/'+str(request.GET.get('event')))
 
 def auth_return(request):
