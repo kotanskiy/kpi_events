@@ -1,9 +1,9 @@
 import httplib2
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from googleapiclient import discovery
-from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.contrib import xsrfutil
+
 from oauth2client.contrib.django_util.storage import DjangoORMStorage
 from pure_pagination.mixins import PaginationMixin
 from django.contrib import auth
@@ -384,7 +384,7 @@ def auth_calendar_api(request):
   event_id = str(request.GET.get('event_id'))
   if credential is None or credential.invalid == True:
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
-                                                   request.user)
+                       request.user)
     authorize_url = FLOW.step1_get_authorize_url()
     return HttpResponseRedirect(authorize_url)
   else:
@@ -393,9 +393,9 @@ def auth_calendar_api(request):
 
 @login_required
 def auth_return(request):
-    # if not xsrfutil.validate_token(bytes(settings.SECRET_KEY, "utf-8"), request.GET.get('state'),
-    #                                request.user):
-    #     return HttpResponseBadRequest()
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.GET.get('state'),
+                                   request.user):
+        return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
