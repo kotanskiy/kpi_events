@@ -1,5 +1,6 @@
 import httplib2
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from googleapiclient import discovery
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.contrib import xsrfutil
@@ -334,8 +335,46 @@ FLOW = flow_from_clientsecrets(
 
 event_id = None
 
+def transform_datetime(date, start_date):
+    try:
+        result = str(date.strftime('%Y-%m-%dT%H:%M:%S'))
+    except AttributeError:
+        new_date = start_date + timedelta(hours=3)
+        result = str(new_date.strftime('%Y-%m-%dT%H:%M:%S'))
+    return result
+
 def create_event(credential, event_id):
-    pass
+    event = get_object_or_404(Event, pk=event_id)
+
+    http = credential.authorize(httplib2.Http())
+    service = discovery.build('calendar', 'v3', http=http)
+
+    event = {
+        'summary': event.name,
+        'location': event.place_of_event,
+        'description': event.description,
+        'start': {
+            'dateTime': transform_datetime(event.start_date, event.start_date),
+            'timeZone': 'Europe/Kiev',
+        },
+        'end': {
+            'dateTime': transform_datetime(event.end_date, event.start_date),
+            'timeZone': 'Europe/Kiev',
+        },
+        'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=1'
+        ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
+    }
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print('Event created: %s' % (event.get('htmlLink')))
 
 @login_required
 def auth_calendar_api(request):
@@ -349,9 +388,7 @@ def auth_calendar_api(request):
     authorize_url = FLOW.step1_get_authorize_url()
     return HttpResponseRedirect(authorize_url)
   else:
-    http = httplib2.Http()
-    http = credential.authorize(http)
-    service = build("calendar", "v3", http=http)
+    create_event(credential, event_id)
     return redirect('/event/'+ event_id)
 
 @login_required
@@ -363,4 +400,5 @@ def auth_return(request):
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
     global event_id
+    create_event(credential, event_id)
     return HttpResponseRedirect('/event/' + event_id)
