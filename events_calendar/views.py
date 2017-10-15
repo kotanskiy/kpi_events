@@ -348,9 +348,9 @@ def auth_calendar_api(request):
     return redirect('/event/'+str(request.POST.get('event')))
 
 def auth_return(request):
-    if not xsrfutil.validate_token(bytes(settings.SECRET_KEY, "utf-8"), request.GET.get('state'),
-                                   request.user):
-        return HttpResponseBadRequest()
+    # if not xsrfutil.validate_token(bytes(settings.SECRET_KEY, "utf-8"), request.GET.get('state'),
+    #                                request.user):
+    #     return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
