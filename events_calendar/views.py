@@ -353,4 +353,4 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
-    return HttpResponseRedirect("/event/"+str(request.GET.get('event_id')))
+    return HttpResponseRedirect('/')
