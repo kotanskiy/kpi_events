@@ -353,4 +353,5 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
+    print('auth is work')
     return HttpResponseRedirect("/")
