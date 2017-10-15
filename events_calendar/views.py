@@ -383,7 +383,7 @@ def auth_calendar_api(request):
   global event_id
   event_id = str(request.GET.get('event_id'))
   if credential is None or credential.invalid == True:
-    FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY.encode('utf-8'),
+    FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY.encode(),
                        request.user)
     authorize_url = FLOW.step1_get_authorize_url()
     return HttpResponseRedirect(authorize_url)
@@ -393,7 +393,7 @@ def auth_calendar_api(request):
 
 @login_required
 def auth_return(request):
-    if not xsrfutil.validate_token(settings.SECRET_KEY, request.GET.get('state'),
+    if not xsrfutil.validate_token(settings.SECRET_KEY.encode(), request.GET.get('state'),
                                    request.user):
         return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
