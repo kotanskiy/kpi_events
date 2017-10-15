@@ -339,7 +339,7 @@ def auth_calendar_api(request):
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
                                                    request.user)
     authorize_url = FLOW.step1_get_authorize_url()
-    return HttpResponseRedirect(authorize_url)
+    return HttpResponseRedirect(authorize_url + '?event_id=' + str(request.GET.get('event_id')))
   else:
     http = httplib2.Http()
     http = credential.authorize(http)
@@ -353,5 +353,4 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
-    print('auth is work')
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/event/"+str(request.GET.get('event_id')))
