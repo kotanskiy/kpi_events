@@ -349,7 +349,7 @@ def auth_calendar_api(request):
     return redirect('/event/'+str(request.POST.get('event')))
 
 def auth_return(request):
-    if not xsrfutil.validate_token(settings.SECRET_KEY, request.REQUEST['state'],
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.GET.get('state'),
                                    request.user):
         return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(request.REQUEST)
