@@ -58,6 +58,8 @@ ULOGIN_HIDDEN = []
 ULOGIN_DISPLAY = 'panel'
 ULOGIN_FIELDS = ['first_name', 'last_name', 'email', 'photo_big']
 
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'events_calendar/client_secret.json'
+
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Календар подій КПІ'
 }
@@ -110,7 +112,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kpi_events',
-        'USER': 'root',
+        'USER': 'root2',
         'PASSWORD': '',
         'HOST': 'localhost',
     }

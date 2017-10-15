@@ -1,3 +1,9 @@
+import httplib2
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from googleapiclient.discovery import build
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.contrib import xsrfutil
+from oauth2client.contrib.django_util.storage import DjangoORMStorage
 from pure_pagination.mixins import PaginationMixin
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -6,10 +12,11 @@ from django.template.context_processors import csrf
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from events_calendar.forms import EventForm, OrganizationForm
-from events_calendar.google import create_event
-from events_calendar.models import Event, Comment, Category, Organization
+from events_calendar.models import Event, Comment, Category, Organization, CredentialsModel
 from datetime import timedelta
 from django.utils import timezone
+
+from kpi_events import settings
 
 
 class EventsWithBaseFiltersListView(PaginationMixin, ListView):
@@ -126,7 +133,7 @@ class EventDetailsView(DetailView):
 def insert_into_google_calendar(request):
     if request.POST:
         event = get_object_or_404(Event, pk=request.POST.get('event_id'))
-        create_event(event)
+        auth_calendar_api(event)
         print('done')
         return redirect('/event/'+str(event.id))
 
@@ -319,3 +326,33 @@ def subscribe_on_organization(request):
         elif sub == 'Unsubscribe':
             user.profile.signed_organizations.remove(organization)
         return redirect('/filter_by_organization/' + str(organization.id))
+
+FLOW = flow_from_clientsecrets(
+    settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON,
+    scope='https://www.googleapis.com/auth/calendar',
+    redirect_uri='https://events.kpi.ua/oauth2callback')
+
+def auth_calendar_api(request):
+  storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+  credential = storage.get()
+  if credential is None or credential.invalid == True:
+    FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
+                                                   request.user)
+    authorize_url = FLOW.step1_get_authorize_url()
+    return HttpResponseRedirect(authorize_url)
+  else:
+    http = httplib2.Http()
+    http = credential.authorize(http)
+    service = build("plus", "v1", http=http)
+    activities = service.activities()
+
+    return redirect('/event/'+str(request.POST.get('event')))
+
+def auth_return(request):
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.REQUEST['state'],
+                                   request.user):
+        return HttpResponseBadRequest()
+    credential = FLOW.step2_exchange(request.REQUEST)
+    storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+    storage.put(credential)
+    return HttpResponseRedirect("/")
