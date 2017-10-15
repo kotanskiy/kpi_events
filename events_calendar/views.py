@@ -343,13 +343,12 @@ def auth_calendar_api(request):
   else:
     http = httplib2.Http()
     http = credential.authorize(http)
-    service = build("plus", "v1", http=http)
-    activities = service.activities()
+    service = build("calendar", "v3", http=http)
 
     return redirect('/event/'+str(request.POST.get('event')))
 
 def auth_return(request):
-    if not xsrfutil.validate_token(settings.SECRET_KEY.encode(), request.GET.get('state'),
+    if not xsrfutil.validate_token(settings.SECRET_KEY, request.GET.get('state'),
                                    request.user):
         return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
