@@ -332,9 +332,16 @@ FLOW = flow_from_clientsecrets(
     scope='https://www.googleapis.com/auth/calendar',
     redirect_uri='https://events.kpi.ua/oauth2callback')
 
+event_id = None
+
+def create_event(credential, event_id):
+    pass
+
+@login_required
 def auth_calendar_api(request):
   storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
   credential = storage.get()
+  event_id = str(request.GET.get('event_id'))
   if credential is None or credential.invalid == True:
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
                                                    request.user)
@@ -344,8 +351,9 @@ def auth_calendar_api(request):
     http = httplib2.Http()
     http = credential.authorize(http)
     service = build("calendar", "v3", http=http)
-    return redirect('/event/'+str(request.GET.get('event_id')))
+    return redirect('/event/'+ event_id)
 
+@login_required
 def auth_return(request):
     # if not xsrfutil.validate_token(bytes(settings.SECRET_KEY, "utf-8"), request.GET.get('state'),
     #                                request.user):
@@ -353,4 +361,4 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/event/' + event_id)
