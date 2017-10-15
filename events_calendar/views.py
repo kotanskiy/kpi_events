@@ -341,6 +341,7 @@ def create_event(credential, event_id):
 def auth_calendar_api(request):
   storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
   credential = storage.get()
+  global event_id
   event_id = str(request.GET.get('event_id'))
   if credential is None or credential.invalid == True:
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
@@ -361,4 +362,5 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
+    global event_id
     return HttpResponseRedirect('/event/' + event_id)
