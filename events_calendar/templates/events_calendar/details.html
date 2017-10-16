@@ -57,6 +57,7 @@
             <form class="form-horizontal" action="{% url 'calendar:insert_into_google_calendar' %}" method="get"
                   onsubmit="alert('Ця подія буде додана у ваш google календар');">
                 {% csrf_token %}
+                <input type="hidden" name="access_type" value="offline">
                 <input type="hidden" name="event_id" value="{{ event.id }}">
                 <input type="submit" value="Додати в google календар" class="btn btn-primary">
             </form>
