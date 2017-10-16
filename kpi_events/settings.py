@@ -58,7 +58,7 @@ ULOGIN_HIDDEN = []
 ULOGIN_DISPLAY = 'panel'
 ULOGIN_FIELDS = ['first_name', 'last_name', 'email', 'photo_big']
 
-GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'events_calendar/client_secret.json'
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'kpi_events/client_secret.json'
 
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Календар подій КПІ'
