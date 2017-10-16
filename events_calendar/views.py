@@ -331,7 +331,7 @@ def subscribe_on_organization(request):
 FLOW = flow_from_clientsecrets(
     settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON,
     scope='https://www.googleapis.com/auth/calendar',
-    redirect_uri='https://events.kpi.ua/oauth2callback')
+    redirect_uri='https://events.kpi.ua/oauth2callback?access_type=offline')
 
 
 
