@@ -334,7 +334,7 @@ FLOW = flow_from_clientsecrets(
     redirect_uri='https://events.kpi.ua/oauth2callback')
 
 FLOW.params['access_type'] = 'offline'         # offline access
-FLOW.params['include_granted_scopes'] = True   # incremental auth
+# FLOW.params['include_granted_scopes'] = True   # incremental auth
 
 def transform_datetime(date, start_date):
     try:
