@@ -386,7 +386,8 @@ def auth_calendar_api(request):
   if credential is None or credential.invalid == True:
     # FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
     #                    request.user)
-    authorize_url = FLOW.step1_get_authorize_url()
+    authorize_url = FLOW.step1_get_authorize_url(access_type='offline')
+
     return HttpResponseRedirect(authorize_url)
   else:
     create_event(credential, event_id)
