@@ -381,19 +381,13 @@ def create_event(credential, event_id):
 
 @login_required
 def auth_calendar_api(request):
-  storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
-  credential = storage.get()
-  global event_id
-  event_id = request.GET.get('event_id')
-  if credential is None or credential.invalid == True:
-    # FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY,
-    #                    request.user)
+    storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+    credential = storage.get()
+    global event_id
+    event_id = request.GET.get('event_id')
+    FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, request.user)
     authorize_url = FLOW.step1_get_authorize_url()
-
     return HttpResponseRedirect(authorize_url)
-  else:
-    create_event(credential, event_id)
-    return redirect('/event/'+ event_id)
 
 @login_required
 def auth_return(request):
