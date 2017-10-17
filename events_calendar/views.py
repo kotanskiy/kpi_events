@@ -364,7 +364,7 @@ def create_event(credential, event_id, request):
             'timeZone': 'Europe/Kiev',
         },
         'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=1'
+            'COUNT=1'
         ],
         'reminders': {
             'useDefault': False,
