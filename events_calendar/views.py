@@ -296,9 +296,11 @@ class EventsByOrganizationListView(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization.html'
 
     def get_context_data(self, **kwargs):
+        organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
         context = super(EventsByOrganizationListView, self).get_context_data()
-        context['organization'] = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        context['organization'] = organization
         context['type'] = ''
+        context['page_header'] = organization.name
         return context
 
     def get_queryset(self):
