@@ -397,4 +397,4 @@ def auth_return(request):
     storage.put(credential)
     global event_id
     create_event(credential, event_id)
-    return HttpResponseRedirect('/event/{}/'.format(event_id))
+    return HttpResponseRedirect('/event/{}'.format(event_id))
