@@ -103,18 +103,22 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
         return events
 
 
-class EventsBySignedOrganizationsListView(EventsWithBaseFiltersListView):
-    def get_signed_organizations(self):
-        return self.request.user.profile.signed_organizations.all()
+class EventsBySignedEventsAndOrganizationsListView(EventsWithBaseFiltersListView):
+    def get_signed_events(self):
+        return super(EventsBySignedEventsAndOrganizationsListView, self).get_queryset().\
+            filter(pk__in = [event.id for event in self.request.user.profile.signed_events.all()])
+
+    def get_events_by_signed_organizations(self):
+        return super(EventsBySignedEventsAndOrganizationsListView, self).get_queryset().\
+            filter(creator__in=self.request.user.profile.signed_organizations.all())
 
     def get_context_data(self, **kwargs):
-        context = super(EventsBySignedOrganizationsListView, self).get_context_data(**kwargs)
+        context = super(EventsBySignedEventsAndOrganizationsListView, self).get_context_data(**kwargs)
         context['type'] = 'Моя лента событий'
         return context
 
     def get_queryset(self):
-        return super(EventsBySignedOrganizationsListView, self).get_queryset()\
-            .filter(creator__in=self.get_signed_organizations())
+        return self.get_signed_events().union(self.get_events_by_signed_organizations())
 
 class EventDetailsView(DetailView):
     model = Event
@@ -224,15 +228,14 @@ class OrganizationEditView(UpdateView):
 @login_required
 def subscribe(request):
     if request.POST:
-        event = get_object_or_404(Event, pk=request.POST.get('event'))
-        organization = event.creator
+        event_id = request.POST.get('event')
         user = request.user
         sub = request.POST.get('sub')
         if sub == 'Subscribe':
-            user.profile.signed_organizations.add(organization)
+            user.profile.signed_events.add(event_id)
         elif sub == 'Unsubscribe':
-            user.profile.signed_organizations.remove(organization)
-        return redirect('/event/' + str(event.id))
+            user.profile.signed_events.remove(event_id)
+        return redirect('/event/' + event_id)
 
 @login_required
 def unsubscribe(request):

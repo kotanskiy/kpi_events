@@ -72,7 +72,8 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='images/users', blank=True, default='images/users/default.jpg')
     organization = models.ForeignKey(Organization, related_name='organization', verbose_name='Організація', null=True, blank=True)
     signed_organizations = models.ManyToManyField(Organization, related_name='organizations', blank=True, verbose_name='Організації')
-    google_calendar_events = models.ManyToManyField(Event, blank=True, verbose_name='Події додані у гугл календар юзера')
+    google_calendar_events = models.ManyToManyField(Event, blank=True, verbose_name='Події додані в гугл календар юзера')
+    signed_events = models.ManyToManyField(Event, related_name='signed_events', blank=True, verbose_name='Події, які додані в "Мої події"')
 
     def __str__(self):
         return self.user.username

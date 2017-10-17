@@ -44,7 +44,7 @@
             <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
             &nbsp;&nbsp;&nbsp;<input type="hidden" name="event" value="{{ event.id }}">
             {% if user.username %}
-                {% if event.creator in signed_organizations %}
+                {% if event in request.user.profile.signed_events.all %}
                     <input type="hidden" name="sub" value="Unsubscribe">
                     <input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись">
                 {% else %}
