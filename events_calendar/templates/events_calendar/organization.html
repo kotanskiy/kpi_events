@@ -58,10 +58,10 @@
                         <input type="hidden" name="organization" value="{{ organization.id }}">
                         {% if organization in user.profile.signed_organizations.all %}
                             <input type="hidden" name="sub" value="Unsubscribe">
-                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись від подій">
                         {% else %}
                             <input type="hidden" name="sub" value="Subscribe">
-                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися">
+                            &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися на всі події">
                         {% endif %}
                     {% endif %}
 
