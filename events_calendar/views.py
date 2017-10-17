@@ -363,9 +363,6 @@ def create_event(credential, event_id, request):
             'dateTime': transform_datetime(event.end_date, event.start_date),
             'timeZone': 'Europe/Kiev',
         },
-        'recurrence': [
-            'COUNT=1'
-        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
