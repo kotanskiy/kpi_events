@@ -372,7 +372,7 @@ def create_event(credential, event_id, request):
 
     event = service.events().insert(calendarId='primary', body=event).execute()
     if event not in request.user.profile.google_calendar_events.all():
-        request.user.profile.google_calendar_events.add(event)
+        request.user.profile.google_calendar_events.add(event_id)
     print('Event created: %s' % (event.get('htmlLink')))
 
 @login_required
