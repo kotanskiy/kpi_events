@@ -131,13 +131,6 @@ class EventDetailsView(DetailView):
             context['signed_organizations'] = signed_organizations
         return context
 
-def insert_into_google_calendar(request):
-    if request.POST:
-        event = get_object_or_404(Event, pk=request.POST.get('event_id'))
-        auth_calendar_api(event)
-        print('done')
-        return redirect('/event/'+str(event.id))
-
 class CommentsListView(ListView):
     model = Comment
     template_name = 'events_calendar/comments.html'
@@ -345,10 +338,11 @@ def transform_datetime(date, start_date):
         result = str(new_date.strftime('%Y-%m-%dT%H:%M:%S'))
     return result
 
-def create_event(credential, event_id):
+
+def create_event(credential, event_id, request):
     event = get_object_or_404(Event, pk=event_id)
-    if not event:
-        print('Мы не получили event через event_id')
+    # if not event:
+    #     print('Мы не получили event через event_id')
     http = credential.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
@@ -377,6 +371,8 @@ def create_event(credential, event_id):
     }
 
     event = service.events().insert(calendarId='primary', body=event).execute()
+    if event not in request.user.profile.google_calendar_events.all():
+        request.user.profile.google_calendar_events.add(event)
     print('Event created: %s' % (event.get('htmlLink')))
 
 @login_required
@@ -396,5 +392,5 @@ def auth_return(request):
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
     global event_id
-    create_event(credential, event_id)
+    create_event(credential, event_id, request)
     return HttpResponseRedirect('/event/{}'.format(event_id))

@@ -72,6 +72,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='images/users', blank=True, default='images/users/default.jpg')
     organization = models.ForeignKey(Organization, related_name='organization', verbose_name='Організація', null=True, blank=True)
     signed_organizations = models.ManyToManyField(Organization, related_name='organizations', blank=True, verbose_name='Організації')
+    google_calendar_events = models.ManyToManyField(Event, blank=True, verbose_name='Події додані у гугл календар юзера')
 
     def __str__(self):
         return self.user.username
@@ -97,3 +98,4 @@ class CredentialsModel(models.Model):
 
 class CredentialsAdmin(admin.ModelAdmin):
     pass
+
