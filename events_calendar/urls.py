@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^proposed_events$', login_required(views.ProposedEventsListView.as_view()), name='proposed_events'),
     url(r'^edit_proposed_event/(?P<pk>[\d+]*)$', login_required(views.ProposeEventEditView.as_view(success_url='/proposed_events')), name='edit_proposed_event'),
     url(r'^unsubscribe$', views.unsubscribe, name='unsubscribe'),
-    url(r'^filter_by_organization/(?P<organization_id>[\d+]*)$', views.EventsByOrganizationListView.as_view(), name='filter_by_organization'),
+    url(r'^organization/(?P<organization_id>[^/]+)$', views.EventsByOrganizationListView.as_view(), name='filter_by_organization'),
     url(r'^remove_proposed_event/(?P<event_id>[\d+]*)$', views.remove_proposed_event, name='remove_proposed_event'),
     url(r'^subscribe_on_organization$', views.subscribe_on_organization, name='subscribe_on_organization'),
     url(r'^insert_into_google_calendar$', views.auth_calendar_api, name='insert_into_google_calendar'),

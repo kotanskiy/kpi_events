@@ -104,7 +104,13 @@
                                     <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                                 {% endthumbnail %}
                             {% endif %}
-                            <a href="{% url 'calendar:filter_by_organization' event.creator.id %}"><span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
+
+                            {% if event.creator.link_to_organization != None %}
+                                <a href="/organization/{{ event.creator.link_to_organization }}">
+                            {% else %}
+                                <a href="/organization/{{ event.creator.id }}">
+                            {% endif %}
+                                <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,13 @@
     <form class="form-horizontal" method="post" action="{% url 'calendar:edit_organization' request.user.profile.organization.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        {% if organization.link_to_organization != None %}
+            <b>Посилання: </b><a href="{% url 'calendar:filter_by_organization' organization.link_to_organization %}"><b>events.kpi.ua{% url 'calendar:filter_by_organization' organization.link_to_organization%}</b></a>
+            <br><br>
+        {% else %}
+            <b>Посилання: </b><a href="{% url 'calendar:filter_by_organization' organization.id %}"><b>events.kpi.ua{% url 'calendar:filter_by_organization' organization.id %}</b></a>
+            <br><br>
+        {% endif %}
         <input type="submit" value="Зберегти" class="btn btn-primary">
         <br>
     </form>

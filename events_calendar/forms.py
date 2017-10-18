@@ -29,6 +29,7 @@ class OrganizationForm(forms.ModelForm):
         fields = [
             'name',
             'image',
+            'link_to_organization',
         ]
 
     def __init__(self, *args, **kwargs):

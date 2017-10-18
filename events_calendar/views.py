@@ -232,8 +232,20 @@ class OrganizationEditView(UpdateView):
     form_class = OrganizationForm
     template_name_suffix = '_update_form'
 
+    def get_context_data(self, **kwargs):
+        context = super(OrganizationEditView, self).get_context_data()
+        context['page_header'] = self.object.name
+        context['link'] = self.object.link_to_organization
+        return context
+
     def form_valid(self, form):
         if self.request.user.profile.organization == form.instance:
+            link_to_organization = form.instance.link_to_organization
+            if link_to_organization != None:
+                if link_to_organization.strip() != '' and len(link_to_organization.strip()) >= 5:
+                    form.instance.link_to_organization = link_to_organization.strip().replace(' ', '_').replace('/', '_').replace('\\', '_').replace(',', '_')
+                else:
+                    form.instance.link_to_organization = str(form.instance.id)
             return super(OrganizationEditView, self).form_valid(form)
 
 @login_required
@@ -307,7 +319,10 @@ class EventsByOrganizationListView(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization.html'
 
     def get_context_data(self, **kwargs):
-        organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        try:
+            organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        except ValueError:
+            organization = get_object_or_404(Organization, link_to_organization=self.kwargs['organization_id'])
         context = super(EventsByOrganizationListView, self).get_context_data()
         context['organization'] = organization
         context['type'] = ''
@@ -315,7 +330,10 @@ class EventsByOrganizationListView(EventsWithBaseFiltersListView):
         return context
 
     def get_queryset(self):
-        organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        try:
+            organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        except ValueError:
+            organization = get_object_or_404(Organization, link_to_organization=self.kwargs['organization_id'])
         return super(EventsByOrganizationListView, self).get_queryset().filter(creator=organization)
 
 

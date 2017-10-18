@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.urls import reverse
 from oauth2client.contrib.django_util.models import CredentialsField
 
 
@@ -22,6 +21,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=50, verbose_name='Найменування', null=False)
     image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
     access_to_the_offer = models.BooleanField(default=False, blank=True)
+    link_to_organization = models.CharField(max_length=50, verbose_name='Посилання на організацію', blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.name
