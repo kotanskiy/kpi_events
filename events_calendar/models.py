@@ -8,11 +8,11 @@ from oauth2client.contrib.django_util.models import CredentialsField
 
 
 class Index(models.Model):
-    word = models.TextField()
-    index = models.TextField()  # change on SET()
+    word = models.TextField(max_length=50)
+    links = models.TextField()  # change on SET()
 
     def __str__(self):
-        return self.index
+        return self.links
 
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')

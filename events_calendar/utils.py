@@ -49,7 +49,7 @@ def add_index(pk):
             indexes = set()
             try:
                 values = get_object_or_404(Index, word=word)
-                indexes = literal_eval(values.index)
+                indexes = literal_eval(values.links)
                 indexes.add(pk)
                 Index.objects.filter(word=word).update(index=indexes)
             except:
@@ -63,7 +63,7 @@ def find(request):
     for key in search_words:
         try:
             values = get_object_or_404(Index, word=key)
-            result.append(literal_eval(values.index))
+            result.append(literal_eval(values.links))
             rez = result[0]
             for i in range(len(result) - 1):
                 rez = set(rez) & set(result[i + 1])
