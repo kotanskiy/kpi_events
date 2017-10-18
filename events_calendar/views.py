@@ -13,9 +13,12 @@ from django.template.context_processors import csrf
 from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from events_calendar.forms import EventForm, OrganizationForm
-from events_calendar.models import Event, Comment, Category, Organization, CredentialsModel
-from datetime import timedelta
+from events_calendar.models import Event, Comment, Category, Organization, CredentialsModel, Index
+from datetime import timedelta, datetime
 from django.utils import timezone
+
+from re import sub
+from ast import literal_eval
 
 from kpi_events import settings
 
@@ -268,20 +271,88 @@ def unsubscribe(request):
         user.profile.signed_organizations.remove(organization)
     return redirect('/auth/edit_user/')
 
+
+
+def delete_indexes():
+    Index.objects.all().delete()
+    print("All indexes deleted")
+
+
+def split_str(string):
+    return set(str.upper(sub(r'[^a-zA-Zа-яА-Я0-9 ]', r'', string).replace("  ", " ")).split(" "))
+
+
+def create_indexes():
+    last_pk = Event.objects.order_by('-pk')[0].pk
+    indexes = {}
+    for i in range(1, last_pk+1):
+        try:
+            event = get_object_or_404(Event, pk=i)
+            words = split_str(event.description + " " + event.name)
+            for word in words:
+                if len(word) > 1:
+                    if not indexes.get(word):
+                        indexes[word] = set()
+                    indexes[word].add(event.pk)
+        except:
+            None
+    for key in indexes:
+        Index.objects.create(word=key, index=indexes[key])
+        print("For {0} created index {1}".format(key, indexes[key]))
+
+
+def add_index(pk):
+    event = get_object_or_404(Event, pk=pk)
+    words = split_str(event.description + " " + event.name)
+    for word in words:
+        if len(word) > 1:
+            indexes = set()
+            try:
+                values = get_object_or_404(Index, word=word)
+                indexes = literal_eval(values.index)
+                indexes.add(pk)
+                Index.objects.filter(word=word).update(index=indexes)
+            except:
+                indexes.add(pk)
+                Index.objects.create(word=word, index=indexes)
+
+
+def find(request):
+    search_words = split_str(request)
+    result = []
+    for key in search_words:
+        try:
+            values = get_object_or_404(Index, word=key)
+            result.append(literal_eval(values.index))
+            rez = result[0]
+            for i in range(len(result) - 1):
+                rez = set(rez) & set(result[i + 1])
+            events = []
+            # time = datetime.now()
+            for i in rez:
+                events.append(Event.objects.get(pk=i))
+                # event = Event.objects.get(pk=i)
+                # if (time < event.end_date):
+                #     events.append(event)
+            return events
+        except:
+            return []
+
+delete_indexes()
+create_indexes()
+
 def searching_results(request):
     user = auth.get_user(request)
     text = request.GET.get('text').strip()
-    if text == '' or len(text) < 5:
+    if text == '' or len(text) < 3:
         return redirect('/')
-    events = Event.objects.filter(name__icontains=text).filter(published=True)
+    events = find(text)
     if not events:
-        events = Event.objects.filter(description__icontains=text).filter(published=True)
-    events = list(events)
-    events.reverse()
+        return redirect('/')
     context = {
-        'user':user,
-        'page_header':'Результати пошуку',
-        'events':events,
+        'user': user,
+        'page_header': 'Результати пошуку',
+        'events': events,
     }
     return render(request, 'events_calendar/searching_results.html', context)
 

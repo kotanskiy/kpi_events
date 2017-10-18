@@ -7,6 +7,13 @@ from django.dispatch import receiver
 from oauth2client.contrib.django_util.models import CredentialsField
 
 
+class Index(models.Model):
+    word = models.TextField()
+    index = models.TextField()  # change on SET()
+
+    def __str__(self):
+        return self.index
+
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
 
@@ -46,6 +53,12 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        from .views import add_index
+        add_index(self.pk)
 
     class Meta:
         ordering = [
