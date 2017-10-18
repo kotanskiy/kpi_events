@@ -21,10 +21,24 @@
             <b>По даті:</b><hr>
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="4"> Події на тиждень<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
             {% elif  current_date == '2'%}
                 <input class="radio-inline" type="radio" name="date_filter" value="1"> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="4"> Події на тиждень<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="2" checked> Минулі події<br>
+            {% elif current_date == '3' %}
+                <input class="radio-inline" type="radio" name="date_filter" value="1"> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="3" checked> Події на сьогодні<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="4"> Події на тиждень<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
+            {% elif current_date == '4' %}
+                <input class="radio-inline" type="radio" name="date_filter" value="1"> Найближчі події<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="4" checked> Події на тиждень<br>
+                <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
             {% endif %}
 
 

@@ -90,6 +90,7 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
         }
         return filters_data
 
+    # 1-Ближайшие 2-Прошедшие 3-На сегодня 4-На неделю
     def get_queryset(self):
         filters_data = self.get_filters_data()
         if filters_data['current_date'] == '1':
@@ -100,6 +101,16 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
             events = Event.objects.filter(category__in=filters_data['for_filter_categories']).filter(
                 published=True).filter(
                 start_date__lte=filters_data['end_date']).order_by('-start_date').exclude(end_date__gte=timezone.now())
+        elif filters_data['current_date'] == '3':
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).\
+                filter(published=True).filter(start_date__year=timezone.now().year)\
+                .filter(start_date__month=timezone.now().month)\
+                .filter(start_date__day=timezone.now().day)\
+                .order_by('start_date')
+        elif filters_data['current_date'] == '4':
+            events = Event.objects.filter(category__in=filters_data['for_filter_categories']).\
+                filter(published=True).filter(start_date__gte=filters_data['end_date']).order_by('start_date').\
+                exclude(start_date__gte=filters_data['end_date'] + timedelta(days=6))
         return events
 
 
