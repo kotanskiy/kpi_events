@@ -119,7 +119,7 @@
         <div class="col-lg-8 col-sm-12" style="text-align: center;">
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
-                        <li><a href="/filter_by_organization/{{ organization.id }}?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
+                        <li><a href="/organization/{{ organization.id }}?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
                             {% else %}
                         <li class="disabled"><a>&larr;</a>
                     {% endif %}
@@ -131,14 +131,14 @@
                             {% if page == page_obj.number %}
                                 <a>{{ page }}</a>
                             {% else %}
-                                <a href="/filter_by_organization/{{ organization.id }}?page={{ page }}">{{ page }}</a>
+                                <a href="/organization/{{ organization.id }}?page={{ page }}">{{ page }}</a>
                             {% endif %}
                         {% endif %}
                     </li>
                     {% endfor %}
 
                     {% if page_obj.has_next %}
-                        <li><a href="/filter_by_organization/{{ organization.id }}?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
+                        <li><a href="/organization/{{ organization.id }}?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
                             {% else %}
                         <li class="disabled"><a>&rarr;</a>
                     {% endif %}

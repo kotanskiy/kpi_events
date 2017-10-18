@@ -348,7 +348,10 @@ def subscribe_on_organization(request):
             user.profile.signed_organizations.add(organization)
         elif sub == 'Unsubscribe':
             user.profile.signed_organizations.remove(organization)
-        return redirect('/filter_by_organization/' + str(organization.id))
+        if organization.link_to_organization != None:
+            return redirect('/organization/' + organization.link_to_organization)
+        else:
+            return redirect('/organization/' + str(organization.id))
 
 @login_required
 def auth_calendar_api(request):
