@@ -37,7 +37,7 @@ def create_indexes():
         except:
             pass
     for key in indexes:
-        Index.objects.create(word=key, index=indexes[key])
+        Index.objects.create(word=key, links=indexes[key])
         print("For {0} created index {1}".format(key, indexes[key]))
 
 
@@ -51,10 +51,10 @@ def add_index(pk):
                 values = get_object_or_404(Index, word=word)
                 indexes = literal_eval(values.links)
                 indexes.add(pk)
-                Index.objects.filter(word=word).update(index=indexes)
+                Index.objects.filter(word=word).update(links=indexes)
             except:
                 indexes.add(pk)
-                Index.objects.create(word=word, index=indexes)
+                Index.objects.create(word=word, links=indexes)
 
 
 def find(request):
