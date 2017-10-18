@@ -57,7 +57,7 @@ class Event(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-        from .views import add_index
+        from events_calendar.utils import add_index
         add_index(self.pk)
 
     class Meta:

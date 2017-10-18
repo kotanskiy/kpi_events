@@ -3,7 +3,9 @@
 {% block content %}
 
     <h2 class="text-info" style="color: #a1a1a1;">Результати пошуку:</h2>
-
+    {% if not events %}
+        Нічого не знайдено
+    {% endif %}
 {% for event in events %}
 <div class="row row-size" >
     <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
