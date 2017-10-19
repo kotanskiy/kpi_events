@@ -70,7 +70,7 @@ def find(request):
             events = []
             # time = datetime.now()
             for i in rez:
-                events.append(Event.objects.get(pk=i))
+                events.append(Event.objects.get(pk=i, published=True))
                 # event = Event.objects.get(pk=i)
                 # if (time < event.end_date):
                 #     events.append(event)
