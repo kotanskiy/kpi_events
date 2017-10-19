@@ -9,7 +9,7 @@ from oauth2client.contrib.django_util.models import CredentialsField
 
 class Index(models.Model):
     word = models.TextField(max_length=50, null=False)
-    links = models.TextField(null=True)  # change on SET()
+    links = models.TextField(null=False)  # change on SET()
 
     def __str__(self):
         return self.links
@@ -38,7 +38,7 @@ class Organization(models.Model):
         verbose_name_plural = 'Організації'
 
 class Event(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Назва')
+    name = models.CharField(max_length=100, verbose_name='Назва')
     description = models.TextField('Опис', blank=True, null=True)
     image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default.jpg')
     creator_user = CurrentUserField(add_only=True, related_name='Юзер')
