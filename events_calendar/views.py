@@ -17,7 +17,6 @@ from django.utils import timezone
 from events_calendar.utils import find, FLOW, create_event_for_google_calendar
 from kpi_events import settings
 
-
 class EventsWithBaseFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
     model = Event
@@ -241,7 +240,7 @@ class OrganizationEditView(UpdateView):
             link_to_organization = form.instance.link_to_organization
             if link_to_organization != None:
                 if link_to_organization.strip() != '' and len(link_to_organization.strip()) >= 5:
-                    form.instance.link_to_organization = link_to_organization.strip().replace(' ', '_').replace('/', '_').replace('\\', '_').replace(',', '_')
+                    form.instance.link_to_organization = link_to_organization.strip().lower().replace(' ', '_').replace('/', '_').replace('\\', '_').replace(',', '_')
                 else:
                     form.instance.link_to_organization = str(form.instance.id)
             return super(OrganizationEditView, self).form_valid(form)
@@ -312,7 +311,7 @@ class ProposeEventEditView(EventEditView):
 
 class EventsByOrganizationListView(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization.html'
-
+    paginate_by = 1
     def get_context_data(self, **kwargs):
         try:
             organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
@@ -338,20 +337,20 @@ def remove_proposed_event(request, event_id):
         get_object_or_404(Event, pk=event_id).delete()
         return redirect('/proposed_events')
 
-
-def subscribe_on_organization(request):
-    if request.POST and request.user.is_authenticated:
+@login_required
+def subscribe_on_organization(request, organization_id):
+    if request.user.is_authenticated:
         user = request.user
-        organization = get_object_or_404(Organization, pk=request.POST.get('organization'))
+        organization = get_object_or_404(Organization, pk=organization_id)
         sub = request.POST.get('sub')
         if sub == 'Subscribe':
             user.profile.signed_organizations.add(organization)
         elif sub == 'Unsubscribe':
             user.profile.signed_organizations.remove(organization)
         if organization.link_to_organization != None:
-            return redirect('/organization/' + organization.link_to_organization)
+            return redirect('/' + organization.link_to_organization)
         else:
-            return redirect('/organization/' + str(organization.id))
+            return redirect('/' + str(organization.id))
 
 @login_required
 def auth_calendar_api(request):

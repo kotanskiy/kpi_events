@@ -106,9 +106,9 @@
                             {% endif %}
 
                             {% if event.creator.link_to_organization != None %}
-                                <a href="/organization/{{ event.creator.link_to_organization }}">
+                                <a href="/{{ event.creator.link_to_organization }}">
                             {% else %}
-                                <a href="/organization/{{ event.creator.id }}">
+                                <a href="/{{ event.creator.id }}">
                             {% endif %}
                                 <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
                         </div>

@@ -17,7 +17,11 @@
 
 
             <b>По даті:</b><hr>
-            <form action="{% url 'calendar:filter_by_organization' organization.id %}" method="post">
+            {% if organization.link_to_organization %}
+                <form action="{% url 'calendar:filter_by_organization' organization.link_to_organization %}" method="post">
+            {% else %}
+                <form action="{% url 'calendar:filter_by_organization' organization.id %}" method="post">
+            {% endif %}
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -59,7 +63,7 @@
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">
             <div class="row">
-                <form action="{% url 'calendar:subscribe_on_organization' %}" method="post">
+                <form action="{% url 'calendar:subscribe_on_organization' organization.id %}" method="post">
                     <span class="text-info" style="color: #a1a1a1; font-size: large">Список подій від: &nbsp;&nbsp;</span>
                     {% if organization.image %}
                         {% thumbnail organization.image "30x30" format="PNG" crop="" as im %}
@@ -69,7 +73,6 @@
                     &nbsp;&nbsp;<span class="text-info" style="color: #859aff; font-size: large;">{{ organization.name }}</span>
                     {% if user.username %}
                         {% csrf_token %}
-                        <input type="hidden" name="organization" value="{{ organization.id }}">
                         {% if organization in user.profile.signed_organizations.all %}
                             <input type="hidden" name="sub" value="Unsubscribe">
                             &nbsp;&nbsp;<input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись від подій">
@@ -119,7 +122,8 @@
         <div class="col-lg-8 col-sm-12" style="text-align: center;">
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
-                        <li><a href="/organization/{{ organization.id }}?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
+                        <li><a href="/{% if organization.link_to_organization %}
+{{ organization.link_to_organization }}{% else %}{{ organization.id }}{% endif %}?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
                             {% else %}
                         <li class="disabled"><a>&larr;</a>
                     {% endif %}
@@ -131,14 +135,16 @@
                             {% if page == page_obj.number %}
                                 <a>{{ page }}</a>
                             {% else %}
-                                <a href="/organization/{{ organization.id }}?page={{ page }}">{{ page }}</a>
+                                <a href="/{% if organization.link_to_organization %}
+{{ organization.link_to_organization }}{% else %}{{ organization.id }}{% endif %}?page={{ page }}">{{ page }}</a>
                             {% endif %}
                         {% endif %}
                     </li>
                     {% endfor %}
 
                     {% if page_obj.has_next %}
-                        <li><a href="/organization/{{ organization.id }}?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
+                        <li><a href="/{% if organization.link_to_organization %}
+{{ organization.link_to_organization }}{% else %}{{ organization.id }}{% endif %}?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
                             {% else %}
                         <li class="disabled"><a>&rarr;</a>
                     {% endif %}
