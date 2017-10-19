@@ -311,7 +311,7 @@ class ProposeEventEditView(EventEditView):
 
 class EventsByOrganizationListView(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization.html'
-    paginate_by = 1
+
     def get_context_data(self, **kwargs):
         try:
             organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
