@@ -123,6 +123,7 @@ class EventsBySignedEventsAndOrganizationsListView(EventsWithBaseFiltersListView
     def get_context_data(self, **kwargs):
         context = super(EventsBySignedEventsAndOrganizationsListView, self).get_context_data(**kwargs)
         context['type'] = 'Моя лента событий'
+        context['page_header'] = 'Мої події'
         return context
 
     def get_queryset(self):
