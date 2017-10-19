@@ -236,6 +236,9 @@ class OrganizationEditView(UpdateView):
         context['link'] = self.object.link_to_organization
         return context
 
+    def get_success_url(self):
+        return '/organization_events/edit_organization/{}'.format(self.object.id)
+
     def form_valid(self, form):
         if self.request.user.profile.organization == form.instance:
             link_to_organization = form.instance.link_to_organization

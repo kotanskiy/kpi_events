@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^add_comment/(?P<event_id>[\d+]*)$', views.add_comment, name='add_comment'),
     url(r'^organization_events$', login_required(views.AdminOrganizationEvents.as_view()), name='organization_events'),
     url(r'^organization_events/create_event$', login_required(views.EventCreateView.as_view(success_url='/organization_events')), name='create_event'),
-    url(r'^organization_events/edit_event/(?P<pk>[\d+]*)$', login_required(views.EventEditView.as_view(success_url='/organization_events')), name='edit_event'),
+    url(r'^organization_events/edit_event/(?P<pk>[\d+]*)$', login_required(views.EventEditView.as_view()), name='edit_event'),
     url(r'^organization_events/edit_organization/(?P<pk>[\d+]*)$', login_required(views.OrganizationEditView.as_view(success_url='/organization_events')), name='edit_organization'),
     url(r'^subscribe$', views.subscribe, name='subscribe'),
     url(r'^my_feed$', login_required(views.EventsBySignedEventsAndOrganizationsListView.as_view()), name='filter_by_signed_organizations'),
