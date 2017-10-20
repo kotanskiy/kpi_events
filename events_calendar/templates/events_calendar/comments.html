@@ -11,6 +11,7 @@
             <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span><br>
             <span class="text-comment">{{ comment.text }}</span><br>
             <span class="date-comment">{{ comment.time }}</span><br>
+            {%  if user == comment.creator %}<span class="delete-comment"><a href="{% url 'calendar:remove_comment' comment_id=comment.pk %}">Delete</a></span><br>{%  endif %}
         </div>
 
 
