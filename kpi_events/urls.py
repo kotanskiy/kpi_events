@@ -16,16 +16,19 @@ Including another URLconf
 import django
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.views.static import serve
 
 from kpi_events import settings
 from loginsys import views
 
 urlpatterns = [
+    url(r'^admin', admin.site.urls),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('loginsys.urls')),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
     url(r'^96f3c45875e1.html/$', views.key),
     url(r'^ulogin/', include('django_ulogin.urls')),
     url(r'^', include('events_calendar.urls')),
+
 ]
