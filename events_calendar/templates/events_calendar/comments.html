@@ -12,9 +12,9 @@
             <span class="text-comment">{{ comment.text }}</span><br>
             <span class="date-comment">{{ comment.time }}</span><br>
             {%  if user == comment.creator or user.is_staff %}
-            <button onclick="getAjaxCom()">Видалити</button><br>
+            <button onclick="AjaxRemoveComment()">Видалити</button><br>
                 <script type="text/javascript">
-                    function getAjaxCom() {
+                    function AjaxRemoveComment() {
                         $.ajax({
                             url: "{% url 'calendar:remove_comment' comment.pk %}",
                             type: 'POST',
