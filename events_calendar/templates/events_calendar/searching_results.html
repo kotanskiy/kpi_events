@@ -21,7 +21,16 @@
             {% endif %}
             <br>
             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-            {% if event.end_date %}
+            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
+                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:
+                    {% if event.end_date.minute < 10 %}
+                        0{{ event.end_date.minute }}
+                    {% else %}
+                        {{ event.end_date.minute }}
+                    {% endif %}
+                    {% else %}
+                                </span>
+            {% elif event.end_date %}
                 <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
             {% endif %}
             <br>
