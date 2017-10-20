@@ -167,11 +167,9 @@ def add_comment(request, event_id):
 def remove_comment(request, comment_id):
     user = request.user
     comment = get_object_or_404(Comment, pk=comment_id)
-    event = comment.event
     if user == comment.creator or user.is_staff:
         comment.delete()
-        return redirect("/event/%s" % event.pk)
-    return redirect("/event/%s" % event.pk)
+    return redirect('/')
 
 class AdminOrganizationEvents(EventsWithBaseFiltersListView):
     template_name = 'events_calendar/organization_events.html'
