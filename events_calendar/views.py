@@ -334,10 +334,10 @@ class EventsByOrganizationListView(EventsWithBaseFiltersListView):
             organization = get_object_or_404(Organization, link_to_organization=self.kwargs['organization_id'])
         return super(EventsByOrganizationListView, self).get_queryset().filter(creator=organization)
 
-
+@login_required
 def remove_proposed_event(request, event_id):
     user = request.user
-    if user.is_authenticated and user.profile.organization.access_to_the_offer:
+    if user.profile.organization.access_to_the_offer:
         get_object_or_404(Event, pk=event_id).delete()
         return redirect('/proposed_events')
 
