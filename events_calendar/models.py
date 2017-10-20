@@ -105,11 +105,3 @@ class Profile(models.Model):
         instance.profile.save()
 
 
-class CredentialsModel(models.Model):
-  id = models.ForeignKey(User, primary_key=True)
-  credential = CredentialsField()
-
-
-class CredentialsAdmin(admin.ModelAdmin):
-    pass
-

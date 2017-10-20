@@ -10,7 +10,7 @@ from django.template.context_processors import csrf
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from events_calendar.forms import EventForm, OrganizationForm
-from events_calendar.models import Event, Comment, Category, Organization, CredentialsModel
+from events_calendar.models import Event, Comment, Category, Organization
 from datetime import timedelta
 from django.utils import timezone
 
@@ -370,8 +370,8 @@ def auth_return(request):
     #                                request.user):
     #     return HttpResponseBadRequest()
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
-    storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
-    storage.put(credential)
+    # storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+    # storage.put(credential)
     global event_id
     create_event_for_google_calendar(credential, event_id, request)
     return HttpResponseRedirect('/event/{}'.format(event_id))

@@ -70,6 +70,8 @@ def logout(request):
     return redirect('/')
 
 def registration(request):
+    add_event = request.GET.get('add_event', '-1')
+    print(add_event)
     args = {}
     args['page_header'] = 'Реєстрація'
     args.update(csrf(request))

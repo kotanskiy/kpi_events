@@ -72,8 +72,14 @@
                 <br>
                 <button class="btn btn-default">Додана в google календар</button><br>
             {% endif %}
-
+        {% else %}
+            <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у google календар(Виконайте вхід)</a>
         {% endif %}
+        <!--<script type="text/javascript">
+            var link = document.getElementById('link');
+            link.setAttribute("onclick","popupWin = window.open(this.href,'contacts','location,width=600,height=500,top=0'); popupWin.focus(); return false");
+        </script>-->
+
 
         {% if event.place_of_event != None %}
             <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
