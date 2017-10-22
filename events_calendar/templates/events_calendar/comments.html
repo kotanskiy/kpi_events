@@ -8,30 +8,33 @@
             {% endthumbnail %}
         </div>
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="cursor: default; margin-left: 15px">
-            <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span><br>
+            <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span>&nbsp;&nbsp;&nbsp;
+            {%  if user == comment.creator or user.is_staff %}
+                <span class="glyphicon glyphicon-remove" onclick="AjaxRemoveComment();"
+                      style="cursor: pointer;"></span><br>
+            {% endif %}
             <span class="text-comment">{{ comment.text }}</span><br>
             <span class="date-comment">{{ comment.time }}</span><br>
-            {%  if user == comment.creator or user.is_staff %}
-            <button onclick="AjaxRemoveComment()">Видалити</button><br>
-                <script type="text/javascript">
-                    function AjaxRemoveComment() {
-                        $.ajax({
-                            url: "{% url 'calendar:remove_comment' comment.pk %}",
-                            type: 'POST',
-                            data: {
-                                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-                        });
-                        updateComments();
-                    }
-                </script>
-            {%  endif %}
         </div>
 
 
     </div>
 
 </div><br>
+<script type="text/javascript">
+    function AjaxRemoveComment() {
+        $.ajax({
+            url: "{% url 'calendar:remove_comment' comment.pk %}",
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(){
+                updateComments();
+            }
+        });
+    }
+</script>
 {% endfor %}
 <script type="text/javascript">
     footer();
