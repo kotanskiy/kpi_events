@@ -12,6 +12,8 @@
             {%  if user == comment.creator or user.is_staff %}
                 <span class="glyphicon glyphicon-remove" onclick="AjaxRemoveComment();"
                       style="cursor: pointer;"></span><br>
+            {% else %}
+                <br>
             {% endif %}
             <span class="text-comment">{{ comment.text }}</span><br>
             <span class="date-comment">{{ comment.time }}</span><br>
