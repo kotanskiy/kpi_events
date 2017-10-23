@@ -10,8 +10,8 @@
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="cursor: default; margin-left: 15px">
             <span class="text-info">{{ comment.creator.first_name }} {{ comment.creator.last_name }}</span>&nbsp;&nbsp;&nbsp;
             {%  if user == comment.creator or user.is_staff %}
-                <span class="glyphicon glyphicon-remove" onclick="AjaxRemoveComment();"
-                      style="cursor: pointer;"></span><br>
+                <a><span class="glyphicon glyphicon-remove" onclick="AjaxRemoveComment();"
+                         style="cursor: pointer;"></span></a><br>
             {% else %}
                 <br>
             {% endif %}

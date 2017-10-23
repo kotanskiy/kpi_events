@@ -9,14 +9,14 @@
         <br><br>
         <div class="col-lg-3 col-md-3 col-xs-12">
             {% if user.username %}
-                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Запропонувати подію</button></a>
+                <a href="{% url 'calendar:suggest_an_event' %}"><span class="glyphicon glyphicon-plus" title="Запропонувати подію"></span></a>
             {% endif %}
 
 
             <br><br>
 
 
-            <b>По даті:</b><hr>
+            <b>По даті:</b>
             {% if organization.link_to_organization %}
                 <form action="{% url 'calendar:filter_by_organization' organization.link_to_organization %}" method="post">
             {% else %}
@@ -46,7 +46,7 @@
 
 
             <br>
-            <b>За категоріями:</b><hr>
+            <b>За категоріями:</b><br>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}

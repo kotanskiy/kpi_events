@@ -13,7 +13,7 @@
         <div class="col-lg-3 col-md-3 col-xs-12">
 
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
-                <b>По даті:</b><hr>
+                <b>По даті:</b><br>
                 {% if current_date == '1' %}
                     <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                     <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -36,7 +36,7 @@
                     <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
                 {% endif %}
                 <br>
-                <b>За категоріями:</b><hr>
+                <b>За категоріями:</b><br>
                 {% csrf_token %}
                 {% for category in categories %}
                     {% if category in current_categories %}
