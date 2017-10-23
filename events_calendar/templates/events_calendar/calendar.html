@@ -19,6 +19,7 @@
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
             <b>По даті:</b><hr>
+            <!--Hard code need to fix-->
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -59,7 +60,7 @@
             <br><br>
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">
-
+            <!--Hard code need to fix-->
             {% if user.username %}
                 {% if type == 'Все события' %}
                     <a href="{% url 'calendar:home' %}"><button class="btn btn-primary"><span class="title-font">Всі події</span></button></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -128,6 +129,7 @@
     <br><br>
 
     <div class="row">
+        <!--Hard code need to fix-->
         {% if type == 'Моя лента событий' %}
             <div class="col-lg-8 col-sm-12" style="text-align: center">
                 {% load i18n %}
