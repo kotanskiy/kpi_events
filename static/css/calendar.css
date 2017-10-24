@@ -94,4 +94,8 @@
     background-color: #125187;
 }
 
+.pagination-sm>li.active>a {
+    background-color: #125187;
+    border-color: #125187;
+}
 
