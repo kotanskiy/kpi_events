@@ -9,7 +9,7 @@
         <br><br>
         <div class="col-lg-3 col-md-3 col-xs-12">
             {% if user.username %}
-                <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary">Запропонувати подію</button></a>
+                <a href="{% url 'calendar:suggest_an_event' %}"><span class="glyphicon glyphicon-plus" title="Запропонувати подію"></span></a>
             {% endif %}
 
             <br><br>
@@ -18,7 +18,8 @@
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
-            <b>По даті:</b><hr>
+            <b>По даті:</b><br>
+            <!--Hard code need to fix-->
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                 <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -43,7 +44,7 @@
 
 
             <br>
-            <b>За категоріями:</b><hr>
+            <b>За категоріями:</b><br>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
@@ -59,20 +60,24 @@
             <br><br>
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">
-
+            <!--Hard code need to fix-->
             {% if user.username %}
+                <ul class="nav nav-tabs">
+
+
                 {% if type == 'Все события' %}
-                    <a href="{% url 'calendar:home' %}"><button class="btn btn-primary"><span class="title-font">Всі події</span></button></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <span class="title-font"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></span>
+                    <li class="active"><a href="{% url 'calendar:home' %}">Всі події</a></li>
+                    <li><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
                 {% else %}
-                    <span class="title-font"><a href="{% url 'calendar:home' %}">Всі події</a></span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <a href="{% url 'calendar:filter_by_signed_organizations' %}"><button class="btn btn-primary"><span class="title-font">Мої події</span></button></a>
+                    <li><a href="{% url 'calendar:home' %}">Всі події</a></li>
+                    <li class="active"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
                 {% endif %}
+                </ul>
             {% endif %}
             <br><br>
             {% for event in events %}
                 <div class="row row-fluid">
-                    <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
                                 {% thumbnail event.image "400x300" format="PNG" crop="" as im %}
@@ -85,7 +90,7 @@
                         <div class="text">
                             <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
                             {% if request.user.profile.organization == event.creator %}
-                                <a href="{% url 'calendar:edit_event' event.id %}">Редагувати</a>
+                                <a href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
                             {% endif %}
 
                             <br>
@@ -128,6 +133,7 @@
     <br><br>
 
     <div class="row">
+        <!--Hard code need to fix-->
         {% if type == 'Моя лента событий' %}
             <div class="col-lg-8 col-sm-12" style="text-align: center">
                 {% load i18n %}

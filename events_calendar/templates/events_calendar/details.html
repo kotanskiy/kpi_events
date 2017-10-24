@@ -139,11 +139,13 @@
                         $.ajax({
                             url: "{% url 'calendar:add_comment' event.id %}",
                             type: 'POST',
-                            data: textComment
+                            data: textComment,
+                            success: function(){
+                                updateComments();
+                            }
                         });
                         $("#input_comment").val('');
                         $("#input_comment").blur();
-                        updateComments();
                     }
                     $(document).ready(function(){
                         $("#input_comment").keypress(function(e){

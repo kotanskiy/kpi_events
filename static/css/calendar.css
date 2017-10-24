@@ -2,8 +2,19 @@
 
 
 .navbar-default {
-    background-color: #397dfa;
-    border-color: #397dfa;
+    background-color: #125187;
+    border-color: #125187;
+}
+
+.btn-primary {
+    background-color: #125187;
+    color: whitesmoke;
+    border-color: #125187;
+}
+
+.btn-primary:hover {
+    background-color: #12386c;
+    border-color: #12386c;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -20,7 +31,7 @@
 }
 
 .navbar-default .navbar-toggle {
-    border-color: #397dfa;
+    border-color: #125187;
     background-color: whitesmoke;
 }
 
@@ -29,7 +40,7 @@
 }
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
-    border-color: #397dfa;
+    border-color: #125187;
 }
 
 
@@ -77,5 +88,14 @@
 
 .date-comment {
     color: #939393;
+}
+
+.footer {
+    background-color: #125187;
+}
+
+.pagination-sm>li.active>a {
+    background-color: #125187;
+    border-color: #125187;
 }
 

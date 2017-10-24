@@ -22,7 +22,7 @@ class EventsWithBaseFiltersListView(PaginationMixin, ListView):
     model = Event
     context_object_name = 'events'
     template_name = 'events_calendar/calendar.html'
-    paginate_by = 5
+    paginate_by = 10
 
     def post(self, request, *args, **kwargs):
         current_date = request.POST['date_filter']
@@ -295,7 +295,7 @@ class ProposedEventsListView(PaginationMixin, ListView):
     model = Event
     template_name = 'events_calendar/proposed_events.html'
     context_object_name = 'events'
-    paginate_by = 5
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(ProposedEventsListView, self).get_context_data(**kwargs)

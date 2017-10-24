@@ -13,7 +13,7 @@
         <div class="col-lg-3 col-md-3 col-xs-12">
 
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
-                <b>По даті:</b><hr>
+                <b>По даті:</b><br>
                 {% if current_date == '1' %}
                     <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                     <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -36,7 +36,7 @@
                     <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
                 {% endif %}
                 <br>
-                <b>За категоріями:</b><hr>
+                <b>За категоріями:</b><br>
                 {% csrf_token %}
                 {% for category in categories %}
                     {% if category in current_categories %}
@@ -68,7 +68,7 @@
 
             {% for event in events %}
                 <div class="row row-size" >
-                    <div class=" col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
                                 {% thumbnail event.image "400x300" format="PNG" crop="" as im %}
@@ -77,7 +77,7 @@
                             </a>
                         {% endif %}
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
                             <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
                             <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
