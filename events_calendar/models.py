@@ -11,11 +11,12 @@ class Index(models.Model):
     word = models.CharField(max_length=100)
     index = models.TextField()
 
-    def setindex(self, x):
-        self.index = x
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        Index.objects.filter(pk=self.pk).update(index=','.join(str(i) for i in self.index))
 
     def getindex(self):
-        return [int(x) for x in self.index[1:-1].split(', ')]
+        return [int(i) for i in self.index.split(',')]
 
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')

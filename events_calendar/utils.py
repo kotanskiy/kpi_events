@@ -58,19 +58,19 @@ def add_index(pk):
 
 def find(search_request):
     search_words = split_str(search_request)
-    result = []
+    posts = []
     try:
         for key in search_words:
-            result.append(get_object_or_404(Index, word=key).getindex())
-        rez = result[0]
-        for i in range(len(result) - 1):
-            rez = set(result[i]) & set(result[i + 1])
-        events = []
+            posts.append(get_object_or_404(Index, word=key).getindex())
+        rez = posts[0]
+        for i in range(len(posts) - 1):
+            rez = set(posts[i]) & set(posts[i + 1])
+        posts = []
         for i in rez:
-            events.append(Event.objects.get(pk=i))
-        return events
+            posts.append(Event.objects.get(pk=i))
     except:
-        return None
+        None
+    return posts
 
 
 def update():
