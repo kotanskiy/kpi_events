@@ -77,7 +77,7 @@
             <br><br>
             {% for event in events %}
                 <div class="row row-fluid">
-                    <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
                                 {% thumbnail event.image "400x300" format="PNG" crop="" as im %}
