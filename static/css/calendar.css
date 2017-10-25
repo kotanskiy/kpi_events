@@ -71,11 +71,6 @@
     max-width: 100%;
 }
 
-.event-date {
-    float: right;
-    padding-right: 10px;
-}
-
 .error-login {
     color: #cf5119;
 }
@@ -97,5 +92,16 @@
 .pagination-sm>li.active>a {
     background-color: #125187;
     border-color: #125187;
+}
+
+.btn-details {
+    height: 20px;
+    padding-top: 0px;
+    font-size: small;
+}
+
+.main-text {
+    color: #125187;
+    font-size: large;
 }
 

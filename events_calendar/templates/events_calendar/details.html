@@ -21,60 +21,20 @@
 </script>
 {% autoescape on %}
 <div class="row">
-    <div class="col-lg-8 col-sm-12">
-        <span class="title-font">{{ event.name }}</span>
-        <span class="event-date text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-4 col-sm-12">
         {% thumbnail event.image "850x500" format="PNG" crop="" as im %}
             <img src="/media/{{ im.url }}" width="100%">
         {% endthumbnail %}
     </div>
     <div class="col-lg-4 col-sm-12">
+        <span class="title-font main-text">{{ event.name }}</span>  <span class="main-text" >&#9679; {{ event.category.name }}</span><br>
+        <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
+        {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
+            <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
+        {% elif event.end_date %}
+            <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
+        {% endif %}<br>
 
-        <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
-            {% csrf_token %}
-            {% if event.creator.image %}
-                {% thumbnail event.creator.image "30x30" format="PNG" crop="" as im %}
-                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
-                {% endthumbnail %}
-            {% endif %}
-            {% if event.creator.link_to_organization != None %}
-                <a href="/{{ event.creator.link_to_organization }}">
-            {% else %}
-                <a href="/{{ event.creator.id }}">
-            {% endif %}
-            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
-            &nbsp;&nbsp;&nbsp;<input type="hidden" name="event" value="{{ event.id }}">
-            {% if user.username %}
-                {% if event in request.user.profile.signed_events.all %}
-                    <input type="hidden" name="sub" value="Unsubscribe">
-                    <input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись">
-                {% else %}
-                    <input type="hidden" name="sub" value="Subscribe">
-                    <input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися">
-                {% endif %}
-            {% endif %}
-        </form>
-        {% if request.user.username %}
-
-            {% if event not in request.user.profile.google_calendar_events.all %}
-                <br>
-                <form class="form-horizontal" action="{% url 'calendar:insert_into_google_calendar' %}" method="get"
-                      onsubmit="alert('Ця подія буде додана у ваш google календар');">
-                    {% csrf_token %}
-                    <input type="hidden" name="event_id" value="{{ event.id }}">
-                    <input type="submit" value="Додати в google календар" class="btn btn-primary">
-                </form><br>
-            {% else %}
-                <br>
-                <button class="btn btn-default">Додана в google календар</button><br>
-            {% endif %}
-        {% else %}
-            <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у google календар(Виконайте вхід)</a>
-        {% endif %}
         <!--<script type="text/javascript">
             var link = document.getElementById('link');
             link.setAttribute("onclick","popupWin = window.open(this.href,'contacts','location,width=600,height=500,top=0'); popupWin.focus(); return false");
@@ -85,10 +45,6 @@
             <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
         {% endif %}
 
-        {% if event.vk_link != None %}
-            <span class="text-info"><a href="{{ event.vk_link }}" target="_blank">Посилання вк</a></span><br>
-        {% endif %}
-
         {% if event.fb_link != None %}
             <a href="{{ event.fb_link }}" target="_blank">Посилання facebook</a><br>
         {% endif %}
@@ -96,16 +52,51 @@
         {% if event.web_site != None %}
             <span class="text-info"><a href="{{ event.web_site }}" target="_blank">Посилання на сайт події</a></span><br>
         {% endif %}
+        <br>
+        <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:subscribe' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="event" value="{{ event.id }}">
+            {% if user.username %}
+                {% if event in request.user.profile.signed_events.all %}
+                    <input type="hidden" name="sub" value="Unsubscribe">
+                    <input id="subscribe_button" class="btn btn-default btn-details" type="submit" value="Видалити з моїх подій" style="float: left; margin-top: 1px;">
+                {% else %}
+                    <input type="hidden" name="sub" value="Subscribe">
+                    <input id="subscribe_button" class="btn btn-primary btn-details" type="submit" value="Додати до моїх подій" style="float: left; margin-top: 1px;">
+                {% endif %}
+            {% endif %}
+        </form>
+        {% if request.user.username %}
+            {% if event not in request.user.profile.google_calendar_events.all %}
+                <form class="form-horizontal" action="{% url 'calendar:insert_into_google_calendar' %}" method="get"
+                      onsubmit="alert('Ця подія буде додана у ваш google календар');">
+                    {% csrf_token %}
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Додати в google" class="btn btn-primary btn-details">
+                </form>
+            {% else %}
+                <button class="btn btn-default">Додана в google календар</button>
+            {% endif %}
+        {% else %}
+            <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у google календар(Виконайте вхід)</a>
+        {% endif %}<br>
+        {% if event.creator.image %}
+            {% thumbnail event.creator.image "30x30" format="PNG" crop="" as im %}
+                <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+        {% endif %}
+        {% if event.creator.link_to_organization != None %}
+            <a href="/{{ event.creator.link_to_organization }}">
+        {% else %}
+            <a href="/{{ event.creator.id }}">
+        {% endif %}
+        <span class="title-font main-text">{{ event.creator.name }}</span></a>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-8 col-sm-12">
         <br>
-        <span class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|linebreaks }}</span><br>
-        <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category.name }}</span>
-        {% if event.end_date != None %}
-            <span class="event-date text-info" style="color: #a1a1a1">{{ event.end_date }}</span>
-        {% endif %}
+        <span class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|linebreaks }}</span>
     </div>
 </div>
 <div class="row">
