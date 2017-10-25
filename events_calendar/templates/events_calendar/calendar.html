@@ -7,7 +7,7 @@
 
     <div class="row row-fluid">
         <br><br>
-        <div class="col-lg-3 col-md-3 col-xs-12">
+        <div class="col-lg-2 col-md-2 col-xs-12">
             {% if user.username %}
                 <a href="{% url 'calendar:suggest_an_event' %}"><button class="btn btn-primary btn-details">Запропонувати подію</button></a>
             {% endif %}
@@ -59,12 +59,10 @@
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
             <br><br>
         </div>
-        <div class="col-lg-9 col-md-9 col-xs-12">
+        <div class="col-lg-10 col-md-10 col-xs-12">
             <!--Hard code need to fix-->
             {% if user.username %}
                 <ul class="nav nav-tabs">
-
-
                 {% if type == 'Все события' %}
                     <li class="active"><a href="{% url 'calendar:home' %}">Всі події</a></li>
                     <li><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>

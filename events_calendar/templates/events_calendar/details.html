@@ -27,7 +27,7 @@
         {% endthumbnail %}
     </div>
     <div class="col-lg-4 col-sm-12">
-        <span class="title-font main-text">{{ event.name }}</span>  <span class="main-text" >&#9679; {{ event.category.name }}</span><br>
+        <span class="title-font main-text">{{ event.name }}</span>  <span class="main-text" >&#8226; {{ event.category.name }}</span><br>
         <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
         {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
             <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
