@@ -54,12 +54,20 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
                 <li>
+                    {% if user.username %}
+                        <a href="{% url 'calendar:suggest_an_event' %}"><span class="glyphicon glyphicon-plus" title="Запропонувати подію"></span></a>
+                    {% endif %}
+                </li>
+                <li>
                     {% thumbnail user.profile.image "30x30" format="PNG" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
                     <a href="{% url 'loginsys:edit_user' %}" style="padding-left: 40px;">{{ user.first_name }}</a>
                 </li>
                 {% if user.profile.organization %}
+                    {% thumbnail user.profile.organization.image "30x30" format="PNG" crop="" as im %}
+                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
+                    {% endthumbnail %}
                     <li>
                         <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
                     </li>
