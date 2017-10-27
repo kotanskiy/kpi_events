@@ -88,7 +88,7 @@
                         <div class="text">
                             <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
                             {% if request.user.profile.organization == event.creator %}
-                                <a href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
+                                <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
                             {% endif %}
 
                             <br>
@@ -120,7 +120,7 @@
                     </div>
                 </div>
 
-                <br>
+                <br><br>
             {% endfor %}
         </div>
 
