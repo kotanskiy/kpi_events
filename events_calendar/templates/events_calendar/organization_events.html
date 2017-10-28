@@ -10,7 +10,7 @@
         {{ user.profile.organization.name }} | Адміністрування
     </h3>
     <div class="row row-size">
-        <div class="col-lg-3 col-md-3 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-xs-12 collapse navbar-collapse" id="filters">
 
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
                 <b>По даті:</b><br>
