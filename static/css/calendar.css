@@ -2,19 +2,19 @@
 
 
 .navbar-default {
-    background-color: #ef562d;
-    border-color: #ef562d;
+    background-color: #5676ab;
+    border-color: #5676ab;
 }
 
 .btn-primary {
-    background-color: #ef562d;
+    background-color: #5676ab;
     color: whitesmoke;
-    border-color: #ef562d;
+    border-color: #5676ab;
 }
 
 .btn-primary:hover {
-    background-color: #bd4020;
-    border-color: #bd4020;
+    background-color: #455d8a;
+    border-color: #455d8a;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -31,7 +31,7 @@
 }
 
 .navbar-default .navbar-toggle {
-    border-color: #ef562d;
+    border-color: #5676ab;
     background-color: whitesmoke;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
-    border-color: #ef562d;
+    border-color: #5676ab;
 }
 
 
@@ -86,17 +86,17 @@
 }
 
 .footer {
-    background-color: #ef562d;
+    background-color: #5676ab;
 }
 
 .pagination-sm>li.active>a {
-    background-color: #ef562d;
-    border-color: #ef562d;
+    background-color: #5676ab;
+    border-color: #5676ab;
 }
 
 .pagination-sm>li.active>a:hover {
-    background-color: #bd4020;
-    border-color: #bd4020;
+    background-color: #5676ab;
+    border-color: #5676ab;
 }
 
 .btn-details {
