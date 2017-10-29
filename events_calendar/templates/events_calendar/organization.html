@@ -67,7 +67,7 @@
                             <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
                         {% endthumbnail %}
                     {% endif %}
-                    &nbsp;&nbsp;<span class="text-info" style="color: #859aff; font-size: large;">{{ organization.name }}</span>
+                    &nbsp;&nbsp;<span class="title-font description-font" style="font-size: large;">{{ organization.name }}</span>
                     {% if user.username %}
                         {% csrf_token %}
                         {% if organization in user.profile.signed_organizations.all %}
@@ -85,7 +85,7 @@
             <br>
             {% for event in events %}
                 <div class="row row-fluid">
-                    <div class=" col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                    <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
                                 {% thumbnail event.image "400x300" format="PNG" crop="" as im %}
@@ -96,21 +96,37 @@
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
-                            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
-                            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
-                                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
-                            {% elif event.end_date %}
-                                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
-                            {% endif %}
-                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
-                            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
+                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
+                            {% if request.user.profile.organization == event.creator %}
+                                <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
+                            {% endif %}<br>
                             {% if event.creator.image %}
-                                {% thumbnail event.creator.image "30x30" format="PNG" crop="" as im %}
-                                    <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                                {% thumbnail event.creator.image "18x18" format="PNG" crop="" as im %}
+                                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
                                 {% endthumbnail %}
                             {% endif %}
-                            <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span>
+                            {% if event.creator.link_to_organization != None %}
+                                <a href="/{{ event.creator.link_to_organization }}">
+                            {% else %}
+                                <a href="/{{ event.creator.id }}">
+                            {% endif %}
+                            {{ event.creator.name }}</a> <span class="secondary-text" >&#8226; {{ event.category.name }}</span><br>
+
+
+                            <span class="glyphicon glyphicon-time icon-secondary" style="padding-top: 5px;"></span>
+                            <span class="secondary-text" style="color: #a1a1a1">{{ event.start_date }}</span>
+                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
+                                <span class="secondary-text" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
+                            {% elif event.end_date %}
+                                <span class="secondary-text" style="color: #a1a1a1"> - {{ event.end_date }}</span>
+                            {% endif %}
+                            <br>
+
+                            {% if event.place_of_event %}
+                                <span class="glyphicon glyphicon-map-marker icon-secondary"></span>
+                                <span class="secondary-text">{{ event.place_of_event }}</span><br>
+                            {% endif %}
+                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:300 }}</p>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
-            <b>По даті:</b><br>
+            <b class="main-filter-font">По даті:</b><br>
             <!--Hard code need to fix-->
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
@@ -42,7 +42,7 @@
 
 
             <br>
-            <b>За категоріями:</b><br>
+            <b class="main-filter-font">За категоріями:</b><br>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
