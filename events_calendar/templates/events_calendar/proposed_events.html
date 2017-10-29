@@ -21,11 +21,11 @@
                     <div class="text">
                         <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
                         <span class="glyphicon glyphicon-time icon-secondary" style="padding-top: 5px;"></span>
-                        <span class="secondary-text" style="color: #a1a1a1">{{ event.start_date }}</span>
+                        <span class="secondary-text">{{ event.start_date }}</span>
                         {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
-                            <span class="secondary-text" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
+                            <span class="secondary-text"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
                         {% elif event.end_date %}
-                            <span class="secondary-text" style="color: #a1a1a1"> - {{ event.end_date }}</span>
+                            <span class="secondary-text"> - {{ event.end_date }}</span>
                         {% endif %}
                         <br>
                         {% if event.place_of_event %}
