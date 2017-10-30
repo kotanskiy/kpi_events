@@ -11,9 +11,9 @@
     </h3>
     <div class="row row-size">
         <div class="col-lg-3 col-md-3 col-xs-12 collapse navbar-collapse" id="filters">
-
+            <div class="filter-style">
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
-                <b>По даті:</b><br>
+                <b class="main-filter-font">По даті:</b><br>
                 {% if current_date == '1' %}
                     <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                     <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -36,7 +36,7 @@
                     <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
                 {% endif %}
                 <br>
-                <b>За категоріями:</b><br>
+                <b class="main-filter-font">За категоріями:</b><br>
                 {% csrf_token %}
                 {% for category in categories %}
                     {% if category in current_categories %}
@@ -49,6 +49,7 @@
                 <input type="submit" value="Фільтрувати" class="btn btn-primary btn-details">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
+            </div>
             <br><br>
         </div>
         <div class="col-lg-9 col-md-9 col-xs-12">

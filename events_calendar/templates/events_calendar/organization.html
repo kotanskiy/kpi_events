@@ -12,8 +12,8 @@
 
             <br><br>
 
-
-            <b>По даті:</b>
+            <div class="filter-style">
+            <b class="main-filter-font">По даті:</b>
             {% if organization.link_to_organization %}
                 <form action="{% url 'calendar:filter_by_organization' organization.link_to_organization %}" method="post">
             {% else %}
@@ -43,7 +43,7 @@
 
 
             <br>
-            <b>За категоріями:</b><br>
+            <b class="main-filter-font">За категоріями:</b><br>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
@@ -56,6 +56,7 @@
             <input type="submit" value="Фільтрувати" class="btn btn-primary btn-details">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
+            </div>
             <br><br>
         </div>
         <div class="col-lg-10 col-md-10 col-xs-12">
