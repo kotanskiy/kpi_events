@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="{% url 'calendar:clear_filters' %}"><img src="/media/images/events_calendar/logo_50x50_header.png"></a>
+        <a href="{% url 'calendar:clear_filters' %}"><img style="padding-left: 15px;" src="/media/images/events_calendar/logo_50x50_header.png"></a>
         <span class="glyphicon glyphicon-filter navbar-toggle" data-toggle="collapse" data-target="#filters" aria-expanded="true"
               style="padding: 8px; padding-top: 7px; cursor: pointer;" title="Відкрити фільтри"></span>
 
@@ -73,7 +73,7 @@
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
                     {% endthumbnail %}
                     <li>
-                        <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
+                        <a href="{% url 'calendar:organization_events' %}">&nbsp;&nbsp;{{ user.profile.organization.name }}</a>
                     </li>
                 {% endif %}
                 <li>
@@ -81,10 +81,12 @@
                 </li>
             {% else %}
                 <li>
+                    <a href="{% url 'loginsys:login' %}"><span class="glyphicon glyphicon-plus" title="Запропонувати подію(Потрібна реєстрація)"></span></a>
+                </li>
+                <li>
                     <a href="{% url 'loginsys:login' %}">Вхід і реєстрація</a>
                 </li>
             {% endif %}
-
         </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -108,6 +110,9 @@
             $("footer.footer").removeClass("navbar-fixed-bottom");
         }
     }
+    $(document).ready(function () {
+        footer();
+    });
     footer();
     setInterval('footer()', 1000);
 </script>

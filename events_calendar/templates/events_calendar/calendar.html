@@ -7,9 +7,7 @@
 
     <div class="row row-fluid">
         <br><br>
-        <div class="col-lg-2 col-md-2 col-xs-12 collapse navbar-collapse" id="filters">
-
-            <br><br>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 collapse navbar-collapse" id="filters">
             <div class="filter-style">
             {% if type != 'Моя лента событий' %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
@@ -56,9 +54,9 @@
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
             </div>
-            <br><br>
+
         </div>
-        <div class="col-lg-10 col-md-10 col-xs-12">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
             <!--Hard code need to fix-->
             {% if user.username %}
                 <ul class="nav nav-tabs">
@@ -70,8 +68,8 @@
                     <li class="active"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
                 {% endif %}
                 </ul>
+                <br>
             {% endif %}
-            <br><br>
             {% for event in events %}
                 <div class="row row-fluid">
                     <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
@@ -85,7 +83,7 @@
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
-                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
+                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;<br>
                             {% if request.user.profile.organization == event.creator %}
                                 <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
                             {% endif %}<br>
@@ -115,7 +113,8 @@
                                 <span class="glyphicon glyphicon-map-marker icon-secondary"></span>
                                 <span class="secondary-text">{{ event.place_of_event }}</span><br>
                             {% endif %}
-                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:300 }}</p>
+                            <br>
+                            <p class="description-font" >{{ event.description|truncatechars:300 }}</p>
                         </div>
                     </div>
                 </div>

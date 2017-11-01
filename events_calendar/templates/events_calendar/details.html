@@ -84,16 +84,16 @@
         {% if request.user.username %}
             {% if event not in request.user.profile.google_calendar_events.all %}
                 <form class="form-horizontal" action="{% url 'calendar:insert_into_google_calendar' %}" method="get"
-                      onsubmit="alert('Ця подія буде додана у ваш google календар');">
+                      onsubmit="alert('Ця подія буде додана у ваш Google календар');">
                     {% csrf_token %}
                     <input type="hidden" name="event_id" value="{{ event.id }}">
                     &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Додати в google" class="btn btn-primary btn-details">
                 </form>
             {% else %}
-                &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-details">Додана в google календар</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-details">Додана в Google</button>
             {% endif %}
         {% else %}
-            <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у google календар(Виконайте вхід)</a>
+            <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у Google(Виконайте вхід)</a>
         {% endif %}
 
     </div>

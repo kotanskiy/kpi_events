@@ -10,7 +10,7 @@
         {{ user.profile.organization.name }} | Адміністрування
     </h3>
     <div class="row row-size">
-        <div class="col-lg-3 col-md-3 col-xs-12 collapse navbar-collapse" id="filters">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 collapse navbar-collapse" id="filters">
             <div class="filter-style">
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
                 <b class="main-filter-font">По даті:</b><br>
@@ -52,7 +52,7 @@
             </div>
             <br><br>
         </div>
-        <div class="col-lg-9 col-md-9 col-xs-12">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
                 <a href="{% url 'calendar:create_event' %}"><input type="button" class="form-control btn btn-primary" value="Додати нову подію"></a>
             </div>

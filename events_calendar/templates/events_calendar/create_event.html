@@ -22,9 +22,11 @@
     </div>
     <script type="text/javascript">
         var placeholder = 'Ввести дату';
+        var descriptionInfo = '  Посилання треба вводити в такому форматі: https://events.kpi.ua';
         $('#id_start_date').datetimepicker().attr('placeholder', placeholder);
         $('#id_end_date').datetimepicker().attr('placeholder', placeholder);
         $('#id_image').attr('accept', 'image/jpeg,image/png');
+        $('label[for^="id_description"]').after(descriptionInfo);
         $('label[for^="id_name"]').before('*  ');
         $('label[for^="id_start_date"]').before('*  ');
         $('label[for^="id_category"]').before('*  ');

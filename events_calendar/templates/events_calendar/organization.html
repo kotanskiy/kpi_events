@@ -7,11 +7,7 @@
 
     <div class="row row-fluid">
         <br><br>
-        <div class="col-lg-2 col-md-2 col-xs-12 collapse navbar-collapse" id="filters">
-
-
-            <br><br>
-
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 collapse navbar-collapse" id="filters">
             <div class="filter-style">
             <b class="main-filter-font">По даті:</b>
             {% if organization.link_to_organization %}
@@ -59,7 +55,7 @@
             </div>
             <br><br>
         </div>
-        <div class="col-lg-10 col-md-10 col-xs-12">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
             <div class="row">
                 <form action="{% url 'calendar:subscribe_on_organization' organization.id %}" method="post">
                     <span class="text-info" style="color: #a1a1a1; font-size: large">Список подій від: &nbsp;&nbsp;</span>

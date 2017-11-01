@@ -46,6 +46,7 @@
 
 .event-image {
     max-width: 100%;
+    border-radius: 5px;
 }
 
 .row-size {
@@ -126,5 +127,9 @@
     background-color: rgba(191, 190, 207, 0.32);
     padding: 10px;
     border-radius: 10px;
+}
+
+.add-event {
+    font-weight: 500;
 }
 
