@@ -133,7 +133,7 @@
     <div class="row">
         <!--Hard code need to fix-->
         {% if type == 'Моя лента событий' %}
-            <div class="col-lg-8 col-sm-12" style="text-align: center">
+            <div style="text-align: center">
                 {% load i18n %}
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
@@ -163,7 +163,7 @@
                 </ul>
             </div>
         {% else %}
-            <div class="col-lg-8 col-sm-12" style="text-align: center;">
+            <div style="text-align: center;">
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
                         <li><a href="?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
