@@ -6,6 +6,7 @@ from events_calendar.views import ProposeEventCreateView
 app_name = 'calendar'
 urlpatterns = [
     url(r'^$', views.EventsWithBaseFiltersListView.as_view(), name='home'),
+    url(r'^home$', views.clear_filters, name='clear_filters'),
     url(r'^event/(?P<pk>[\d+]*)$', views.EventDetailsView.as_view(), name='details'),
     url(r'^comments/(?P<event_id>[\d+]*)$', views.CommentsListView.as_view(), name='comments'),
     url(r'^add_comment/(?P<event_id>[\d+]*)$', views.add_comment, name='add_comment'),

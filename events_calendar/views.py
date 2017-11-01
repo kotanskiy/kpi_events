@@ -17,6 +17,17 @@ from django.utils import timezone
 from events_calendar.utils import find, FLOW, create_event_for_google_calendar
 from kpi_events import settings
 
+
+def clear_filters(request):
+    all_categories = Category.objects.all()
+    for category in all_categories:
+        try:
+            del request.session[category.name]
+        except KeyError:
+            pass
+    request.session['current_date'] = '1'
+    return redirect('/')
+
 class EventsWithBaseFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
     model = Event
