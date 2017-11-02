@@ -70,10 +70,10 @@
                 </li>
                 {% if user.profile.organization %}
                     {% thumbnail user.profile.organization.image "30x30" format="PNG" crop="" as im %}
-                        <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
+                        <a href="{% url 'calendar:organization_events' %}"><img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;"></a>
                     {% endthumbnail %}
                     <li>
-                        <a href="{% url 'calendar:organization_events' %}">&nbsp;&nbsp;{{ user.profile.organization.name }}</a>
+                        <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
                     </li>
                 {% endif %}
                 <li>
