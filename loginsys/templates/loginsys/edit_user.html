@@ -11,7 +11,7 @@
             <br><br><br>
         </form>
     </div>
-    <div class="col-lg-4 col-sm-12">
+    <div class="col-lg-6 col-sm-12">
         <h6 class="text-info" style="color: #a1a1a1; font-size: large">Мої підписки:</h6><br>
         {% for organization in organizations %}
             <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:unsubscribe' %}" method="post">
