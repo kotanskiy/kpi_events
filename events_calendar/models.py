@@ -40,7 +40,7 @@ class Organization(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='Назва')
     description = models.TextField('Опис', blank=True, null=True)
-    image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default_kpi_events.jpg')
+    image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default_300x200.png')
     creator_user = CurrentUserField(add_only=True, related_name='Юзер')
     creator = models.ForeignKey(Organization, verbose_name='Організація', null=True)
     start_date = models.DateTimeField('Дата початку')
