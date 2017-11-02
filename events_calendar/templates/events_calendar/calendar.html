@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
-                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;<br>
+                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
                             {% if request.user.profile.organization == event.creator %}
                                 <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
                             {% endif %}<br>
