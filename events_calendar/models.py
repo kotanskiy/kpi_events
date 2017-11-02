@@ -26,7 +26,7 @@ class Category(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=50, verbose_name='Найменування', null=False)
-    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
+    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default_kpi_events.jpg')
     access_to_the_offer = models.BooleanField(default=False, blank=True)
     link_to_organization = models.CharField(max_length=50, verbose_name='Посилання на організацію', blank=True, null=True, unique=True)
 
