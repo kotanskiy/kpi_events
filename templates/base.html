@@ -73,7 +73,7 @@
                         <a href="{% url 'calendar:organization_events' %}"><img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;"></a>
                     {% endthumbnail %}
                     <li>
-                        <a href="{% url 'calendar:organization_events' %}">&nbsp;{{ user.profile.organization.name }}</a>
+                        <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
                     </li>
                 {% endif %}
                 <li>
