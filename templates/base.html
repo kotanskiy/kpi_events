@@ -39,24 +39,23 @@
             <span class="icon-bar"></span>
         </button>
         <a href="{% url 'calendar:clear_filters' %}" style="text-decoration: none;"><img style="padding-left: 15px;" src="/media/images/events_calendar/logo_50x50_header.png">
-            </a>&nbsp;<span style="font-size: 10px; color: whitesmoke; position: absolute; padding-top: 5px;">beta</span>
+        </a>&nbsp;<span style="font-size: 10px; color: whitesmoke; position: absolute; padding-top: 5px;">beta</span>
 
         <span class="glyphicon glyphicon-filter navbar-toggle" data-toggle="collapse" data-target="#filters" aria-expanded="true"
               style="padding: 8px; padding-top: 7px; cursor: pointer;" title="Відкрити фільтри"></span>
+
+        <div style="position: relative;">
+            <form class="nav-header" style="position: absolute; top: -58px; left: 100px; width: 150px;" method="get" action="{% url 'calendar:searching_results' %}">
+                &nbsp;&nbsp;&nbsp;<input type="text" class="form-control" style="height: 25px;" placeholder="Пошук" name="text">
+            </form>
+        </div>
+
+
 
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="responsive-menu">
-        <ul class="nav navbar-nav navbar-left">
-            <li>
-                <form class="navbar-form" method="get" action="{% url 'calendar:searching_results' %}">
-                    <div class="form-group" style="padding-top: 5px;">
-                        &nbsp;&nbsp;&nbsp;<input type="text" class="form-control" style="height: 25px; " placeholder="Пошук" name="text">
-                    </div>
-                </form>
-            </li>
-        </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
                 <li>
