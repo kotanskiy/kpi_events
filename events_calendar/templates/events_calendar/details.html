@@ -90,7 +90,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Додати в google" class="btn btn-primary btn-details">
                 </form>
             {% else %}
-                &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-default btn-details">Додана в Google</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-default btn-details">Додана в Google</input>
             {% endif %}
         {% else %}
             <a id="link" href="{% url 'loginsys:login' %}" >Додати подію у Google(Виконайте вхід)</a>
