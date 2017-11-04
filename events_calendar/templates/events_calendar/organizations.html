@@ -21,9 +21,9 @@
                     <div class="col-lg-2 col-md-3 col-sm-5 col-xs-12">
                         {% if organization.image != '' %}
                             {% if organization.link_to_organization != None %}
-                                <a href="{% url 'calendar:filter_by_organization' organization.link_to_organization %}">
+                                <a href="/{{ organization.link_to_organization }}">
                             {% else %}
-                                <a href="{% url 'calendar:filter_by_organization' organization.id %}">
+                                <a href="/{{ organization.id }}">
                             {% endif %}
                                 {% thumbnail organization.image "200x200" format="PNG" crop="" as im %}
                                     <img src="/media/{{ im.url }}" class="event-image">
@@ -34,11 +34,11 @@
                     <div class="col-lg-10 col-md-9 col-sm-7 col-xs-12">
                         <div class="text">
                             {% if organization.link_to_organization != None %}
-                                <span class="title-font main-text"><a href="{% url 'calendar:filter_by_organization' organization.link_to_organization %}">
+                                <span class="title-font main-text"><a href="/{{ organization.link_to_organization }}">
                                 {{ organization.name }}</a></span>
                             {% else %}
                                 <span class="title-font main-text">
-                                    <a href="{% url 'calendar:filter_by_organization' organization.id %}">{{ organization.name }}</a>
+                                    <a href="/{{ organization.id }}">{{ organization.name }}</a>
                                 </span>
                             {% endif %}
                             <br><br>
