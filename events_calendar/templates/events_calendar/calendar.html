@@ -63,11 +63,11 @@
                 {% if type == 'Все события' %}
                     <li class="active"><a href="{% url 'calendar:home' %}">Всі події</a></li>
                     <li><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
-                    <li><a href="{% url 'calendar:organization_list' %}">Зареєстровані організації</a></li>
+                    <li><a href="{% url 'calendar:organization_list' %}">Організації</a></li>
                 {% else %}
                     <li><a href="{% url 'calendar:home' %}">Всі події</a></li>
                     <li class="active"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
-                    <li><a href="{% url 'calendar:organization_list' %}">Зареєстровані організації</a></li>
+                    <li><a href="{% url 'calendar:organization_list' %}">Організації</a></li>
                 {% endif %}
                 </ul>
                 <br>
