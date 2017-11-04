@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from events_calendar import views
-from events_calendar.views import ProposeEventCreateView
+from events_calendar.views import ProposeEventCreateView, OrganizationListView
 
 app_name = 'calendar'
 urlpatterns = [
@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^subscribe_on_organization/(?P<organization_id>[\d+]*)$', views.subscribe_on_organization, name='subscribe_on_organization'),
     url(r'^insert_into_google_calendar$', views.auth_calendar_api, name='insert_into_google_calendar'),
     url(r'^oauth2callback$', views.auth_return),
+    url(r'^organizations$', login_required(OrganizationListView.as_view()), name='organization_list'),
     url(r'^(?P<organization_id>[^/]+)$', views.EventsByOrganizationListView.as_view(), name='filter_by_organization'),
 ]

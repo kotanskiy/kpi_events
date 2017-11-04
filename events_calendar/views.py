@@ -394,3 +394,16 @@ def auth_return(request):
     global event_id
     create_event_for_google_calendar(credential, event_id, request)
     return HttpResponseRedirect('/event/{}'.format(event_id))
+
+class OrganizationListView(PaginationMixin, ListView):
+    model = Organization
+    template_name = 'events_calendar/organizations.html'
+    context_object_name = 'organizations'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(OrganizationListView, self).get_context_data(**kwargs)
+        context['page_header'] = 'Головна'
+        context['user'] = self.request.user
+        context['type'] = 'Все организации'
+        return context

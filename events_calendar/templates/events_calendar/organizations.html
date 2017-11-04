@@ -1,0 +1,106 @@
+
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block content %}
+
+<br><br>
+    <div class="row row-fluid">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
+            <!--Hard code need to fix-->
+            {% if user.username %}
+                <ul class="nav nav-tabs">
+                    <li><a href="{% url 'calendar:home' %}">Всі події</a></li>
+                    <li><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
+                    <li class="active"><a href="{% url 'calendar:organization_list' %}">Всі організації</a></li>
+                </ul>
+                <br>
+            {% endif %}
+            {% for organization in organizations %}
+                <div class="row row-fluid">
+                    <div class="col-lg-2 col-md-3 col-sm-5 col-xs-12">
+                        {% if organization.image != '' %}
+                            {% if organization.link_to_organization != None %}
+                                <a href="{% url 'calendar:filter_by_organization' organization.link_to_organization %}">
+                            {% else %}
+                                <a href="{% url 'calendar:filter_by_organization' organization.id %}">
+                            {% endif %}
+                                {% thumbnail organization.image "200x200" format="PNG" crop="" as im %}
+                                    <img src="/media/{{ im.url }}" class="event-image">
+                                {% endthumbnail %}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-10 col-md-9 col-sm-7 col-xs-12">
+                        <div class="text">
+                            {% if organization.link_to_organization != None %}
+                                <span class="title-font main-text"><a href="{% url 'calendar:filter_by_organization' organization.link_to_organization %}">
+                                {{ organization.name }}</a></span>
+                            {% else %}
+                                <span class="title-font main-text">
+                                    <a href="{% url 'calendar:filter_by_organization' organization.id %}">{{ organization.name }}</a>
+                                </span>
+                            {% endif %}
+                            <br><br>
+                            <form action="{% url 'calendar:subscribe_on_organization' organization.id %}" method="post">
+                                {% if user.username %}
+                                    {% csrf_token %}
+                                    {% if organization in user.profile.signed_organizations.all %}
+                                        <input type="hidden" name="sub" value="Unsubscribe">
+                                        <input id="subscribe_button" class="btn btn-default" type="submit" value="Відписатись від подій">
+                                    {% else %}
+                                        <input type="hidden" name="sub" value="Subscribe">
+                                        <input id="subscribe_button" class="btn btn-primary" type="submit" value="Підписатися на всі події">
+                                    {% endif %}
+                                {% endif %}
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <br><br>
+            {% endfor %}
+        </div>
+
+
+
+    </div>
+
+    <br><br>
+
+    <div class="row">
+        <div style="text-align: center;">
+            {% load i18n %}
+            <ul class="pagination pagination-sm">
+                {% if page_obj.has_previous %}
+                    <li><a href="/organizations?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
+                        {% else %}
+                    <li class="disabled"><a>&larr;</a>
+                {% endif %}
+
+                {% for page in page_obj.pages %}
+                    <li {% if page == page_obj.number %}class="active"{% endif %}>
+                    {% if not page %}<li class="disabled"><a>...</a>
+                    {% else %}
+                        {% if page == page_obj.number %}
+                            <a>{{ page }}</a>
+                        {% else %}
+                            <a href="/organizations?page={{ page }}">{{ page }}</a>
+                        {% endif %}
+                    {% endif %}
+                </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li><a href="/organizations?{{ page_obj.next_page_number.querystring }}">&rarr;</a>
+                        {% else %}
+                    <li class="disabled"><a>&rarr;</a>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+    <br><br><br><br>
+{% endblock %}
