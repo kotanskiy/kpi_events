@@ -407,3 +407,7 @@ class OrganizationListView(PaginationMixin, ListView):
         context['user'] = self.request.user
         context['type'] = 'Все организации'
         return context
+
+
+def faq(request):
+    return render(request, 'events_calendar/faq.html', {'page_header': 'FAQ'})
