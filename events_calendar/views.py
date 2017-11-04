@@ -403,7 +403,7 @@ class OrganizationListView(PaginationMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(OrganizationListView, self).get_context_data(**kwargs)
-        context['page_header'] = 'Головна'
+        context['page_header'] = 'Зареєстровані організації'
         context['user'] = self.request.user
         context['type'] = 'Все организации'
         return context
