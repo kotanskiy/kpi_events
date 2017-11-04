@@ -101,7 +101,14 @@
         <p style="color: whitesmoke; padding-top: 12px; margin-bottom: 2px; text-align: center;">[ З усіх питань і верифікацією організації звертайтеся за адресою: <b>eventsKpi@gmail.com</b> ]</p>
         <p style="color: whitesmoke; margin-bottom: 2px; text-align: center;">[ Developed by <a href="https://www.facebook.com/profile.php?id=100011288523701" target="_blank" style="color: whitesmoke;"><b>Olexiy Yefimenko</b></a> olexiyyefimenko@gmail.com. Powered and hosted by <a href="https://hub.kpi.ua" target="_blank" style="color: whitesmoke"><b>KPI hub</b></a> ]</p>
         <p style="color: whitesmoke; text-align: center;">[ &#9400; <b><a style="color: whitesmoke;" href="{% url 'calendar:home' %}">KPI events</a></b>
-            <a style="color: whitesmoke;" href="{% url 'calendar:faq' %}"><b>FAQ</b></a> ]</p>
+            <a style="color: whitesmoke;" href="{% url 'calendar:faq' %}"><b>FAQ</b></a>
+            {% thumbnail "images/events_calendar/logo_facebook.png" "20x20" format="PNG" crop="" as im %}
+                &nbsp;<a href="https://www.facebook.com/KPIevents-2015503345374076/"><img src="/media/{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+            {% thumbnail "images/events_calendar/logo_telegram.png" "20x20" format="PNG" crop="" as im %}
+                &nbsp;<a href="https://t.me/eventskpi"><img src="/media/{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+            ]</p>
     </div>
 </footer>
 <script type="text/javascript">
@@ -116,7 +123,7 @@
         footer();
     });
     footer();
-    setInterval('footer()', 1000);
+    setInterval('footer()', 500);
 </script>
 </body>
 </html>
