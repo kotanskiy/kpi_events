@@ -241,8 +241,10 @@ class EventEditView(UpdateView):
         return context
 
     def form_valid(self, form):
+        self.success_url = '/organization_events/edit_event/{}'.format(self.object.id)
         if self.request.user.profile.organization == form.instance.creator:
             return super(EventEditView, self).form_valid(form)
+
 
 class OrganizationEditView(UpdateView):
     model = Organization
