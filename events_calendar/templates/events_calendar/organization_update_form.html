@@ -16,22 +16,17 @@
         <input type="submit" value="Зберегти" class="btn btn-primary">
         <br>
     </form>
-</div>
-<script type="text/javascript">
-    (function b(c) {
-        var d = /Змінити:/mig;
-        [].forEach.call(c.childNodes, function(a) {
-            3 == a.nodeType && (a.data = a.data.replace(d, ""));
-            1 == a.nodeType && b(a)
-        })
+    </div>
+    <script type="text/javascript">
+        var someText = $('p:contains("Змінити:"):contains("Наразі:")').html();
+        someText = someText.replace(/Змінити:/mig, '');
+        $('p:contains("Змінити:"):contains("Наразі:")').html(someText);
 
-    })(document.body);
-
-    $('#id_image').before('<img src="/media/{{ organization.image }}" style="max-width: 200px"><br>Змінити:').attr('accept', 'image/jpeg,image/png');
-    $('p').find('a').remove();
-    $('#image-clear_id').remove();
-    $('label[for^="image-clear_id"]').remove();
-    $('label[for^="id_image"]').remove();
-</script>
+        $('#id_image').before('<img src="/media/{{ organization.image }}" style="max-width: 200px"><br>Змінити:').attr('accept', 'image/jpeg,image/png');
+        $('p').find('a').remove();
+        $('#image-clear_id').remove();
+        $('label[for^="image-clear_id"]').remove();
+        $('label[for^="id_image"]').remove();
+    </script>
 
 {% endblock %}
