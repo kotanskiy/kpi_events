@@ -55,7 +55,7 @@
 
         {% if event.place_of_event != None %}
             <span class="glyphicon glyphicon-map-marker icon-secondary"></span>
-            <span class="secondary-text">{{ event.place_of_event }}</span><br>
+            <span class="secondary-text"><a href="https://www.google.ru/maps/place/{{ event.place_of_event }}" target="_blank">{{ event.place_of_event }}</a></span><br>
         {% endif %}
 
         {% if event.fb_link != None %}
