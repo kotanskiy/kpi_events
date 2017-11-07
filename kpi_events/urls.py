@@ -13,10 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-import django
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.views.static import serve
 
 from kpi_events import settings
@@ -30,5 +28,4 @@ urlpatterns = [
     url(r'^96f3c45875e1.html/$', views.key),
     url(r'^ulogin/', include('django_ulogin.urls')),
     url(r'^', include('events_calendar.urls')),
-
 ]

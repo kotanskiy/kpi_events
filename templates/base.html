@@ -17,7 +17,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
+    <meta property="og:image" content="https://events.kpi.ua/media/images/events_calendar/og.png">
+    <link rel="shortcut icon" type="image/png" href="/media/images/events_calendar/logo_50x50.png">
     <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
     <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
@@ -30,29 +31,38 @@
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
+
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responsive-menu" aria-expanded="true">
             <span class="sr-only">Відкрити навігацію</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'calendar:home' %}">KPI events</a>
+        <a href="{% url 'calendar:clear_filters' %}" style="text-decoration: none;"><img style="padding-left: 15px;" src="/media/images/events_calendar/logo_50x50_header.png">
+        </a>&nbsp;<span style="font-size: 10px; color: whitesmoke; position: absolute; padding-top: 5px;">beta</span>
+
+        <span class="glyphicon glyphicon-filter navbar-toggle" data-toggle="collapse" data-target="#filters" aria-expanded="true"
+              style="padding: 8px; padding-top: 7px; cursor: pointer;" title="Відкрити фільтри"></span>
+
+        <div style="position: relative;">
+            <form class="nav-header" style="position: absolute; top: -58px; left: 100px; min-width: 140px; width: 30%;" method="get" action="{% url 'calendar:searching_results' %}">
+                &nbsp;&nbsp;&nbsp;<input type="text" class="form-control" style="height: 25px;" placeholder="Пошук" name="text">
+            </form>
+        </div>
+
+
 
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="responsive-menu">
-        <ul class="nav navbar-nav navbar-left">
-            <li>
-                <form class="navbar-form navbar-right" method="get" action="{% url 'calendar:searching_results' %}">
-                    <div class="form-group" style="padding-top: 5px;">
-                        <input type="text" class="form-control" style="height: 25px; " placeholder="Пошук" name="text">
-                    </div>
-                </form>
-            </li>
-        </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
+                <li>
+                    {% if user.username %}
+                        <a href="{% url 'calendar:suggest_an_event' %}" style="font-size: 40px; padding-top: 15px;"><span title="Запропонувати подію">+</span></a>
+                    {% endif %}
+                </li>
                 <li>
                     {% thumbnail user.profile.image "30x30" format="PNG" crop="" as im %}
                         <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;">
@@ -60,6 +70,9 @@
                     <a href="{% url 'loginsys:edit_user' %}" style="padding-left: 40px;">{{ user.first_name }}</a>
                 </li>
                 {% if user.profile.organization %}
+                    {% thumbnail user.profile.organization.image "30x30" format="PNG" crop="" as im %}
+                        <a href="{% url 'calendar:organization_events' %}"><img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}" style="margin-top: 10px; float: left;"></a>
+                    {% endthumbnail %}
                     <li>
                         <a href="{% url 'calendar:organization_events' %}">{{ user.profile.organization.name }}</a>
                     </li>
@@ -69,22 +82,33 @@
                 </li>
             {% else %}
                 <li>
+                    <a href="{% url 'loginsys:login' %}" style="font-size: 40px; padding-top: 15px;"><span title="Запропонувати подію(Потрібна реєстрація)">+</span></a>
+                </li>
+                <li>
                     <a href="{% url 'loginsys:login' %}">Вхід і реєстрація</a>
                 </li>
             {% endif %}
-
         </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 <div class="container">
-
     <br><br>
     {% block content %}{% endblock %}
 </div>
 <footer id="footer" class="footer"><!--Footer-->
     <div class="container" >
-        <p style="color: whitesmoke; padding-top: 12px">Developed by <b>Olexiy Yefimenko</b> olexiyyefimenko@gmail.com. Powered and hosted by <a href="https://hub.kpi.ua" target="_blank" style="color: whitesmoke"><b>KPI hub</b></a>.</p>
+        <p style="color: whitesmoke; padding-top: 12px; margin-bottom: 2px; text-align: center;">[ З усіх питань і верифікацією організації звертайтеся за адресою: <b>eventsKpi@gmail.com</b> ]</p>
+        <p style="color: whitesmoke; margin-bottom: 2px; text-align: center;">[ Developed by <a href="https://www.facebook.com/profile.php?id=100011288523701" target="_blank" style="color: whitesmoke;"><b>Olexiy Yefimenko</b></a> olexiyyefimenko@gmail.com. Powered and hosted by <a href="https://hub.kpi.ua" target="_blank" style="color: whitesmoke"><b>KPI hub</b></a> ]</p>
+        <p style="color: whitesmoke; text-align: center;">[ &#9400; <b><a style="color: whitesmoke;" href="{% url 'calendar:home' %}">KPI events</a></b>
+            <a style="color: whitesmoke;" href="{% url 'calendar:faq' %}"><b>FAQ</b></a>
+            {% thumbnail "images/events_calendar/logo_facebook.png" "20x20" format="PNG" crop="" as im %}
+                &nbsp;<a href="https://www.facebook.com/KPIevents-2015503345374076/" target="_blank"><img src="/media/{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+            {% thumbnail "images/events_calendar/logo_telegram.png" "20x20" format="PNG" crop="" as im %}
+                &nbsp;<a href="https://t.me/eventskpi" target="_blank"><img src="/media/{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+            ]</p>
     </div>
 </footer>
 <script type="text/javascript">
@@ -95,8 +119,11 @@
             $("footer.footer").removeClass("navbar-fixed-bottom");
         }
     }
+    $(document).ready(function () {
+        footer();
+    });
     footer();
-    setInterval('footer()', 1000);
+    setInterval('footer()', 500);
 </script>
 </body>
 </html>

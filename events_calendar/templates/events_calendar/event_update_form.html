@@ -20,10 +20,22 @@
     <br>
 </div>
 <script type="text/javascript">
+{#        (function b(c) {#}
+{#	        var d = /Змінити:/mig;#}
+{#	        [].forEach.call(c.childNodes, function(a) {#}
+{#	            3 == a.nodeType && (a.data = a.data.replace(d, ""));#}
+{#	            1 == a.nodeType && b(a)#}
+{#	        })#}
+{##}
+{#	    })(document.body);#}
+
+        var someText = $('p:contains("Змінити:"):contains("Наразі:")').html();
+        someText = someText.replace(/Змінити:/mig, '');
+        $('p:contains("Змінити:"):contains("Наразі:")').html(someText);
         var placeholder = 'Ввести дату';
         $('#id_start_date').datetimepicker('setStartDate', '{{ start_time }}').attr('placeholder', placeholder);
         $('#id_end_date').datetimepicker().attr('placeholder', placeholder);
-        $('#id_image').attr('accept', 'image/jpeg,image/png').before('<img src="/media/{{ event.image }}" style="max-width: 200px"><br><br>');
+        $('#id_image').attr('accept', 'image/jpeg,image/png').before('<img src="/media/{{ event.image }}" style="max-width: 200px"><br>Змінити:');
         $('label[for^="id_name"]').before('*  ');
         $('label[for^="id_start_date"]').before('*  ');
         $('label[for^="id_category"]').before('*  ');

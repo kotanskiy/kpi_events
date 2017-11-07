@@ -7,18 +7,14 @@
 
     <div class="row row-fluid">
         <br><br>
-        <div class="col-lg-3 col-md-3 col-xs-12">
-            {% if user.username %}
-                <a href="{% url 'calendar:suggest_an_event' %}"><span class="glyphicon glyphicon-plus" title="Запропонувати подію"></span></a>
-            {% endif %}
-
-            <br><br>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 collapse navbar-collapse" id="filters">
+            <div class="filter-style">
             {% if type != 'Моя лента событий' %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:home' %}">
             {% else %}
                 <form class="form-horizontal" method="post" action="{% url 'calendar:filter_by_signed_organizations' %}">
             {% endif %}
-            <b>По даті:</b><br>
+            <b class="main-filter-font">По даті:</b><br>
             <!--Hard code need to fix-->
             {% if current_date == '1' %}
                 <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
@@ -44,7 +40,7 @@
 
 
             <br>
-            <b>За категоріями:</b><br>
+            <b class="main-filter-font">За категоріями:</b><br>
             {% csrf_token %}
             {% for category in categories %}
                 {% if category in current_categories %}
@@ -54,27 +50,28 @@
                 {% endif %}
             {% endfor %}
             <br>
-            <input type="submit" value="Фільтрувати" class="btn btn-primary">
+            <input type="submit" value="Фільтрувати" class="btn btn-primary btn-details center-block">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
-            <br><br>
+            </div>
+            <br>
         </div>
-        <div class="col-lg-9 col-md-9 col-xs-12">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
             <!--Hard code need to fix-->
             {% if user.username %}
                 <ul class="nav nav-tabs">
-
-
                 {% if type == 'Все события' %}
                     <li class="active"><a href="{% url 'calendar:home' %}">Всі події</a></li>
                     <li><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
+                    <li><a href="{% url 'calendar:organization_list' %}">Організації</a></li>
                 {% else %}
                     <li><a href="{% url 'calendar:home' %}">Всі події</a></li>
                     <li class="active"><a href="{% url 'calendar:filter_by_signed_organizations' %}">Мої події</a></li>
+                    <li><a href="{% url 'calendar:organization_list' %}">Організації</a></li>
                 {% endif %}
                 </ul>
+                <br>
             {% endif %}
-            <br><br>
             {% for event in events %}
                 <div class="row row-fluid">
                     <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
@@ -88,41 +85,43 @@
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
-                            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
+                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
                             {% if request.user.profile.organization == event.creator %}
-                                <a href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
-                            {% endif %}
-
-                            <br>
-                            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
-                                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
-                            {% elif event.end_date %}
-                                <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
-                            {% endif %}
-                            <br>
-                            {% if event.place_of_event %}
-                                <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
-                            {% endif %}
-                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
-                            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
+                                <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
+                            {% endif %}<br><br>
                             {% if event.creator.image %}
-                                {% thumbnail event.creator.image "30x30" format="PNG" crop="" as im %}
-                                    <img src="/media/{{ im.url }}" class="img-rounded" height="{{ im.height }}" width="{{ im.width }}">
+                                {% thumbnail event.creator.image "18x18" format="PNG" crop="" as im %}
+                                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
                                 {% endthumbnail %}
                             {% endif %}
-
                             {% if event.creator.link_to_organization != None %}
                                 <a href="/{{ event.creator.link_to_organization }}">
                             {% else %}
                                 <a href="/{{ event.creator.id }}">
                             {% endif %}
-                                <span class="text-info" style="color: #859aff; font-size: larger">{{ event.creator.name }}</span></a>
+                            {{ event.creator.name }}</a> <span class="secondary-text" >&#8226; {{ event.category.name }}</span><br>
+
+
+                            <span class="glyphicon glyphicon-time icon-secondary" style="padding-top: 5px;"></span>
+                            <span class="secondary-text">{{ event.start_date }}</span>
+                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
+                                <span class="secondary-text"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
+                            {% elif event.end_date %}
+                                <span class="secondary-text"> - {{ event.end_date }}</span>
+                            {% endif %}
+                            <br>
+
+                            {% if event.place_of_event %}
+                                <span class="glyphicon glyphicon-map-marker icon-secondary"></span>
+                                <span class="secondary-text">{{ event.place_of_event }}</span><br>
+                            {% endif %}
+                            <br>
+                            <p class="description-font" >{{ event.description|truncatechars:300 }}</p>
                         </div>
                     </div>
                 </div>
 
-                <br>
+                <br><br>
             {% endfor %}
         </div>
 
@@ -135,7 +134,7 @@
     <div class="row">
         <!--Hard code need to fix-->
         {% if type == 'Моя лента событий' %}
-            <div class="col-lg-8 col-sm-12" style="text-align: center">
+            <div style="text-align: center">
                 {% load i18n %}
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
@@ -165,7 +164,7 @@
                 </ul>
             </div>
         {% else %}
-            <div class="col-lg-8 col-sm-12" style="text-align: center;">
+            <div style="text-align: center;">
                 <ul class="pagination pagination-sm">
                     {% if page_obj.has_previous %}
                         <li><a href="?{{ page_obj.previous_page_number.querystring }}">&larr;</a>
@@ -195,4 +194,5 @@
             </div>
         {% endif %}
     </div>
+    <br><br><br><br>
 {% endblock %}

@@ -30,7 +30,7 @@ class Category(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=50, verbose_name='Найменування', null=False)
-    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default.jpg')
+    image = models.ImageField(upload_to='images/organization', blank=True, default='images/organization/default_kpi_events.jpg')
     access_to_the_offer = models.BooleanField(default=False, blank=True)
     link_to_organization = models.CharField(max_length=50, verbose_name='Посилання на організацію', blank=True, null=True, unique=True)
 
@@ -44,7 +44,7 @@ class Organization(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=100, verbose_name='Назва')
     description = models.TextField('Опис', blank=True, null=True)
-    image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default.jpg')
+    image = models.ImageField(upload_to='images/events_calendar', blank=True, default='images/events_calendar/default_300x200.png')
     creator_user = CurrentUserField(add_only=True, related_name='Юзер')
     creator = models.ForeignKey(Organization, verbose_name='Організація', null=True)
     start_date = models.DateTimeField('Дата початку')

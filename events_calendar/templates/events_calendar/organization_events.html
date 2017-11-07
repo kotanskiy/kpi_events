@@ -10,10 +10,10 @@
         {{ user.profile.organization.name }} | Адміністрування
     </h3>
     <div class="row row-size">
-        <div class="col-lg-3 col-md-3 col-xs-12">
-
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 collapse navbar-collapse" id="filters">
+            <div class="filter-style">
             <form class="form-horizontal" method="post" action="{% url 'calendar:organization_events' %}">
-                <b>По даті:</b><br>
+                <b class="main-filter-font">По даті:</b><br>
                 {% if current_date == '1' %}
                     <input class="radio-inline" type="radio" name="date_filter" value="1" checked> Найближчі події<br>
                     <input class="radio-inline" type="radio" name="date_filter" value="3"> Події на сьогодні<br>
@@ -36,7 +36,7 @@
                     <input class="radio-inline" type="radio" name="date_filter" value="2"> Минулі події<br>
                 {% endif %}
                 <br>
-                <b>За категоріями:</b><br>
+                <b class="main-filter-font">За категоріями:</b><br>
                 {% csrf_token %}
                 {% for category in categories %}
                     {% if category in current_categories %}
@@ -46,12 +46,13 @@
                     {% endif %}
                 {% endfor %}
                 <br>
-                <input type="submit" value="Фільтрувати" class="btn btn-primary">
+                <input type="submit" value="Фільтрувати" class="btn btn-primary btn-details center-block">
             </form>
             <span class="text-info" style="color: #a1a1a1;">{{ info_filter }}</span>
+            </div>
             <br><br>
         </div>
-        <div class="col-lg-9 col-md-9 col-xs-12">
+        <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
             <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
                 <a href="{% url 'calendar:create_event' %}"><input type="button" class="form-control btn btn-primary" value="Додати нову подію"></a>
             </div>
@@ -60,14 +61,14 @@
             </div>
             {% if user.profile.organization.access_to_the_offer %}
                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
-                    <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Предложка{% if count_proposed_events != 0 %} ({{ count_proposed_events }}){% endif %}"></a>
+                    <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Запропоновані{% if count_proposed_events != 0 %} ({{ count_proposed_events }}){% endif %}"></a>
                 </div>
             {% endif %}
 
             <br><br><br>
 
             {% for event in events %}
-                <div class="row row-size" >
+                <div class="row row-fluid">
                     <div class="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         {% if event.image != '' %}
                             <a href="{% url 'calendar:details' event.id %}">
@@ -79,29 +80,47 @@
                     </div>
                     <div class="col-lg-8 col-md-7 col-sm-7 col-xs-12">
                         <div class="text">
-                            <span class="title-font"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span><br>
-                            <span class="text-info" style="color: #a1a1a1">{{ event.start_date }}</span>
-                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
-                            <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
-                        {% elif event.end_date %}
-                            <span class="text-info" style="color: #a1a1a1"> - {{ event.end_date }}</span>
-                        {% endif %}
-
-                            <br>
-                            {% if event.place_of_event %}
-                                <span class="text-info" style="color: #a1a1a1; font-size: large">{{ event.place_of_event }}</span><br>
+                            <span class="title-font main-text"><a href="{% url 'calendar:details' event.id %}">{{ event.name }}</a></span>&nbsp;
+                            {% if request.user.profile.organization == event.creator %}
+                                <a style="position: absolute;" href="{% url 'calendar:edit_event' event.id %}"><span title="Редагувати" class="glyphicon glyphicon-pencil"></span></a>
+                            {% endif %}<br>
+                            {% if event.creator.image %}
+                                {% thumbnail event.creator.image "18x18" format="PNG" crop="" as im %}
+                                    <img src="/media/{{ im.url }}" class="img-rounded" width="{{ im.width }}" height="{{ im.height }}">
+                                {% endthumbnail %}
                             {% endif %}
-                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:200 }}</p>
-                            <h6 class="text-info" style="color: #a1a1a1; font-size: large">{{ event.category }}</h6>
+                            {% if event.creator.link_to_organization != None %}
+                                <a href="/{{ event.creator.link_to_organization }}">
+                            {% else %}
+                                <a href="/{{ event.creator.id }}">
+                            {% endif %}
+                            {{ event.creator.name }}</a> <span class="secondary-text" >&#8226; {{ event.category.name }}</span><br>
+
+
+                            <span class="glyphicon glyphicon-time icon-secondary" style="padding-top: 5px;"></span>
+                            <span class="secondary-text">{{ event.start_date }}</span>
+                            {% if event.end_date.month == event.start_date.month and event.end_date.day == event.start_date.day %}
+                                <span class="secondary-text"> - {{ event.end_date.hour }}:{% if event.end_date.minute < 10 %}0{{event.end_date.minute}}{% else %}{{event.end_date.minute}}{% endif %}</span>
+                            {% elif event.end_date %}
+                                <span class="secondary-text"> - {{ event.end_date }}</span>
+                            {% endif %}
+                            <br>
+
+                            {% if event.place_of_event %}
+                                <span class="glyphicon glyphicon-map-marker icon-secondary"></span>
+                                <span class="secondary-text">{{ event.place_of_event }}</span><br>
+                            {% endif %}
+                            <p class="description-font" style="margin-bottom: 10px; margin-top: 10px">{{ event.description|truncatechars:300 }}</p>
                         </div>
-                        <a href="{% url 'calendar:edit_event' event.id %}">Редагувати</a>
                     </div>
-                </div><br>
+                </div>
+
+                <br><br>
             {% endfor %}
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8 col-sm-12" style="text-align: center;">
+        <div style="text-align: center;">
             {% load i18n %}
             <ul class="pagination pagination-sm">
                 {% if page_obj.has_previous %}

@@ -8,9 +8,10 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input class="btn btn-primary" type="submit" value="Зберегти">
+            <br><br><br>
         </form>
     </div>
-    <div class="col-lg-4 col-sm-12">
+    <div class="col-lg-6 col-sm-12">
         <h6 class="text-info" style="color: #a1a1a1; font-size: large">Мої підписки:</h6><br>
         {% for organization in organizations %}
             <form class="form-horizontal" id="subscribe_form" action="{% url 'calendar:unsubscribe' %}" method="post">
@@ -27,10 +28,19 @@
                 {% endif %}
             </form><br>
         {% endfor %}
-    <br><br>
+        <br><br>
     </div>
-<script type="text/javascript">
-    $('#id_image').before('<img src="/media/{{ user.profile.image }}" style="max-width: 200px"><br><br>').attr('accept', 'image/jpeg,image/png');
-    $('p').find('a').remove();
+    <script type="text/javascript">
+        var someText = $('p:contains("Змінити:"):contains("Наразі:")').html();
+        someText = someText.replace(/Змінити:/mig, '');
+        $('p:contains("Змінити:"):contains("Наразі:")').html(someText);
+
+        $('#id_image').before('<img src="/media/{{ user.profile.image }}" style="max-width: 200px"><br>Змінити:').attr('accept', 'image/jpeg,image/png');
+        $('p').find('a').remove();
+        window.addEventListener("DOMContentLoaded", function() {
+
+
+
+	});
 </script>
 {% endblock %}

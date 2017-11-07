@@ -17,6 +17,17 @@ from django.utils import timezone
 from events_calendar.utils import find, FLOW, create_event_for_google_calendar
 from kpi_events import settings
 
+
+def clear_filters(request):
+    all_categories = Category.objects.all()
+    for category in all_categories:
+        try:
+            del request.session[category.name]
+        except KeyError:
+            pass
+    request.session['current_date'] = '1'
+    return redirect('/')
+
 class EventsWithBaseFiltersListView(PaginationMixin, ListView):
     all_categories = Category.objects.all()
     model = Event
@@ -221,6 +232,9 @@ class EventEditView(UpdateView):
     form_class = EventForm
     template_name_suffix = '_update_form'
 
+    def get_success_url(self):
+        return '/organization_events/edit_event/{}'.format(self.object.id)
+
     def get_context_data(self, **kwargs):
         context = super(EventEditView, self).get_context_data()
         context['page_header'] = 'Редагувати'
@@ -232,6 +246,7 @@ class EventEditView(UpdateView):
     def form_valid(self, form):
         if self.request.user.profile.organization == form.instance.creator:
             return super(EventEditView, self).form_valid(form)
+
 
 class OrganizationEditView(UpdateView):
     model = Organization
@@ -383,3 +398,20 @@ def auth_return(request):
     global event_id
     create_event_for_google_calendar(credential, event_id, request)
     return HttpResponseRedirect('/event/{}'.format(event_id))
+
+class OrganizationListView(PaginationMixin, ListView):
+    model = Organization
+    template_name = 'events_calendar/organizations.html'
+    context_object_name = 'organizations'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(OrganizationListView, self).get_context_data(**kwargs)
+        context['page_header'] = 'Зареєстровані організації'
+        context['user'] = self.request.user
+        context['type'] = 'Все организации'
+        return context
+
+
+def faq(request):
+    return render(request, 'events_calendar/faq.html', {'page_header': 'FAQ'})
