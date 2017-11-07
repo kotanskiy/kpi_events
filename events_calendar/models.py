@@ -5,18 +5,16 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from oauth2client.contrib.django_util.models import CredentialsField
+from django.contrib.sitemaps import Sitemap
+
 
 
 class Index(models.Model):
-    word = models.CharField(max_length=100)
-    index = models.TextField()
+    word = models.TextField(max_length=50)
+    links = models.TextField(null=True)  # change on SET()
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-        Index.objects.filter(pk=self.pk).update(index=','.join(str(i) for i in self.index))
-
-    def getindex(self):
-        return [int(i) for i in self.index.split(',')]
+    def __str__(self):
+        return self.links
 
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Назва')
@@ -64,6 +62,9 @@ class Event(models.Model):
         from events_calendar.utils import add_index
         add_index(self.pk)
 
+    def get_absolute_url(self):
+        return "/event/%s" % self.pk
+
     class Meta:
         ordering = [
             '-start_date',
@@ -108,4 +109,14 @@ class Profile(models.Model):
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
+class EngineSitemap(Sitemap):
+    priority = 0.5
 
+    def items(self):
+        return Event.objects.all()
+
+    def lastmod(self, obj):
+        return obj.start_date
+
+    def changefreq(self, obj):
+        return "daily"

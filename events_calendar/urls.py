@@ -2,8 +2,15 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from events_calendar import views
 from events_calendar.views import ProposeEventCreateView, OrganizationListView
+from .models import EngineSitemap
+from django.contrib.sitemaps.views import sitemap
 
 app_name = 'calendar'
+
+sitemaps = {
+    app_name: EngineSitemap
+}
+
 urlpatterns = [
     url(r'^$', views.EventsWithBaseFiltersListView.as_view(), name='home'),
     url(r'^home$', views.clear_filters, name='clear_filters'),
@@ -29,5 +36,6 @@ urlpatterns = [
     url(r'^insert_into_google_calendar$', views.auth_calendar_api, name='insert_into_google_calendar'),
     url(r'^oauth2callback$', views.auth_return),
     url(r'^organizations$', login_required(OrganizationListView.as_view()), name='organization_list'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     url(r'^(?P<organization_id>[^/]+)$', views.EventsByOrganizationListView.as_view(), name='filter_by_organization'),
 ]
