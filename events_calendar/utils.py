@@ -35,9 +35,9 @@ def create_indexes():
                         indexes[word] = set()
                     indexes[word].add(event.pk)
         except:
-            None
+            pass
     for key in indexes:
-        Index.objects.create(word=key, index=indexes[key])
+        Index.objects.create(word=key, links=indexes[key])
         print("For {0} created index {1}".format(key, indexes[key]))
 
 
@@ -48,30 +48,35 @@ def add_index(pk):
         if len(word) > 1:
             indexes = set()
             try:
-                indexes = get_object_or_404(Index, word=word).getindex()
+                values = get_object_or_404(Index, word=word)
+                indexes = literal_eval(values.links)
                 indexes.add(pk)
-                Index.objects.filter(word=word).update(index=indexes)
+                Index.objects.filter(word=word).update(links=indexes)
             except:
                 indexes.add(pk)
-                Index.objects.create(word=word, index=indexes)
+                Index.objects.create(word=word, links=indexes)
 
 
-def find(search_request):
-    search_words = split_str(search_request)
-    posts = []
-    try:
-        for key in search_words:
-            posts.append(get_object_or_404(Index, word=key).getindex())
-        rez = posts[0]
-        for i in range(len(posts) - 1):
-            rez = set(posts[i]) & set(posts[i + 1])
-        posts = []
-        for i in rez:
-            posts.append(Event.objects.get(pk=i))
-    except:
-        None
-    return posts
-
+def find(request):
+    search_words = split_str(request)
+    result = []
+    for key in search_words:
+        try:
+            values = get_object_or_404(Index, word=key)
+            result.append(literal_eval(values.links))
+            rez = result[0]
+            for i in range(len(result) - 1):
+                rez = set(rez) & set(result[i + 1])
+            events = []
+            # time = datetime.now()
+            for i in rez:
+                events.append(Event.objects.get(pk=i, published=True))
+                # event = Event.objects.get(pk=i)
+                # if (time < event.end_date):
+                #     events.append(event)
+            return events
+        except:
+            return []
 
 def update():
     delete_indexes()
