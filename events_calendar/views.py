@@ -232,6 +232,9 @@ class EventEditView(UpdateView):
     form_class = EventForm
     template_name_suffix = '_update_form'
 
+    def get_success_url(self):
+        return '/organization_events/edit_event/{}'.format(self.object.id)
+
     def get_context_data(self, **kwargs):
         context = super(EventEditView, self).get_context_data()
         context['page_header'] = 'Редагувати'
@@ -241,7 +244,6 @@ class EventEditView(UpdateView):
         return context
 
     def form_valid(self, form):
-        self.success_url = '/organization_events/edit_event/{}'.format(self.object.id)
         if self.request.user.profile.organization == form.instance.creator:
             return super(EventEditView, self).form_valid(form)
 
