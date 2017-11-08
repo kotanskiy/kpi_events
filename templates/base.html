@@ -62,7 +62,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="responsive-menu">
         <ul class="nav navbar-nav navbar-left">
-            <li><a class="" href="{% url 'calendar:home' %}">Календар подій КПІ</a></li>
+            <li><a id="kpi" href="{% url 'calendar:home' %}">Календар подій КПІ</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
@@ -128,10 +128,12 @@
         }
     }
     function changeSearchField() {
-        if ($(window).width() <= 700){
+        if ($(window).width() <= 800){
             $("#search-field").addClass("mobile-version").removeClass("desktop-version");
+            $("#kpi").html('');
         }else {
             $("#search-field").removeClass("mobile-version").addClass("desktop-version");
+            $("#kpi").html('Календар подій КПІ');
         }
     }
     $(document).ready(function () {
