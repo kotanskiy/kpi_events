@@ -27,6 +27,14 @@
     <title>{{ page_header }} | Календар подій КПІ</title>
 </head>
 <body>
+<style>
+    .mobile-version{
+        left: 100px;
+    }
+    .desktop-version{
+        left: 230px;
+    }
+</style>
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -45,19 +53,22 @@
               style="padding: 8px; padding-top: 7px; cursor: pointer;" title="Відкрити фільтри"></span>
 
         <div style="position: relative;">
-            <form class="nav-header" style="position: absolute; top: -58px; left: 100px; min-width: 140px; width: 30%;" method="get" action="{% url 'calendar:searching_results' %}">
-                &nbsp;&nbsp;&nbsp;<input type="text" class="form-control" style="height: 25px;" placeholder="Пошук" name="text">
+            <form id="search-field" class="nav-header" style="position: absolute; top: -38px; min-width: 140px; width: 30%;" method="get" action="{% url 'calendar:searching_results' %}">
+                <input type="text" class="form-control" style="height: 25px;" placeholder="Пошук" name="text">
             </form>
         </div>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="responsive-menu">
+        <ul class="nav navbar-nav navbar-left">
+            <li><a class="" href="{% url 'calendar:home' %}">Календар подій КПІ</a></li>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user.username %}
                 <li>
                     {% if user.username %}
-                        <a href="{% url 'calendar:suggest_an_event' %}" style="font-size: 40px; padding-top: 15px;"><span title="Запропонувати подію">+</span></a>
+                        <a href="{% url 'calendar:suggest_an_event' %}" class="right" style="font-size: 40px; padding-top: 15px;"><span title="Запропонувати подію">+</span></a>
                     {% endif %}
                 </li>
                 <li>
@@ -87,7 +98,7 @@
             {% endif %}
         </ul>
     </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+  </div><!-- /.container -->
 </nav>
 <div class="container">
     <br><br>
@@ -116,11 +127,19 @@
             $("footer.footer").removeClass("navbar-fixed-bottom");
         }
     }
+    function changeSearchField() {
+        if ($(window).width() <= 700){
+            $("#search-field").addClass("mobile-version").removeClass("desktop-version");
+        }else {
+            $("#search-field").removeClass("mobile-version").addClass("desktop-version");
+        }
+    }
     $(document).ready(function () {
         footer();
+        changeSearchField();
     });
-    footer();
     setInterval('footer()', 500);
+    setInterval('changeSearchField()', 500);
 </script>
 </body>
 </html>
