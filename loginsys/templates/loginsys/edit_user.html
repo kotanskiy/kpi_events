@@ -8,7 +8,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input class="btn btn-primary" type="submit" value="Зберегти">
-            <br><br><br>
+            <br><br><br><br><br><br><br>
         </form>
     </div>
     <div class="col-lg-6 col-sm-12">
@@ -30,6 +30,7 @@
         {% endfor %}
         <br><br>
     </div>
+
     <script type="text/javascript">
         var someText = $('p:contains("Змінити:"):contains("Наразі:")').html();
         someText = someText.replace(/Змінити:/mig, '');
