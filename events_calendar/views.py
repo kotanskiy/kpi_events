@@ -381,9 +381,7 @@ def subscribe_on_organization(request, organization_id):
 
 @login_required
 def auth_calendar_api(request):
-    #need to save into session (event_id_for_google)
-    global event_id
-    event_id = request.GET.get('event_id')
+    request.session['event_id_for_google'] = request.GET.get('event_id')
     FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, request.user)
     authorize_url = FLOW.step1_get_authorize_url()
     return HttpResponseRedirect(authorize_url)
@@ -396,9 +394,7 @@ def auth_return(request):
     credential = FLOW.step2_exchange(code=request.GET.get('code'))
     # storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     # storage.put(credential)
-
-    #need to get from session (event_id_for_google)
-    global event_id
+    event_id = request.session['event_id_for_google']
     create_event_for_google_calendar(credential, event_id, request)
     return HttpResponseRedirect('/event/{}'.format(event_id))
 
