@@ -165,7 +165,7 @@
     <script type="text/javascript">
         function clickable(){
             var codeElems = $(".description-font"); //jQuery
-            var regStr= /(\b(https:\/\/?|ftp:\/\/|file:\/\/)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            var regStr= /(\b(https:\/\/?|ftp:\/\/|file:\/\/|http:\/\/)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
             var regStr2 = /(\b(Goo.gl?|bit.ly)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
             for (var c=0; c<codeElems.length; c++){
                 codeElems[c].innerHTML=codeElems[c].innerHTML.replace(regStr, '<a href="$1" target="_blank">$1</a>');
