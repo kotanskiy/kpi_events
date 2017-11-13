@@ -53,18 +53,17 @@
             <br><br>
         </div>
         <div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
-            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px;">
                 <a href="{% url 'calendar:create_event' %}"><input type="button" class="form-control btn btn-primary" value="Додати нову подію"></a>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px;{% if not user.profile.organization.access_to_the_offer %}margin-bottom: 10px;{% endif %}">
                 <a href="{% url 'calendar:edit_organization' request.user.profile.organization.id %}"><input type="button" class="form-control btn btn-primary" value="Редагувати організацію"></a>
             </div>
             {% if user.profile.organization.access_to_the_offer %}
-                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px">
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top: 10px; margin-bottom: 10px;">
                     <a href="{% url 'calendar:proposed_events' %}"><input type="button" class="form-control btn btn-primary" value="Запропоновані{% if count_proposed_events != 0 %} ({{ count_proposed_events }}){% endif %}"></a>
                 </div>
             {% endif %}
-
             <br><br><br>
 
             {% for event in events %}
@@ -151,5 +150,4 @@
 
         </div>
     </div>
-
 {% endblock %}
