@@ -49,8 +49,8 @@ class Event(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата закінчення', blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name='Категорія')
     place_of_event = models.CharField(max_length=100, verbose_name='Місце події', blank=True, null=True)
-    fb_link = models.CharField(max_length=50, verbose_name='Посилання в fb', blank=True, null=True)
-    web_site = models.CharField(max_length=50, verbose_name='Посилання на сайт події', blank=True, null=True)
+    fb_link = models.CharField(max_length=200, verbose_name='Посилання в fb', blank=True, null=True)
+    web_site = models.CharField(max_length=200, verbose_name='Посилання на сайт події', blank=True, null=True)
     published = models.BooleanField(default=True, verbose_name='Опублікований')
 
     def __str__(self):
