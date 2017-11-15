@@ -411,6 +411,24 @@ class OrganizationListView(PaginationMixin, ListView):
         context['type'] = 'Все организации'
         return context
 
+class CurrentEventsListView(PaginationMixin, ListView):
+    model = Event
+    template_name = 'events_calendar/current_events.html'
+    context_object_name = 'events'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        contex = super(CurrentEventsListView, self).get_context_data(**kwargs)
+        contex['page_header'] = 'Поточні події'
+        contex['user'] = self.request.user
+        return contex
+
+    def get_queryset(self):
+        now = timezone.now()
+        events = Event.objects.filter(published=True).filter(start_date__lte=now).\
+            filter(end_date__gte=now).order_by('end_date')
+        return events
+
 
 def faq(request):
     return render(request, 'events_calendar/faq.html', {'page_header': 'FAQ'})
